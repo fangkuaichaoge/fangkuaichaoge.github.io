@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>网站更新 - 新链接通知</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft YaHei", sans-serif;
+        }
+        body {
+            background-color: #f5f7fa;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            max-width: 500px;
+            width: 100%;
+        }
+        h1 {
+            color: #333;
+            font-size: 20px;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        .desc {
+            color: #666;
+            font-size: 15px;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .link-box {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 25px;
+        }
+        #linkInput {
+            flex: 1;
+            padding: 12px 15px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            color: #333;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+        #linkInput:focus {
+            border-color: #409eff;
+        }
+        #copyBtn {
+            padding: 0 20px;
+            background-color: #409eff;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.3s;
+        }
+        #copyBtn:hover {
+            background-color: #337ecc;
+        }
+        .tip {
+            text-align: center;
+            font-size: 13px;
+            color: #999;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .tip.success {
+            opacity: 1;
+            color: #67c23a;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>网站更新通知</h1>
+        <p class="desc">原网站代码已更换，有人复制我的屎山代码进行二创丢不起这个人，请访问以下更快的链接：</p>
+        <div class="link-box">
+            <input type="text" id="linkInput" value="https://4dskinmerge-11mu10x2.maozi.io/" readonly>
+            <button id="copyBtn">复制链接</button>
+        </div>
+        <p class="tip" id="copyTip">链接复制成功！</p>
+    </div>
+
+    <script>
+        // 获取元素
+        const copyBtn = document.getElementById('copyBtn');
+        const linkInput = document.getElementById('linkInput');
+        const copyTip = document.getElementById('copyTip');
+
+        // 复制链接功能
+        copyBtn.addEventListener('click', () => {
+            // 选中输入框内容
+            linkInput.select();
+            // 复制到剪贴板
+            document.execCommand('copy');
+            // 显示成功提示
+            copyTip.classList.add('success');
+            // 3秒后隐藏提示
+            setTimeout(() => {
+                copyTip.classList.remove('success');
+            }, 3000);
+        });
+    </script>
+</body>
+</html>
