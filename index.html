@@ -1344,7 +1344,7 @@
             });
         }
 
-        // 国外作者适配：清理注释
+        // ==================== 核心修复1：移除注释 ====================
         function removeComments(jsonStr) {
             return jsonStr
                 .replace(/(".*?")|(\/\/.*)/g, (match, str) => str || '')
@@ -1352,10 +1352,22 @@
                 .trim();
         }
 
-        // 国外作者适配：清理注释并删除 geometry.null
+        // ==================== 核心修复2：修复JSON语法错误 ====================
+        function fixJsonSyntax(jsonStr) {
+            // 去除对象和数组中的尾随逗号
+            jsonStr = jsonStr.replace(/,\s*}/g, '}');
+            jsonStr = jsonStr.replace(/,\s*]/g, ']');
+            // 单引号转双引号（排除已转义的单引号）
+            jsonStr = jsonStr.replace(/(?<!\\)'/g, '"');
+            // 为没有引号的键名添加引号
+            jsonStr = jsonStr.replace(/([{,]\s*)(\w+)(\s*:)/g, '$1"$2"$3');
+            return jsonStr;
+        }
+
+        // ==================== 核心修复3：国外作者适配（清理注释+删除geometry.null） ====================
         function removeCommentsAndFixGeometry(jsonStr) {
             let cleaned = removeComments(jsonStr);
-            // 删除 geometry.null 空定义
+            // 删除 geometry.null 空定义（多种格式）
             cleaned = cleaned.replace(/,\s*"geometry\.null"\s*:\s*\{\s*\}/g, '');
             cleaned = cleaned.replace(/"geometry\.null"\s*:\s*\{\s*\},?/g, '');
             return cleaned;
@@ -1644,6 +1656,49 @@
             return { modifiedSkins, geoRenameMap, textureMap };
         }
 
+        // ==================== 核心修复4：加载核心文件（带自动修复） ====================
+        async function loadCoreFiles(files, packName) {
+            const coreFiles = ['manifest.json', 'geometry.json', 'skins.json'];
+            const coreData = {};
+            
+            for (const fileName of coreFiles) {
+                const file = files[fileName];
+                if (!file) throw new Error(`${packName} 缺少 ${fileName}`);
+                
+                let content = file._content;
+                
+                // 清理注释和geometry.null
+                if (fixComments.checked) {
+                    logAdd(`🌍 国外作者适配：清理 ${packName} 的 ${fileName}`);
+                    content = removeCommentsAndFixGeometry(content);
+                }
+                
+                try {
+                    coreData[fileName] = JSON.parse(content);
+                } catch (e) {
+                    // JSON解析失败，尝试自动修复
+                    logAdd(`⚠️ ${packName} 的 ${fileName} 包含语法错误，尝试自动修复...`);
+                    try {
+                        const fixedContent = fixJsonSyntax(content);
+                        coreData[fileName] = JSON.parse(fixedContent);
+                        logAdd(`✅ ${fileName} 自动修复成功`);
+                    } catch (error2) {
+                        throw new Error(`${fileName} JSON解析失败且无法自动修复：${error2.message}`);
+                    }
+                }
+                
+                // 再次检查并删除geometry.null（解析后）
+                if (fileName === 'geometry.json' && coreData[fileName]) {
+                    if (coreData[fileName]['geometry.null'] !== undefined) {
+                        delete coreData[fileName]['geometry.null'];
+                        logAdd(`🗑️ 已移除 geometry.null 空定义（国外作者包适配）`);
+                    }
+                }
+            }
+            
+            return coreData;
+        }
+
         // 合并逻辑
         mergeBtn.addEventListener('click', async () => {
             if (mergeInProgress) return;
@@ -1746,10 +1801,12 @@
                     'skins.json': JSON.stringify({ skins: allModifiedSkins })
                 };
 
-                // geometry.json 特殊处理（兼容性逗号）
+                // ==================== 核心修复5：geometry.json 倒数第二个大括号后添加逗号 ====================
                 let geoStr = JSON.stringify(mergedGeo);
                 const lastBraceIndex = geoStr.lastIndexOf('}');
-                geoStr = geoStr.substring(0, lastBraceIndex) + ',' + geoStr.substring(lastBraceIndex);
+                if (lastBraceIndex !== -1) {
+                    geoStr = geoStr.substring(0, lastBraceIndex) + ',' + geoStr.substring(lastBraceIndex);
+                }
                 outputFiles['geometry.json'] = geoStr;
 
                 // 收集贴图（使用映射后的文件名）
@@ -1803,37 +1860,6 @@
                 logAdd(`🛡️ 已为 ${modifiedCount} 个皮肤启用隐藏盔甲`);
             }
             return result;
-        }
-
-        async function loadCoreFiles(files, packName) {
-            const coreFiles = ['manifest.json', 'geometry.json', 'skins.json'];
-            const coreData = {};
-            
-            for (const fileName of coreFiles) {
-                const file = files[fileName];
-                if (!file) throw new Error(`${packName} 缺少 ${fileName}`);
-                
-                let content = file._content;
-                
-                if (fixComments.checked) {
-                    logAdd(`🔧 清理 ${packName} 的 ${fileName} 中的注释`);
-                    content = removeCommentsAndFixGeometry(content);
-                }
-                
-                try {
-                    coreData[fileName] = JSON.parse(content);
-                } catch (e) {
-                    throw new Error(`${fileName} JSON解析失败: ${e.message}`);
-                }
-                
-                // 删除 geometry.null
-                if (fileName === 'geometry.json' && coreData[fileName]['geometry.null'] !== undefined) {
-                    delete coreData[fileName]['geometry.null'];
-                    logAdd(`🗑️ 已移除 geometry.null 空定义`);
-                }
-            }
-            
-            return coreData;
         }
 
         async function generateZip(files) {
