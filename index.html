@@ -1,205 +1,232 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="zh-CN">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Minecraft 4D皮肤包合并工具</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
+        @font-face {
+            font-family: 'Minecraft';
+            src: local('Microsoft YaHei'), local('SimHei'), sans-serif;
+        }
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+        }
+
+        :root {
+            --mc-green: #3b8526;
+            --mc-green-hover: #4a9b30;
+            --mc-gray-light: #d0d1d5;
+            --mc-bg-dark: #1b1b1b;
+            --mc-bg-panel: #212121;
+            --mc-bg-button: #404040;
+            --mc-border: #000000;
+            --mc-text-muted: #888888;
+            --mc-red: #8b3a3a;
         }
 
         body {
-            background: linear-gradient(135deg, #f5f0ff 0%, #faf5ff 25%, #fff0f5 75%, #f0f8ff 100%);
+            font-family: "Microsoft YaHei", sans-serif;
+            background-color: var(--mc-bg-dark);
+            color: var(--mc-gray-light);
             min-height: 100vh;
             display: flex;
             overflow-x: hidden;
+            image-rendering: pixelated;
         }
 
-        /* 左侧装饰栏 */
+        /* 左侧边栏 - Minecraft风格 */
         .sidebar {
             width: 80px;
-            background: linear-gradient(180deg, rgba(139, 127, 247, 0.95) 0%, rgba(159, 147, 255, 0.95) 100%);
-            backdrop-filter: blur(20px);
+            background-color: var(--mc-bg-panel);
+            border-right: 4px solid var(--mc-border);
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 32px 0;
-            box-shadow: 4px 0 24px rgba(139, 127, 247, 0.2);
+            padding: 20px 0;
+            box-shadow: 4px 0 0 rgba(0,0,0,0.5);
             position: fixed;
             height: 100vh;
             z-index: 100;
-            border-right: 1px solid rgba(255, 255, 255, 0.3);
         }
 
         .logo {
             width: 48px;
             height: 48px;
-            background: rgba(255, 255, 255, 0.25);
-            border-radius: 16px;
+            background-color: var(--mc-green);
+            border: 3px solid var(--mc-border);
+            border-bottom: 6px solid var(--mc-border);
             display: flex;
             align-items: center;
             justify-content: center;
-            color: white;
-            font-size: 24px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: var(--mc-gray-light);
+            font-size: 20px;
+            image-rendering: pixelated;
+            box-shadow: inset 0 2px 0 rgba(255,255,255,0.2);
         }
 
         .version {
             margin-top: auto;
-            color: rgba(255, 255, 255, 0.7);
-            font-size: 11px;
-            font-weight: 500;
+            color: var(--mc-text-muted);
+            font-size: 12px;
+            font-weight: 600;
+            text-shadow: 2px 2px 0 #000;
         }
 
         /* 主内容区 */
         .main-content {
             flex: 1;
             margin-left: 80px;
-            padding: 40px;
+            padding: 30px;
             max-width: 1200px;
-            margin-right: auto;
-            padding-left: 120px;
         }
 
         .page-header {
-            margin-bottom: 32px;
+            margin-bottom: 24px;
             text-align: center;
+            border-bottom: 3px solid var(--mc-border);
+            padding-bottom: 16px;
+            background-color: rgba(0,0,0,0.2);
+            padding: 16px;
+            border: 3px solid var(--mc-border);
+            box-shadow: 0 4px 0 rgba(0,0,0,0.5);
         }
 
         .page-title {
-            font-size: 28px;
+            font-size: 24px;
             font-weight: 700;
-            color: #2d2b55;
+            color: var(--mc-gray-light);
             display: inline-flex;
             align-items: center;
             gap: 12px;
-            letter-spacing: -0.5px;
+            text-shadow: 2px 2px 0 #000;
         }
 
         .page-title i {
-            color: #8B7FF7;
-            font-size: 32px;
-            filter: drop-shadow(0 2px 4px rgba(139, 127, 247, 0.3));
+            color: var(--mc-green);
+            font-size: 28px;
         }
 
-        /* 玻璃拟态卡片 */
+        /* Minecraft风格卡片 */
         .glass-container {
-            background: rgba(255, 255, 255, 0.65);
-            backdrop-filter: blur(20px);
-            border-radius: 24px;
-            border: 1px solid rgba(255, 255, 255, 0.6);
-            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.07);
-            padding: 32px;
+            background-color: rgba(33, 33, 33, 0.9);
+            border: 3px solid var(--mc-border);
+            box-shadow: 0 6px 0 rgba(0,0,0,0.8), inset 0 1px 0 rgba(255,255,255,0.1);
+            padding: 24px;
             margin-bottom: 24px;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
         }
 
-        /* 上传区域 */
+        .glass-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(to bottom, rgba(255,255,255,0.1), transparent);
+            pointer-events: none;
+        }
+
+        /* 上传区域 - MC风格 */
         .upload-section {
-            margin-bottom: 24px;
+            margin-bottom: 20px;
         }
 
         .upload-zone {
-            background: linear-gradient(135deg, rgba(139, 127, 247, 0.05) 0%, rgba(159, 147, 255, 0.05) 100%);
-            border: 2px dashed rgba(139, 127, 247, 0.3);
-            border-radius: 24px;
-            padding: 60px 40px;
+            background-color: rgba(0,0,0,0.3);
+            border: 3px dashed var(--mc-bg-button);
+            border-radius: 0;
+            padding: 40px;
             text-align: center;
             cursor: pointer;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.2s;
             position: relative;
-            overflow: hidden;
-            backdrop-filter: blur(10px);
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.5);
         }
 
         .upload-zone:hover, .upload-zone.dragover {
-            border-color: rgba(139, 127, 247, 0.6);
-            background: linear-gradient(135deg, rgba(139, 127, 247, 0.1) 0%, rgba(159, 147, 255, 0.1) 100%);
-            transform: translateY(-2px);
-            box-shadow: 0 12px 40px rgba(139, 127, 247, 0.15);
+            border-color: var(--mc-green);
+            background-color: rgba(59, 133, 38, 0.1);
+            box-shadow: inset 0 0 30px rgba(59, 133, 38, 0.2);
         }
 
         .upload-zone.dragover {
             border-style: solid;
-            border-color: #8B7FF7;
-            background: rgba(139, 127, 247, 0.15);
+            background-color: rgba(59, 133, 38, 0.2);
         }
 
         .upload-icon-main {
-            width: 80px;
-            height: 80px;
-            background: linear-gradient(135deg, #e0dcff 0%, #f3f0ff 100%);
-            border-radius: 28px;
+            width: 64px;
+            height: 64px;
+            background-color: var(--mc-bg-button);
+            border: 3px solid var(--mc-border);
+            border-bottom: 6px solid var(--mc-border);
             display: flex;
             align-items: center;
             justify-content: center;
-            margin: 0 auto 24px;
-            color: #8B7FF7;
-            font-size: 36px;
-            box-shadow: 0 8px 24px rgba(139, 127, 247, 0.25);
-            transition: transform 0.3s ease;
-        }
-
-        .upload-zone:hover .upload-icon-main {
-            transform: scale(1.1) rotate(-5deg);
+            margin: 0 auto 16px;
+            color: var(--mc-green);
+            font-size: 28px;
+            box-shadow: 0 4px 0 rgba(0,0,0,0.5);
         }
 
         .upload-title-main {
-            color: #2d2b55;
-            font-size: 20px;
-            font-weight: 600;
+            color: var(--mc-gray-light);
+            font-size: 18px;
+            font-weight: 700;
             margin-bottom: 8px;
+            text-shadow: 2px 2px 0 #000;
         }
 
         .upload-subtitle-main {
-            color: #8b8aa3;
-            font-size: 14px;
-            font-weight: 400;
+            color: var(--mc-text-muted);
+            font-size: 13px;
         }
 
         .upload-hint {
             margin-top: 16px;
             padding: 8px 16px;
-            background: rgba(139, 127, 247, 0.1);
-            border-radius: 100px;
+            background-color: rgba(59, 133, 38, 0.2);
+            border: 2px solid var(--mc-green);
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            color: #8B7FF7;
+            color: var(--mc-green);
             font-size: 12px;
-            font-weight: 500;
+            font-weight: 600;
+            text-shadow: 1px 1px 0 rgba(0,0,0,0.5);
         }
 
-        /* 文件列表区域 */
+        /* 文件列表 */
         .packs-list-container {
-            margin-top: 24px;
+            margin-top: 20px;
         }
 
         .section-subheader {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 16px;
-            color: #2d2b55;
-            font-size: 16px;
+            margin-bottom: 12px;
+            color: var(--mc-gray-light);
+            font-size: 15px;
             font-weight: 600;
+            text-shadow: 2px 2px 0 #000;
         }
 
         .pack-count {
-            background: linear-gradient(135deg, #8B7FF7 0%, #a59aff 100%);
-            color: white;
+            background-color: var(--mc-green);
+            color: var(--mc-gray-light);
             padding: 4px 12px;
-            border-radius: 100px;
+            border: 2px solid var(--mc-border);
+            border-bottom: 4px solid var(--mc-border);
             font-size: 12px;
-            font-weight: 600;
+            font-weight: 700;
+            text-shadow: 1px 1px 0 rgba(0,0,0,0.3);
         }
 
         .packs-list {
@@ -210,62 +237,61 @@
         }
 
         .pack-item {
-            background: rgba(255, 255, 255, 0.8);
-            border: 1px solid rgba(139, 127, 247, 0.15);
-            border-radius: 16px;
-            padding: 16px 20px;
+            background-color: var(--mc-bg-button);
+            border: 3px solid var(--mc-border);
+            border-bottom: 6px solid var(--mc-border);
+            padding: 12px 16px;
             display: flex;
             align-items: center;
-            gap: 16px;
+            gap: 12px;
             cursor: move;
-            transition: all 0.3s ease;
+            transition: all 0.1s;
             position: relative;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.1);
         }
 
         .pack-item:hover {
-            transform: translateX(4px);
-            border-color: rgba(139, 127, 247, 0.3);
-            box-shadow: 0 4px 16px rgba(139, 127, 247, 0.1);
+            transform: translateX(2px);
+            border-color: var(--mc-green);
         }
 
         .pack-item.dragging {
-            opacity: 0.5;
-            transform: scale(0.98);
-            box-shadow: 0 8px 24px rgba(139, 127, 247, 0.2);
+            opacity: 0.6;
+            border-color: var(--mc-green);
         }
 
         .pack-item.drag-over {
-            border-top: 3px solid #8B7FF7;
+            border-top: 4px solid var(--mc-green);
             margin-top: 8px;
         }
 
         .pack-handle {
-            color: #c4b5fd;
+            color: var(--mc-text-muted);
             font-size: 16px;
             cursor: grab;
             padding: 8px;
             margin: -8px;
-            transition: color 0.2s;
         }
 
         .pack-handle:active {
             cursor: grabbing;
-            color: #8B7FF7;
+            color: var(--mc-green);
         }
 
         .pack-number {
             width: 32px;
             height: 32px;
-            background: linear-gradient(135deg, #8B7FF7 0%, #a59aff 100%);
-            color: white;
-            border-radius: 10px;
+            background-color: var(--mc-green);
+            border: 2px solid var(--mc-border);
+            border-bottom: 4px solid var(--mc-border);
+            color: var(--mc-gray-light);
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: 700;
             font-size: 14px;
             flex-shrink: 0;
+            text-shadow: 1px 1px 0 rgba(0,0,0,0.3);
         }
 
         .pack-info {
@@ -274,28 +300,28 @@
         }
 
         .pack-name {
-            color: #2d2b55;
+            color: var(--mc-gray-light);
             font-weight: 600;
-            font-size: 15px;
+            font-size: 14px;
             margin-bottom: 4px;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+            text-shadow: 1px 1px 0 #000;
         }
 
         .pack-path {
-            color: #a5b4fc;
+            color: var(--mc-text-muted);
             font-size: 11px;
-            font-weight: 500;
-            margin-top: 2px;
+            margin-bottom: 4px;
         }
 
         .pack-meta {
-            color: #8b8aa3;
-            font-size: 12px;
+            color: var(--mc-text-muted);
+            font-size: 11px;
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 8px;
         }
 
         .pack-status {
@@ -303,16 +329,17 @@
             align-items: center;
             gap: 4px;
             padding: 2px 8px;
-            background: rgba(34, 197, 94, 0.1);
-            color: #16a34a;
-            border-radius: 6px;
+            background-color: rgba(59, 133, 38, 0.2);
+            color: var(--mc-green);
+            border: 1px solid var(--mc-green);
             font-size: 11px;
-            font-weight: 500;
+            font-weight: 600;
         }
 
         .pack-status.error {
-            background: rgba(239, 68, 68, 0.1);
-            color: #dc2626;
+            background-color: rgba(139, 58, 58, 0.2);
+            color: #ff6b6b;
+            border-color: var(--mc-red);
         }
 
         .pack-actions {
@@ -323,153 +350,149 @@
         .pack-btn {
             width: 32px;
             height: 32px;
-            border: none;
-            background: rgba(139, 127, 247, 0.1);
-            color: #8B7FF7;
-            border-radius: 8px;
+            border: 2px solid var(--mc-border);
+            border-bottom: 4px solid var(--mc-border);
+            background-color: var(--mc-bg-panel);
+            color: var(--mc-gray-light);
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: all 0.2s;
+            transition: all 0.1s;
         }
 
         .pack-btn:hover {
-            background: rgba(139, 127, 247, 0.2);
-            transform: scale(1.1);
+            background-color: var(--mc-green);
+            transform: translateY(-1px);
+        }
+
+        .pack-btn:active {
+            border-bottom: 2px solid var(--mc-border);
+            transform: translateY(2px);
         }
 
         .pack-btn.delete:hover {
-            background: rgba(239, 68, 68, 0.1);
-            color: #dc2626;
+            background-color: var(--mc-red);
         }
 
         .empty-state {
             text-align: center;
             padding: 40px;
-            color: #8b8aa3;
+            color: var(--mc-text-muted);
             font-size: 14px;
-            background: rgba(139, 127, 247, 0.03);
-            border-radius: 16px;
-            border: 2px dashed rgba(139, 127, 247, 0.1);
+            background-color: rgba(0,0,0,0.2);
+            border: 3px dashed var(--mc-bg-button);
         }
 
-        .empty-state i {
-            font-size: 48px;
-            margin-bottom: 12px;
-            opacity: 0.5;
-        }
-
-        /* 预设区域 */
+        /* 分段按钮组 - MC风格 */
         .section-header {
             display: flex;
             align-items: center;
             gap: 10px;
-            margin-bottom: 20px;
-            color: #2d2b55;
-            font-size: 18px;
+            margin-bottom: 16px;
+            color: var(--mc-gray-light);
+            font-size: 16px;
             font-weight: 600;
+            text-shadow: 2px 2px 0 #000;
         }
 
         .section-header i {
-            color: #8B7FF7;
-            font-size: 20px;
+            color: var(--mc-green);
         }
 
         .preset-pills {
             display: flex;
-            gap: 12px;
+            gap: 8px;
             flex-wrap: wrap;
             margin-bottom: 16px;
         }
 
         .preset-pill {
             padding: 10px 20px;
-            background: rgba(255, 255, 255, 0.9);
-            border: 1px solid rgba(139, 127, 247, 0.2);
-            border-radius: 100px;
+            background-color: var(--mc-bg-button);
+            border: 3px solid var(--mc-border);
+            border-bottom: 6px solid var(--mc-border);
             font-size: 13px;
-            font-weight: 500;
-            color: #6b7280;
+            font-weight: 600;
+            color: var(--mc-gray-light);
             cursor: pointer;
-            transition: all 0.3s ease;
-            white-space: nowrap;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+            transition: all 0.1s;
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.1);
+            text-shadow: 1px 1px 0 #000;
         }
 
         .preset-pill:hover {
-            border-color: rgba(139, 127, 247, 0.5);
-            color: #8B7FF7;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(139, 127, 247, 0.15);
+            background-color: #4a4a4a;
+            transform: translateY(-1px);
         }
 
         .preset-pill.active {
-            background: linear-gradient(135deg, #8B7FF7 0%, #a59aff 100%);
-            color: white;
-            border-color: transparent;
-            box-shadow: 0 4px 16px rgba(139, 127, 247, 0.35);
+            background-color: var(--mc-green);
+            color: var(--mc-gray-light);
+            border-bottom: 4px solid var(--mc-border);
+            transform: translateY(2px);
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.3);
         }
 
         .preset-hint {
             font-size: 12px;
-            color: #8b8aa3;
+            color: var(--mc-text-muted);
             display: flex;
             align-items: center;
             gap: 6px;
             padding-top: 12px;
-            border-top: 1px solid rgba(139, 127, 247, 0.1);
+            border-top: 2px solid var(--mc-bg-button);
         }
 
         /* 选项网格 */
         .options-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            gap: 16px;
-            background: rgba(139, 127, 247, 0.04);
-            border: 1px solid rgba(139, 127, 247, 0.15);
-            border-radius: 20px;
-            padding: 24px;
-            margin-bottom: 24px;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            background-color: rgba(0,0,0,0.2);
+            border: 3px solid var(--mc-border);
+            border-bottom: 6px solid var(--mc-border);
+            padding: 20px;
+            margin-bottom: 20px;
         }
 
         .option-item {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 12px 16px;
-            background: rgba(255, 255, 255, 0.6);
-            border-radius: 16px;
-            border: 1px solid rgba(139, 127, 247, 0.1);
-            transition: all 0.2s;
+            padding: 12px;
+            background-color: var(--mc-bg-button);
+            border: 2px solid var(--mc-border);
+            border-bottom: 4px solid var(--mc-border);
+            transition: all 0.1s;
         }
 
         .option-item:hover {
-            background: rgba(255, 255, 255, 0.9);
-            border-color: rgba(139, 127, 247, 0.2);
-            transform: translateY(-1px);
+            transform: translateX(2px);
+            border-color: var(--mc-green);
         }
 
         .option-label {
             display: flex;
             align-items: center;
-            gap: 12px;
-            color: #4a4868;
-            font-size: 14px;
-            font-weight: 500;
+            gap: 10px;
+            color: var(--mc-gray-light);
+            font-size: 13px;
+            font-weight: 600;
+            text-shadow: 1px 1px 0 #000;
         }
 
         .option-label i {
-            color: #8B7FF7;
+            color: var(--mc-green);
             width: 20px;
             text-align: center;
-            font-size: 16px;
         }
 
+        /* MC风格开关 */
         .toggle-switch {
             position: relative;
-            width: 48px;
-            height: 26px;
+            width: 44px;
+            height: 24px;
             cursor: pointer;
         }
 
@@ -485,106 +508,137 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background-color: #e5e7eb;
-            transition: 0.4s;
-            border-radius: 26px;
-            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+            background-color: var(--mc-bg-dark);
+            border: 2px solid var(--mc-border);
+            transition: .2s;
         }
 
         .slider:before {
             position: absolute;
             content: "";
-            height: 20px;
-            width: 20px;
-            left: 3px;
-            bottom: 3px;
-            background-color: white;
-            transition: 0.4s;
-            border-radius: 50%;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            height: 16px;
+            width: 16px;
+            left: 2px;
+            bottom: 2px;
+            background-color: var(--mc-text-muted);
+            border: 2px solid var(--mc-border);
+            transition: .2s;
+            box-shadow: 0 2px 0 rgba(0,0,0,0.5);
         }
 
-        input:checked+.slider {
-            background: linear-gradient(135deg, #8B7FF7 0%, #a59aff 100%);
+        input:checked + .slider {
+            background-color: var(--mc-green);
         }
 
-        input:checked+.slider:before {
-            transform: translateX(22px);
-            box-shadow: 0 2px 8px rgba(139, 127, 247, 0.4);
+        input:checked + .slider:before {
+            transform: translateX(20px);
+            background-color: var(--mc-gray-light);
         }
 
-        /* 合并按钮 */
+        /* 合并按钮 - MC风格大按钮 */
         .btn-merge {
             width: 100%;
-            padding: 18px;
-            background: linear-gradient(135deg, #8B7FF7 0%, #a59aff 100%);
-            color: white;
-            border: none;
-            border-radius: 16px;
-            font-size: 17px;
-            font-weight: 600;
+            padding: 16px;
+            background-color: var(--mc-green);
+            color: var(--mc-gray-light);
+            border: 3px solid var(--mc-border);
+            border-bottom: 6px solid var(--mc-border);
+            font-size: 16px;
+            font-weight: 700;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.1s;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 12px;
-            box-shadow: 0 4px 20px rgba(139, 127, 247, 0.3);
-            position: relative;
-            overflow: hidden;
-            margin-bottom: 24px;
+            gap: 10px;
+            text-shadow: 1px 1px 0 rgba(0,0,0,0.3);
+            box-shadow: inset 0 2px 0 rgba(255,255,255,0.1);
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
         .btn-merge:hover:not(:disabled) {
+            background-color: var(--mc-green-hover);
             transform: translateY(-2px);
-            box-shadow: 0 8px 30px rgba(139, 127, 247, 0.4);
+        }
+
+        .btn-merge:active:not(:disabled) {
+            border-bottom: 3px solid var(--mc-border);
+            transform: translateY(4px);
         }
 
         .btn-merge:disabled {
-            background: linear-gradient(135deg, #d1d5db 0%, #e5e7eb 100%);
+            background-color: var(--mc-bg-button);
+            color: var(--mc-text-muted);
             cursor: not-allowed;
-            opacity: 0.7;
+            border-bottom: 4px solid var(--mc-border);
         }
 
-        /* 进度和结果 */
+        /* 进度条 */
         .progress-container {
-            background: rgba(139, 127, 247, 0.04);
-            border: 1px solid rgba(139, 127, 247, 0.15);
-            border-radius: 20px;
-            padding: 24px;
-            margin-bottom: 24px;
+            background-color: rgba(0,0,0,0.3);
+            border: 3px solid var(--mc-border);
+            border-bottom: 6px solid var(--mc-border);
+            padding: 20px;
+            margin-bottom: 20px;
             display: none;
         }
 
         .progress-bar-bg {
-            height: 10px;
-            background: rgba(139, 127, 247, 0.1);
-            border-radius: 5px;
-            overflow: hidden;
+            height: 20px;
+            background-color: var(--mc-bg-dark);
+            border: 2px solid var(--mc-border);
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.5);
             margin-bottom: 12px;
+            position: relative;
+            overflow: hidden;
         }
 
         .progress-fill {
             height: 100%;
-            background: linear-gradient(90deg, #8B7FF7 0%, #a5b4fc 100%);
+            background-color: var(--mc-green);
             width: 0%;
-            transition: width 0.5s ease;
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(139, 127, 247, 0.3);
+            transition: width 0.3s;
+            box-shadow: inset 0 2px 0 rgba(255,255,255,0.2);
+            position: relative;
+        }
+
+        .progress-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: repeating-linear-gradient(
+                90deg,
+                transparent,
+                transparent 10px,
+                rgba(0,0,0,0.1) 10px,
+                rgba(0,0,0,0.1) 20px
+            );
+            animation: slide 1s linear infinite;
+        }
+
+        @keyframes slide {
+            0% { transform: translateX(-20px); }
+            100% { transform: translateX(0); }
         }
 
         .progress-text {
-            color: #6b7280;
+            color: var(--mc-gray-light);
             font-size: 14px;
+            font-weight: 600;
             display: flex;
             align-items: center;
             gap: 8px;
-            font-weight: 500;
+            text-shadow: 1px 1px 0 #000;
         }
 
         .progress-text i {
-            animation: spin 1.5s linear infinite;
-            color: #8B7FF7;
+            animation: spin 1s linear infinite;
+            color: var(--mc-green);
         }
 
         @keyframes spin {
@@ -592,107 +646,136 @@
             100% { transform: rotate(360deg); }
         }
 
+        /* 结果区域 */
         .result-container {
-            background: linear-gradient(135deg, rgba(139, 127, 247, 0.1) 0%, rgba(165, 180, 252, 0.1) 100%);
-            border: 1px solid rgba(139, 127, 247, 0.2);
-            border-radius: 20px;
-            padding: 32px;
+            background-color: rgba(59, 133, 38, 0.1);
+            border: 3px solid var(--mc-green);
+            border-bottom: 6px solid var(--mc-border);
+            padding: 24px;
             text-align: center;
             display: none;
-            margin-bottom: 24px;
+            margin-bottom: 20px;
         }
 
         .result-icon {
-            width: 64px;
-            height: 64px;
-            background: linear-gradient(135deg, #8B7FF7 0%, #a59aff 100%);
-            border-radius: 50%;
+            width: 56px;
+            height: 56px;
+            background-color: var(--mc-green);
+            border: 3px solid var(--mc-border);
+            border-bottom: 6px solid var(--mc-border);
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            color: white;
-            font-size: 28px;
-            margin-bottom: 16px;
-            box-shadow: 0 8px 24px rgba(139, 127, 247, 0.3);
+            color: var(--mc-gray-light);
+            font-size: 24px;
+            margin-bottom: 12px;
+            text-shadow: 2px 2px 0 rgba(0,0,0,0.3);
         }
 
         .result-title {
-            color: #2d2b55;
-            font-size: 20px;
+            color: var(--mc-gray-light);
+            font-size: 18px;
             font-weight: 700;
-            margin-bottom: 20px;
+            margin-bottom: 16px;
+            text-shadow: 2px 2px 0 #000;
         }
 
         .btn-download {
             display: inline-flex;
             align-items: center;
-            gap: 10px;
-            padding: 14px 32px;
-            background: linear-gradient(135deg, #8B7FF7 0%, #a59aff 100%);
-            color: white;
+            gap: 8px;
+            padding: 14px 28px;
+            background-color: var(--mc-green);
+            color: var(--mc-gray-light);
             text-decoration: none;
-            border-radius: 12px;
-            font-size: 15px;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 16px rgba(139, 127, 247, 0.3);
-            border: none;
+            border: 3px solid var(--mc-border);
+            border-bottom: 6px solid var(--mc-border);
+            font-size: 14px;
+            font-weight: 700;
             cursor: pointer;
+            transition: all 0.1s;
+            text-shadow: 1px 1px 0 rgba(0,0,0,0.3);
         }
 
         .btn-download:hover {
+            background-color: var(--mc-green-hover);
             transform: translateY(-2px);
-            box-shadow: 0 8px 24px rgba(139, 127, 247, 0.4);
         }
 
-        /* 日志 */
+        .btn-download:active {
+            border-bottom: 3px solid var(--mc-border);
+            transform: translateY(4px);
+        }
+
+        /* 日志区域 */
         .log-container {
-            background: rgba(45, 43, 85, 0.03);
-            border: 1px solid rgba(139, 127, 247, 0.15);
-            border-radius: 20px;
-            padding: 24px;
+            background-color: rgba(0,0,0,0.5);
+            border: 3px solid var(--mc-border);
+            border-bottom: 6px solid var(--mc-border);
+            padding: 16px;
             max-height: 300px;
             overflow-y: auto;
+            font-family: 'Consolas', 'Monaco', monospace;
         }
 
         .log-header {
             display: flex;
             align-items: center;
             gap: 8px;
-            color: #8B7FF7;
+            color: var(--mc-green);
             font-size: 14px;
-            font-weight: 600;
-            margin-bottom: 16px;
-            padding-bottom: 12px;
-            border-bottom: 1px solid rgba(139, 127, 247, 0.1);
+            font-weight: 700;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid var(--mc-bg-button);
+            text-shadow: 1px 1px 0 rgba(0,0,0,0.5);
             position: sticky;
             top: 0;
-            background: inherit;
+            background-color: rgba(0,0,0,0.8);
             z-index: 10;
         }
 
         .log-content {
-            font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
-            font-size: 13px;
-            line-height: 1.8;
-            color: #4a4868;
+            font-size: 12px;
+            line-height: 1.6;
+            color: var(--mc-gray-light);
         }
 
         .log-content div {
-            padding: 4px 0;
-            display: flex;
-            align-items: flex-start;
-            gap: 8px;
+            padding: 2px 0;
+            border-left: 2px solid var(--mc-green);
+            padding-left: 8px;
+            margin-bottom: 4px;
         }
 
         .log-content div::before {
             content: '>';
-            color: #c4b5fd;
+            color: var(--mc-green);
+            margin-right: 6px;
             font-weight: bold;
-            flex-shrink: 0;
         }
 
-                /* 响应式 */
+        /* 滚动条 - MC风格 */
+        ::-webkit-scrollbar {
+            width: 12px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--mc-bg-dark);
+            border: 2px solid var(--mc-border);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--mc-bg-button);
+            border: 2px solid var(--mc-border);
+            border-bottom: 4px solid var(--mc-border);
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--mc-green);
+        }
+
+        /* 响应式 */
         @media (max-width: 1024px) {
             .options-grid {
                 grid-template-columns: 1fr 1fr;
@@ -705,18 +788,19 @@
             }
             .main-content {
                 margin-left: 0;
-                padding: 24px;
+                padding: 20px;
             }
             .options-grid {
                 grid-template-columns: 1fr;
             }
             .upload-zone {
-                padding: 40px 24px;
+                padding: 30px 20px;
             }
         }
     </style>
     <script src="./js/jszip.min.js"></script>
     <script src="./js/FileSaver.min.js"></script>
+<base target="_blank">
 </head>
 
 <body>
@@ -755,14 +839,14 @@
             <!-- 已上传列表 -->
             <div class="packs-list-container" id="packsListContainer" style="display: none;">
                 <div class="section-subheader">
-                    <span>已上传的皮肤包 <span style="color: #8b8aa3; font-size: 14px; font-weight: normal;">（拖拽可调整合并顺序）</span></span>
+                    <span>已上传的皮肤包 <span style="color: #888; font-size: 13px; font-weight: normal;">（拖拽可调整合并顺序）</span></span>
                     <span class="pack-count" id="packCount">0 个</span>
                 </div>
                 <div class="packs-list" id="packsList"></div>
             </div>
 
             <div class="empty-state" id="emptyState">
-                <i class="fas fa-box-open"></i>
+                <i class="fas fa-box-open" style="font-size: 32px; margin-bottom: 8px; display: block; opacity: 0.5;"></i>
                 <div>暂无皮肤包，请上传文件</div>
             </div>
         </div>
@@ -902,7 +986,6 @@
         let skinPacks = [];
         let mergeInProgress = false;
         let dragStartIndex = null;
-        // 新增：模型-贴图-皮肤关联关系（每个包独立的Map）
         let modelTextureRelations = new Map();
 
         // 预设配置
@@ -1017,7 +1100,6 @@
 
             renderPacksList();
             
-            // 并行处理所有新上传的文件
             await Promise.all(newPacks.map(async (pack) => {
                 const file = files.find(f => f.name === pack.fileName);
                 if (file) {
@@ -1025,7 +1107,6 @@
                         logAdd(`正在读取 ${pack.fileName}...`);
                         await extractZip(file, pack);
                         
-                        // 验证核心文件是否存在
                         const hasManifest = !!pack.files['manifest.json'];
                         const hasGeometry = !!pack.files['geometry.json'];
                         const hasSkins = !!pack.files['skins.json'];
@@ -1034,7 +1115,6 @@
                             throw new Error(`缺少核心文件: ${!hasManifest ? 'manifest.json ' : ''}${!hasGeometry ? 'geometry.json ' : ''}${!hasSkins ? 'skins.json' : ''}`);
                         }
                         
-                        // 立即读取 skins.json 统计数量
                         const skinsContent = await pack.files['skins.json'].content;
                         pack.skinCount = countSkinsFromContent(skinsContent);
                         
@@ -1055,7 +1135,6 @@
             updateUI();
         }
 
-        // 从内容字符串统计皮肤数量
         function countSkinsFromContent(content) {
             try {
                 const data = JSON.parse(content);
@@ -1065,12 +1144,10 @@
             }
         }
 
-        // 解压ZIP - 改进版：自动查找嵌套文件夹中的核心文件
         async function extractZip(zipFile, pack) {
             const zip = new JSZip();
             const content = await zip.loadAsync(zipFile);
             
-            // 第一阶段：收集所有文件路径
             const allFiles = [];
             for (const [relativePath, file] of Object.entries(content.files)) {
                 if (!file.dir) {
@@ -1082,7 +1159,6 @@
                 }
             }
             
-            // 第二阶段：查找核心文件位置
             let coreFilesLocation = '';
             
             const manifestInRoot = allFiles.find(f => f.lowerPath === 'manifest.json' || f.lowerPath.endsWith('/manifest.json'));
@@ -1095,7 +1171,6 @@
                     coreFilesLocation = manifestPath.substring(0, manifestPath.lastIndexOf('/') + 1);
                 }
             } else {
-                // 如果根目录没有，尝试查找包含这三个文件的文件夹
                 const folderCandidates = {};
                 
                 allFiles.forEach(f => {
@@ -1124,7 +1199,6 @@
             
             pack.rootPath = coreFilesLocation;
             
-            // 第三阶段：提取所有文件
             for (const {path, file} of allFiles) {
                 const fileContent = await file.async('blob');
                 
@@ -1141,14 +1215,13 @@
                     mappedFileName = path.toLowerCase();
                 }
                 
-                // 立即读取文本内容用于 skins.json 统计
                 const textContent = await file.async('text');
                 
                 pack.files[mappedFileName] = {
                     blob: fileContent,
                     name: mappedFileName,
                     originalPath: path,
-                    _content: textContent, // 缓存文本内容
+                    _content: textContent,
                     get content() { 
                         return Promise.resolve(this._content);
                     }
@@ -1156,7 +1229,6 @@
             }
         }
 
-        // 渲染列表
         function renderPacksList() {
             if (skinPacks.length === 0) {
                 packsListContainer.style.display = 'none';
@@ -1189,7 +1261,7 @@
                                     `<span class="pack-status"><i class="fas fa-check-circle"></i> ${pack.skinCount} 个皮肤</span>` :
                                     isError ?
                                     `<span class="pack-status error"><i class="fas fa-exclamation-circle"></i> ${pack.errorMsg || '加载失败'}</span>` :
-                                    `<span class="pack-status" style="background: rgba(139, 127, 247, 0.1); color: #8B7FF7;"><i class="fas fa-spinner fa-spin"></i> 读取中...</span>`
+                                    `<span class="pack-status" style="background: rgba(59, 133, 38, 0.1); color: #3b8526;"><i class="fas fa-spinner fa-spin"></i> 读取中...</span>`
                                 }
                             </div>
                         </div>
@@ -1202,7 +1274,6 @@
                 `;
             }).join('');
 
-            // 添加拖拽事件
             const items = packsList.querySelectorAll('.pack-item');
             items.forEach(item => {
                 const isError = item.classList.contains('error');
@@ -1217,13 +1288,11 @@
             });
         }
 
-        // 删除包
         window.removePack = function(id) {
             const index = skinPacks.findIndex(p => p.id === id);
             if (index !== -1) {
                 const pack = skinPacks[index];
                 skinPacks.splice(index, 1);
-                // 清理关联关系
                 modelTextureRelations.delete(pack.id);
                 logAdd(`🗑️ 已移除 ${pack.fileName}`);
                 renderPacksList();
@@ -1231,7 +1300,6 @@
             }
         };
 
-        // 拖拽逻辑
         function handleDragStart(e) {
             dragStartIndex = +this.getAttribute('data-index');
             this.classList.add('dragging');
@@ -1274,7 +1342,6 @@
             return false;
         }
 
-        // 更新UI状态
         function updateUI() {
             const readyPacks = skinPacks.filter(p => p.status === 'ready');
             const allReady = readyPacks.length === skinPacks.length && skinPacks.length >= 2;
@@ -1285,7 +1352,6 @@
                 `开始合并 ${skinPacks.length} 个皮肤包`;
         }
 
-        // 预设按钮
         document.querySelectorAll('.preset-pill').forEach(button => {
             button.addEventListener('click', () => {
                 const presetId = button.dataset.preset;
@@ -1323,7 +1389,6 @@
             });
         }
 
-        // 日志
         function logAdd(text) {
             const div = document.createElement('div');
             div.textContent = `[${new Date().toLocaleTimeString()}] ${text}`;
@@ -1331,7 +1396,6 @@
             document.getElementById('log').scrollTop = document.getElementById('log').scrollHeight;
         }
 
-        // 辅助函数
         function getSafeFileName(name) {
             return name.replace(/[\\/:*?"<>|]/g, '_').trim();
         }
@@ -1344,7 +1408,6 @@
             });
         }
 
-        // ==================== 核心修复1：移除注释 ====================
         function removeComments(jsonStr) {
             return jsonStr
                 .replace(/(".*?")|(\/\/.*)/g, (match, str) => str || '')
@@ -1352,64 +1415,51 @@
                 .trim();
         }
 
-        // ==================== 核心修复2：修复JSON语法错误 ====================
         function fixJsonSyntax(jsonStr) {
-            // 去除对象和数组中的尾随逗号
             jsonStr = jsonStr.replace(/,\s*}/g, '}');
             jsonStr = jsonStr.replace(/,\s*]/g, ']');
-            // 单引号转双引号（排除已转义的单引号）
             jsonStr = jsonStr.replace(/(?<!\\)'/g, '"');
-            // 为没有引号的键名添加引号
             jsonStr = jsonStr.replace(/([{,]\s*)(\w+)(\s*:)/g, '$1"$2"$3');
             return jsonStr;
         }
 
-        // ==================== 核心修复3：国外作者适配（清理注释+删除geometry.null） ====================
         function removeCommentsAndFixGeometry(jsonStr) {
             let cleaned = removeComments(jsonStr);
-            // 删除 geometry.null 空定义（多种格式）
             cleaned = cleaned.replace(/,\s*"geometry\.null"\s*:\s*\{\s*\}/g, '');
             cleaned = cleaned.replace(/"geometry\.null"\s*:\s*\{\s*\},?/g, '');
             return cleaned;
         }
 
-        // ==================== 核心修复：模型-贴图关联扫描 ====================
         function scanModelTextureRelations(coreData, packId) {
             const relations = {
-                modelToTextures: new Map(), // 模型名 → 关联贴图列表
-                textureToModels: new Map(), // 贴图名 → 关联模型列表
-                skinToModel: new Map(),     // 皮肤名 → 关联模型名
-                skinToTexture: new Map(),    // 皮肤名 → 关联贴图名
-                skinTextureSuffix: new Map() // 皮肤名 → 贴图后缀
+                modelToTextures: new Map(),
+                textureToModels: new Map(),
+                skinToModel: new Map(),
+                skinToTexture: new Map(),
+                skinTextureSuffix: new Map()
             };
 
             if (!coreData['skins.json'] || !coreData['skins.json'].skins) return relations;
 
-            // 1. 扫描skins.json，建立皮肤-模型-贴图关联
             coreData['skins.json'].skins.forEach((skin, skinIndex) => {
                 const skinName = skin.localization_name || `skin_${skinIndex}`;
                 const modelName = skin.geometry;
                 const textureName = skin.texture.toLowerCase();
 
-                // 皮肤→模型
                 relations.skinToModel.set(skinName, modelName);
-                // 皮肤→贴图
                 relations.skinToTexture.set(skinName, textureName);
 
-                // 模型→贴图（去重）
                 if (!relations.modelToTextures.has(modelName)) {
                     relations.modelToTextures.set(modelName, new Set());
                 }
                 relations.modelToTextures.get(modelName).add(textureName);
 
-                // 贴图→模型（去重）
                 if (!relations.textureToModels.has(textureName)) {
                     relations.textureToModels.set(textureName, new Set());
                 }
                 relations.textureToModels.get(textureName).add(modelName);
             });
 
-            // 2. 转换Set为Array
             for (const [model, textures] of relations.modelToTextures) {
                 relations.modelToTextures.set(model, Array.from(textures));
             }
@@ -1417,13 +1467,11 @@
                 relations.textureToModels.set(texture, Array.from(models));
             }
 
-            // 3. 存储关联关系
             modelTextureRelations.set(packId, relations);
             
             logAdd(`🔍 扫描皮肤包关联关系：`);
             logAdd(`   - 模型数：${relations.modelToTextures.size} | 贴图数：${relations.textureToModels.size} | 皮肤数：${relations.skinToModel.size}`);
 
-            // 4. 输出共用情况日志
             for (const [model, textures] of relations.modelToTextures) {
                 if (textures.length > 1) {
                     logAdd(`   ⚠️ 模型【${model}】关联多个贴图：${textures.join(', ')}`);
@@ -1438,7 +1486,6 @@
             return relations;
         }
 
-        // ==================== 核心修复：重名模型兼容命名 ====================
         function compatibleSimplifyEntries(core, packId, startIndex) {
             const relations = modelTextureRelations.get(packId);
             if (!relations) return { skins: [], geoRenameMap: new Map(), textureMap: new Map() };
@@ -1448,11 +1495,9 @@
             const textureMap = new Map();
             const modelTextureSuffixMap = new Map();
 
-            // 第一步：预处理 - 标记特殊场景
             const modelHasMultiTextures = new Map();
             const textureHasMultiModels = new Map();
 
-            // 识别一个模型对应多个贴图的场景
             for (const [modelName, textures] of relations.modelToTextures) {
                 if (textures.length > 1) {
                     modelHasMultiTextures.set(modelName, textures);
@@ -1465,7 +1510,6 @@
                 }
             }
 
-            // 识别一个贴图对应多个模型的场景
             for (const [textureName, models] of relations.textureToModels) {
                 if (models.length > 1) {
                     textureHasMultiModels.set(textureName, models);
@@ -1473,12 +1517,10 @@
                 }
             }
 
-            // 第二步：基础命名映射
             const modelNewNameMap = new Map();
             const textureNewNameMap = new Map();
             let baseIndex = startIndex;
 
-            // 先为无冲突的模型/贴图分配基础名称
             for (const [modelName] of relations.modelToTextures) {
                 if (!modelHasMultiTextures.has(modelName) && !Array.from(textureHasMultiModels.values()).some(models => models.includes(modelName))) {
                     if (!modelNewNameMap.has(modelName)) {
@@ -1498,7 +1540,6 @@
                 }
             }
 
-            // 第三步：处理特殊场景1 - 一个模型对应多个贴图
             for (const [modelName, textures] of modelHasMultiTextures) {
                 if (!modelNewNameMap.has(modelName)) {
                     const newModelName = `geometry.skin${baseIndex}`;
@@ -1524,7 +1565,6 @@
                 }
             }
 
-            // 第四步：处理特殊场景2 - 一个贴图对应多个模型
             for (const [textureName, models] of textureHasMultiModels) {
                 if (!textureNewNameMap.has(textureName)) {
                     const baseTextureName = `skin${baseIndex}`;
@@ -1551,7 +1591,6 @@
                 baseIndex++;
             }
 
-            // 第五步：更新皮肤信息
             core['skins.json'].skins.forEach((skin, index) => {
                 const skinName = skin.localization_name || `skin_${index}`;
                 const oldModelName = skin.geometry;
@@ -1560,7 +1599,6 @@
                 const newModelName = modelNewNameMap.get(oldModelName) || oldModelName;
                 const newTextureName = textureNewNameMap.get(oldTextureName) || oldTextureName;
 
-                // 生成唯一的localization_name
                 let newSkinName = newModelName.replace('geometry.', '');
                 if (modelTextureSuffixMap.has(oldModelName) && modelTextureSuffixMap.get(oldModelName).has(oldTextureName)) {
                     const suffix = modelTextureSuffixMap.get(oldModelName).get(oldTextureName);
@@ -1581,7 +1619,6 @@
             return { modifiedSkins, geoRenameMap, textureMap };
         }
 
-        // ==================== 核心修复：命名简化 ====================
         function simplifySinglePackEntries(core, packId, startIndex) {
             const modifiedSkins = [];
             const geoRenameMap = new Map();
@@ -1612,12 +1649,10 @@
             return { modifiedSkins, geoRenameMap, textureMap };
         }
 
-        // ==================== 核心修复：处理重复字段（普通模式） ====================
         function modifyDuplicateEntries(core, existingSkins, startIndex, packPrefix) {
             const existingNames = new Set(existingSkins.map(s => s.localization_name));
             const existingGeo = new Set();
             
-            // 收集已存在的geometry名称
             existingSkins.forEach(s => existingGeo.add(s.geometry));
 
             const modifiedSkins = [];
@@ -1630,7 +1665,6 @@
                 let newTex = skin.texture.toLowerCase();
                 let suffix = '';
 
-                // 检查冲突并添加后缀
                 if (existingNames.has(newName)) {
                     suffix = `_${packPrefix}`;
                     newName += suffix;
@@ -1656,7 +1690,6 @@
             return { modifiedSkins, geoRenameMap, textureMap };
         }
 
-        // ==================== 核心修复4：加载核心文件（带自动修复） ====================
         async function loadCoreFiles(files, packName) {
             const coreFiles = ['manifest.json', 'geometry.json', 'skins.json'];
             const coreData = {};
@@ -1667,7 +1700,6 @@
                 
                 let content = file._content;
                 
-                // 清理注释和geometry.null
                 if (fixComments.checked) {
                     logAdd(`🌍 国外作者适配：清理 ${packName} 的 ${fileName}`);
                     content = removeCommentsAndFixGeometry(content);
@@ -1676,7 +1708,6 @@
                 try {
                     coreData[fileName] = JSON.parse(content);
                 } catch (e) {
-                    // JSON解析失败，尝试自动修复
                     logAdd(`⚠️ ${packName} 的 ${fileName} 包含语法错误，尝试自动修复...`);
                     try {
                         const fixedContent = fixJsonSyntax(content);
@@ -1687,7 +1718,6 @@
                     }
                 }
                 
-                // 再次检查并删除geometry.null（解析后）
                 if (fileName === 'geometry.json' && coreData[fileName]) {
                     if (coreData[fileName]['geometry.null'] !== undefined) {
                         delete coreData[fileName]['geometry.null'];
@@ -1699,7 +1729,6 @@
             return coreData;
         }
 
-        // 合并逻辑
         mergeBtn.addEventListener('click', async () => {
             if (mergeInProgress) return;
             mergeInProgress = true;
@@ -1712,7 +1741,6 @@
             try {
                 updateProgress(10, '读取核心文件...');
                 
-                // 加载所有包的核心文件
                 const packsData = [];
                 for (let i = 0; i < skinPacks.length; i++) {
                     const pack = skinPacks[i];
@@ -1721,7 +1749,6 @@
                 }
 
                 updateProgress(25, '扫描模型-贴图关联关系...');
-                // 扫描所有包的关联关系
                 for (const { pack, core } of packsData) {
                     scanModelTextureRelations(core, pack.id);
                 }
@@ -1738,22 +1765,18 @@
                     
                     let result;
                     if (compatibleRenameModel.checked) {
-                        // 重名模型兼容模式（优先级最高）
                         result = compatibleSimplifyEntries(core, pack.id, startIdx);
                         allModifiedSkins.push(...result.modifiedSkins);
                         
-                        // 重命名geometry
                         for (const [oldKey, geoData] of Object.entries(core['geometry.json'])) {
                             const newKey = result.geoRenameMap.get(oldKey) || oldKey;
                             mergedGeo[newKey] = geoData;
                         }
                         
-                        // 保存映射到pack对象供后续使用
                         pack.geoRenameMap = result.geoRenameMap;
                         pack.textureMap = result.textureMap;
                         
                     } else if (simplifyNaming.checked) {
-                        // 命名简化模式
                         result = simplifySinglePackEntries(core, pack.id, startIdx);
                         allModifiedSkins.push(...result.modifiedSkins);
                         
@@ -1765,7 +1788,6 @@
                         pack.geoRenameMap = result.geoRenameMap;
                         pack.textureMap = result.textureMap;
                     } else {
-                        // 普通模式：处理重复字段
                         const packPrefix = getSafeFileName(pack.name).substring(0, 8) || `pack${i+1}`;
                         result = modifyDuplicateEntries(core, allModifiedSkins, startIdx, packPrefix);
                         allModifiedSkins.push(...result.modifiedSkins);
@@ -1789,19 +1811,16 @@
 
                 updateProgress(70, '合并文件...');
                 
-                // UUID替换
                 if (document.getElementById('replaceUuid').checked && mergedManifest) {
                     mergedManifest.header.uuid = generateUUID();
                     if (mergedManifest.modules) mergedManifest.modules[0].uuid = generateUUID();
                 }
 
-                // 准备输出文件
                 const outputFiles = {
                     'manifest.json': JSON.stringify(mergedManifest),
                     'skins.json': JSON.stringify({ skins: allModifiedSkins })
                 };
 
-                // ==================== 核心修复5：geometry.json 倒数第二个大括号后添加逗号 ====================
                 let geoStr = JSON.stringify(mergedGeo);
                 const lastBraceIndex = geoStr.lastIndexOf('}');
                 if (lastBraceIndex !== -1) {
@@ -1809,12 +1828,10 @@
                 }
                 outputFiles['geometry.json'] = geoStr;
 
-                // 收集贴图（使用映射后的文件名）
                 updateProgress(80, '收集贴图文件...');
                 for (const pack of skinPacks) {
                     for (const [fileName, file] of Object.entries(pack.files)) {
                         if (fileName.endsWith('.png') || fileName.endsWith('.jpg')) {
-                            // 使用新的贴图名称（如果存在映射）
                             const newFileName = pack.textureMap.get(fileName) || fileName;
                             const blob = file.blob || file;
                             outputFiles[newFileName] = blob;
@@ -1877,5 +1894,4 @@
         }
     </script>
 </body>
-
 </html>
