@@ -27,6 +27,7 @@
             --mc-border: #000000;
             --mc-text-muted: #888888;
             --mc-red: #8b3a3a;
+            --mc-red-hover: #a04545;
         }
 
         body {
@@ -240,10 +241,8 @@
             background-color: var(--mc-bg-button);
             border: 3px solid var(--mc-border);
             border-bottom: 6px solid var(--mc-border);
-            padding: 12px 16px;
             display: flex;
-            align-items: center;
-            gap: 12px;
+            flex-direction: column;
             cursor: move;
             transition: all 0.1s;
             position: relative;
@@ -251,7 +250,6 @@
         }
 
         .pack-item:hover {
-            transform: translateX(2px);
             border-color: var(--mc-green);
         }
 
@@ -263,6 +261,17 @@
         .pack-item.drag-over {
             border-top: 4px solid var(--mc-green);
             margin-top: 8px;
+        }
+
+        .pack-item.error {
+            border-color: var(--mc-red);
+        }
+
+        .pack-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
         }
 
         .pack-handle {
@@ -373,6 +382,169 @@
 
         .pack-btn.delete:hover {
             background-color: var(--mc-red);
+        }
+
+        .pack-btn.expand {
+            width: auto;
+            padding: 0 12px;
+            font-size: 12px;
+            gap: 4px;
+        }
+
+        .pack-btn.expand:hover {
+            background-color: var(--mc-green);
+        }
+
+        /* 皮肤列表展开区域 */
+        .skins-expandable {
+            border-top: 2px solid var(--mc-border);
+            background-color: rgba(0,0,0,0.3);
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+        }
+
+        .skins-expandable.expanded {
+            max-height: 2000px;
+            overflow-y: auto;
+        }
+
+        .skins-list {
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .skin-item {
+            background-color: var(--mc-bg-panel);
+            border: 2px solid var(--mc-border);
+            border-bottom: 4px solid var(--mc-border);
+            padding: 10px 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.1s;
+        }
+
+        .skin-item:hover {
+            border-color: var(--mc-green);
+            transform: translateX(4px);
+        }
+
+        .skin-index {
+            width: 24px;
+            height: 24px;
+            background-color: var(--mc-bg-button);
+            border: 2px solid var(--mc-border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--mc-text-muted);
+            flex-shrink: 0;
+        }
+
+        .skin-details {
+            flex: 1;
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .skin-name {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--mc-gray-light);
+            text-shadow: 1px 1px 0 #000;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .skin-geometry {
+            font-size: 11px;
+            color: var(--mc-text-muted);
+            font-family: 'Consolas', monospace;
+        }
+
+        .skin-texture {
+            font-size: 11px;
+            color: var(--mc-green);
+        }
+
+        .skin-animations {
+            font-size: 10px;
+            color: var(--mc-text-muted);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+            margin-top: 2px;
+        }
+
+        .anim-tag {
+            background-color: rgba(59, 133, 38, 0.2);
+            padding: 2px 6px;
+            border: 1px solid rgba(59, 133, 38, 0.5);
+            border-radius: 2px;
+        }
+
+        .skin-flags {
+            display: flex;
+            gap: 6px;
+            margin-top: 4px;
+        }
+
+        .flag-tag {
+            font-size: 10px;
+            padding: 2px 6px;
+            background-color: var(--mc-bg-button);
+            border: 1px solid var(--mc-border);
+            color: var(--mc-text-muted);
+        }
+
+        .flag-tag.active {
+            background-color: rgba(59, 133, 38, 0.3);
+            color: var(--mc-green);
+            border-color: var(--mc-green);
+        }
+
+        .skin-delete-btn {
+            width: 28px;
+            height: 28px;
+            border: 2px solid var(--mc-border);
+            border-bottom: 4px solid var(--mc-border);
+            background-color: var(--mc-bg-button);
+            color: var(--mc-gray-light);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.1s;
+            flex-shrink: 0;
+        }
+
+        .skin-delete-btn:hover {
+            background-color: var(--mc-red);
+            transform: translateY(-1px);
+        }
+
+        .skin-delete-btn:active {
+            border-bottom: 2px solid var(--mc-border);
+            transform: translateY(2px);
+        }
+
+        .skin-delete-btn:disabled {
+            background-color: var(--mc-bg-dark);
+            color: var(--mc-text-muted);
+            cursor: not-allowed;
+            opacity: 0.5;
+        }
+
+        .skin-delete-btn:disabled:hover {
+            background-color: var(--mc-bg-dark);
         }
 
         .empty-state {
@@ -839,7 +1011,7 @@
             <!-- 已上传列表 -->
             <div class="packs-list-container" id="packsListContainer" style="display: none;">
                 <div class="section-subheader">
-                    <span>已上传的皮肤包 <span style="color: #888; font-size: 13px; font-weight: normal;">（拖拽可调整合并顺序）</span></span>
+                    <span>已上传的皮肤包 <span style="color: #888; font-size: 13px; font-weight: normal;">（拖拽可调整合并顺序，点击展开查看皮肤列表）</span></span>
                     <span class="pack-count" id="packCount">0 个</span>
                 </div>
                 <div class="packs-list" id="packsList"></div>
@@ -982,916 +1154,916 @@
     </main>
 
     <script>
-        // 全局变量
-        let skinPacks = [];
-        let mergeInProgress = false;
-        let dragStartIndex = null;
-        let modelTextureRelations = new Map();
+        (() => {
+            'use strict';
 
-        // 预设配置
-        const presetConfigs = {
-            1: {
-                name: "同模型兼容",
-                settings: {
-                    compatibleRenameModel: true,
-                    fixComments: true
-                }
-            },
-            2: {
-                name: "启动器适配",
-                settings: {
-                    replaceUuid: true,
-                    outputMcpack: true
-                }
-            },
-            3: {
-                name: "简化合并",
-                settings: {
-                    simplifyNaming: true,
-                    addHideArmor: true
-                }
-            },
-            4: {
-                name: "全能版",
-                settings: {
-                    compatibleRenameModel: true,
-                    simplifyNaming: true,
-                    replaceUuid: true,
-                    addHideArmor: true,
-                    fixComments: true
-                }
-            }
-        };
+            // 常量定义
+            const CORE_FILES = ['manifest.json', 'geometry.json', 'skins.json'];
+            const PRESET_CONFIGS = {
+                1: { name: "同模型兼容", settings: { compatibleRenameModel: true, fixComments: true } },
+                2: { name: "启动器适配", settings: { replaceUuid: true, outputMcpack: true } },
+                3: { name: "简化合并", settings: { simplifyNaming: true, addHideArmor: true } },
+                4: { name: "全能版", settings: { compatibleRenameModel: true, simplifyNaming: true, replaceUuid: true, addHideArmor: true, fixComments: true } }
+            };
 
-        // DOM元素
-        const uploadZone = document.getElementById('uploadZone');
-        const fileInput = document.getElementById('fileInput');
-        const packsListContainer = document.getElementById('packsListContainer');
-        const packsList = document.getElementById('packsList');
-        const emptyState = document.getElementById('emptyState');
-        const packCount = document.getElementById('packCount');
-        const mergeBtn = document.getElementById('mergeBtn');
-        const mergeBtnText = document.getElementById('mergeBtnText');
-        const progressFill = document.getElementById('progressFill');
-        const progressText = document.getElementById('progressText');
-        const progressContainer = document.getElementById('progressContainer');
-        const resultContainer = document.getElementById('resultContainer');
-        const downloadBtn = document.getElementById('downloadBtn');
-        const logContent = document.getElementById('logContent');
-        const fixComments = document.getElementById('fixComments');
-        const compatibleRenameModel = document.getElementById('compatibleRenameModel');
-        const simplifyNaming = document.getElementById('simplifyNaming');
+            // 状态管理
+            const state = {
+                skinPacks: [],
+                mergeInProgress: false,
+                dragStartIndex: null,
+                modelTextureRelations: new Map()
+            };
 
-        // 上传区域事件
-        uploadZone.addEventListener('click', () => fileInput.click());
-        
-        uploadZone.addEventListener('dragover', (e) => {
-            e.preventDefault();
-            uploadZone.classList.add('dragover');
-        });
+            // DOM 元素缓存
+            const elements = {
+                uploadZone: document.getElementById('uploadZone'),
+                fileInput: document.getElementById('fileInput'),
+                packsListContainer: document.getElementById('packsListContainer'),
+                packsList: document.getElementById('packsList'),
+                emptyState: document.getElementById('emptyState'),
+                packCount: document.getElementById('packCount'),
+                mergeBtn: document.getElementById('mergeBtn'),
+                mergeBtnText: document.getElementById('mergeBtnText'),
+                progressFill: document.getElementById('progressFill'),
+                progressText: document.getElementById('progressText'),
+                progressContainer: document.getElementById('progressContainer'),
+                resultContainer: document.getElementById('resultContainer'),
+                downloadBtn: document.getElementById('downloadBtn'),
+                logContent: document.getElementById('logContent'),
+                log: document.getElementById('log'),
+                fixComments: document.getElementById('fixComments'),
+                compatibleRenameModel: document.getElementById('compatibleRenameModel'),
+                simplifyNaming: document.getElementById('simplifyNaming'),
+                replaceUuid: document.getElementById('replaceUuid'),
+                addHideArmor: document.getElementById('addHideArmor'),
+                outputMcpack: document.getElementById('outputMcpack')
+            };
 
-        uploadZone.addEventListener('dragleave', () => {
-            uploadZone.classList.remove('dragover');
-        });
+            // 工具函数
+            const utils = {
+                generateUUID: () => 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
+                    const r = Math.random() * 16 | 0;
+                    return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+                }),
 
-        uploadZone.addEventListener('drop', (e) => {
-            e.preventDefault();
-            uploadZone.classList.remove('dragover');
-            const files = Array.from(e.dataTransfer.files).filter(f => f.name.endsWith('.zip'));
-            if (files.length > 0) {
-                handleFiles(files);
-            }
-        });
+                getSafeFileName: name => name.replace(/[\\/:*?"<>|]/g, '_').trim(),
 
-        fileInput.addEventListener('change', (e) => {
-            handleFiles(Array.from(e.target.files));
-            fileInput.value = '';
-        });
+                removeComments: jsonStr => jsonStr.replace(/(".*?")|(\/\/.*)/g, (match, str) => str || '').replace(/^\s*[\r\n]/gm, '').trim(),
 
-        // 处理文件上传
-        async function handleFiles(files) {
-            const newPacks = [];
-            
-            for (const file of files) {
-                if (!file.name.endsWith('.zip')) continue;
-                
-                const existingIndex = skinPacks.findIndex(p => p.fileName === file.name);
-                if (existingIndex !== -1) {
-                    logAdd(`⚠️ ${file.name} 已存在，将替换旧版本`);
-                    skinPacks.splice(existingIndex, 1);
-                }
+                fixJsonSyntax: jsonStr => jsonStr
+                    .replace(/,\s*}/g, '}')
+                    .replace(/,\s*]/g, ']')
+                    .replace(/(?<!\\)'/g, '"')
+                    .replace(/([{,]\s*)(\w+)(\s*:)/g, '$1"$2"$3'),
 
-                const pack = {
-                    id: Date.now() + Math.random().toString(36).substr(2, 9),
-                    fileName: file.name,
-                    name: getSafeFileName(file.name.replace('.zip', '')),
-                    files: {},
-                    isZip: true,
-                    textureMap: new Map(),
-                    geoRenameMap: new Map(),
-                    skinCount: 0,
-                    status: 'loading',
-                    rootPath: ''
-                };
+                removeCommentsAndFixGeometry: jsonStr => {
+                    let cleaned = utils.removeComments(jsonStr);
+                    return cleaned.replace(/,\s*"geometry\.null"\s*:\s*\{\s*\}/g, '').replace(/"geometry\.null"\s*:\s*\{\s*\},?/g, '');
+                },
 
-                newPacks.push(pack);
-                skinPacks.push(pack);
-            }
-
-            renderPacksList();
-            
-            await Promise.all(newPacks.map(async (pack) => {
-                const file = files.find(f => f.name === pack.fileName);
-                if (file) {
+                countSkins: content => {
                     try {
-                        logAdd(`正在读取 ${pack.fileName}...`);
-                        await extractZip(file, pack);
-                        
-                        const hasManifest = !!pack.files['manifest.json'];
-                        const hasGeometry = !!pack.files['geometry.json'];
-                        const hasSkins = !!pack.files['skins.json'];
-                        
-                        if (!hasManifest || !hasGeometry || !hasSkins) {
-                            throw new Error(`缺少核心文件: ${!hasManifest ? 'manifest.json ' : ''}${!hasGeometry ? 'geometry.json ' : ''}${!hasSkins ? 'skins.json' : ''}`);
-                        }
-                        
-                        const skinsContent = await pack.files['skins.json'].content;
-                        pack.skinCount = countSkinsFromContent(skinsContent);
-                        
-                        pack.status = 'ready';
-                        logAdd(`✅ ${pack.fileName} 已加载 (${pack.skinCount} 个皮肤)`);
-                        if (pack.rootPath) {
-                            logAdd(`   📁 检测到子文件夹结构: ${pack.rootPath}`);
-                        }
-                    } catch (error) {
-                        pack.status = 'error';
-                        pack.errorMsg = error.message;
-                        logAdd(`❌ ${pack.fileName} 读取失败: ${error.message}`);
+                        const data = JSON.parse(content);
+                        return data.skins?.length || 0;
+                    } catch {
+                        return 0;
                     }
-                    renderPacksList();
+                },
+
+                updateProgress: (percent, text) => {
+                    elements.progressFill.style.width = `${percent}%`;
+                    elements.progressText.innerHTML = `<i class="fas fa-spinner"></i> ${text}`;
                 }
-            }));
+            };
 
-            updateUI();
-        }
+            // 日志系统
+            const logger = {
+                add: text => {
+                    const div = document.createElement('div');
+                    div.textContent = `[${new Date().toLocaleTimeString()}] ${text}`;
+                    elements.logContent.appendChild(div);
+                    elements.log.scrollTop = elements.log.scrollHeight;
+                },
+                clear: () => {
+                    elements.logContent.innerHTML = '';
+                }
+            };
 
-        function countSkinsFromContent(content) {
-            try {
-                const data = JSON.parse(content);
-                return data.skins ? data.skins.length : 0;
-            } catch (e) {
-                return 0;
-            }
-        }
+            // 皮肤删除处理器 - 智能处理JSON逗号
+            const skinDeleter = {
+                deleteSkin(packId, skinIndex) {
+                    const pack = state.skinPacks.find(p => p.id === packId);
+                    if (!pack || !pack.files['skins.json']) return false;
 
-        async function extractZip(zipFile, pack) {
-            const zip = new JSZip();
-            const content = await zip.loadAsync(zipFile);
-            
-            const allFiles = [];
-            for (const [relativePath, file] of Object.entries(content.files)) {
-                if (!file.dir) {
-                    allFiles.push({
-                        path: relativePath,
-                        file: file,
-                        lowerPath: relativePath.toLowerCase()
+                    const skinsContent = pack.files['skins.json']._content;
+                    const skinsData = JSON.parse(skinsContent);
+                    
+                    if (skinsData.skins.length <= 1) {
+                        logger.add(`⚠️ 无法删除：${pack.fileName} 至少需要保留1个皮肤`);
+                        return false;
+                    }
+
+                    if (skinIndex < 0 || skinIndex >= skinsData.skins.length) return false;
+
+                    // 获取要删除的皮肤信息
+                    const deletedSkin = skinsData.skins[skinIndex];
+                    const newSkins = skinsData.skins.filter((_, idx) => idx !== skinIndex);
+                    
+                    // 重建JSON字符串，智能处理逗号
+                    const newJsonString = this.rebuildSkinsJson(skinsContent, skinsData.skins, skinIndex);
+                    
+                    // 更新文件内容
+                    pack.files['skins.json']._content = newJsonString;
+                    pack.skinCount = newSkins.length;
+                    
+                    // 如果该皮肤有专属贴图且不再被使用，标记为待删除
+                    this.cleanupUnusedTexture(pack, deletedSkin.texture, newSkins);
+
+                    logger.add(`🗑️ 已删除皮肤: ${deletedSkin.localization_name || `skin_${skinIndex}`} (${pack.fileName})`);
+                    return true;
+                },
+
+                rebuildSkinsJson(originalContent, skins, deleteIndex) {
+                    // 解析原始JSON字符串以准确定位
+                    const data = JSON.parse(originalContent);
+                    const skinArray = data.skins;
+                    
+                    // 构建新的skins数组
+                    const newSkins = skinArray.filter((_, idx) => idx !== deleteIndex);
+                    
+                    // 重建整个JSON对象
+                    const newData = { ...data, skins: newSkins };
+                    
+                    // 格式化输出，确保格式严谨
+                    return JSON.stringify(newData, null, 2);
+                },
+
+                cleanupUnusedTexture(pack, textureName, remainingSkins) {
+                    const textureLower = textureName.toLowerCase();
+                    const stillInUse = remainingSkins.some(s => s.texture.toLowerCase() === textureLower);
+                    
+                    if (!stillInUse && pack.files[textureLower]) {
+                        // 标记贴图为未使用（实际删除在合并时处理）
+                        pack.files[textureLower]._unused = true;
+                        logger.add(`   📎 贴图 ${textureName} 不再被使用`);
+                    }
+                }
+            };
+
+            // 文件处理模块
+            const fileHandler = {
+                async extractZip(zipFile, pack) {
+                    const zip = await JSZip.loadAsync(zipFile);
+                    const allFiles = Object.entries(zip.files)
+                        .filter(([, file]) => !file.dir)
+                        .map(([path, file]) => ({ path, file, lowerPath: path.toLowerCase() }));
+
+                    const coreFilesLocation = this.detectCoreFilesLocation(allFiles);
+                    pack.rootPath = coreFilesLocation;
+
+                    for (const { path, file } of allFiles) {
+                        const textContent = await file.async('text');
+                        const mappedFileName = this.mapFileName(path, coreFilesLocation);
+
+                        pack.files[mappedFileName] = {
+                            blob: await file.async('blob'),
+                            name: mappedFileName,
+                            originalPath: path,
+                            _content: textContent,
+                            get content() { return Promise.resolve(this._content); }
+                        };
+                    }
+                },
+
+                detectCoreFilesLocation(files) {
+                    const findFile = name => files.find(f => f.lowerPath === name || f.lowerPath.endsWith(`/${name}`));
+                    
+                    const manifest = findFile('manifest.json');
+                    const geometry = findFile('geometry.json');
+                    const skins = findFile('skins.json');
+
+                    if (manifest && geometry && skins) {
+                        const idx = manifest.path.lastIndexOf('/');
+                        return idx > 0 ? manifest.path.substring(0, idx + 1) : '';
+                    }
+
+                    const folderScores = {};
+                    files.forEach(({ path, lowerPath }) => {
+                        if (['manifest.json', 'geometry.json', 'skins.json'].some(f => lowerPath.endsWith(f))) {
+                            const folder = path.substring(0, path.lastIndexOf('/') + 1);
+                            folderScores[folder] = (folderScores[folder] || 0) + 1;
+                        }
                     });
-                }
-            }
-            
-            let coreFilesLocation = '';
-            
-            const manifestInRoot = allFiles.find(f => f.lowerPath === 'manifest.json' || f.lowerPath.endsWith('/manifest.json'));
-            const geometryInRoot = allFiles.find(f => f.lowerPath === 'geometry.json' || f.lowerPath.endsWith('/geometry.json'));
-            const skinsInRoot = allFiles.find(f => f.lowerPath === 'skins.json' || f.lowerPath.endsWith('/skins.json'));
-            
-            if (manifestInRoot && geometryInRoot && skinsInRoot) {
-                const manifestPath = manifestInRoot.path;
-                if (manifestPath.includes('/')) {
-                    coreFilesLocation = manifestPath.substring(0, manifestPath.lastIndexOf('/') + 1);
-                }
-            } else {
-                const folderCandidates = {};
-                
-                allFiles.forEach(f => {
-                    if (f.lowerPath.endsWith('manifest.json') || 
-                        f.lowerPath.endsWith('geometry.json') || 
-                        f.lowerPath.endsWith('skins.json')) {
-                        const folder = f.path.substring(0, f.path.lastIndexOf('/') + 1);
-                        if (!folderCandidates[folder]) folderCandidates[folder] = 0;
-                        folderCandidates[folder]++;
-                    }
-                });
-                
-                let bestFolder = '';
-                let maxCount = 0;
-                for (const [folder, count] of Object.entries(folderCandidates)) {
-                    if (count > maxCount) {
-                        maxCount = count;
-                        bestFolder = folder;
-                    }
-                }
-                
-                if (maxCount >= 3) {
-                    coreFilesLocation = bestFolder;
-                }
-            }
-            
-            pack.rootPath = coreFilesLocation;
-            
-            for (const {path, file} of allFiles) {
-                const fileContent = await file.async('blob');
-                
-                let mappedFileName;
-                const fileName = path.split('/').pop().toLowerCase();
-                
-                if (path.startsWith(coreFilesLocation)) {
-                    if (['manifest.json', 'geometry.json', 'skins.json'].includes(fileName)) {
-                        mappedFileName = fileName;
-                    } else {
-                        mappedFileName = path.substring(coreFilesLocation.length).toLowerCase();
-                    }
-                } else {
-                    mappedFileName = path.toLowerCase();
-                }
-                
-                const textContent = await file.async('text');
-                
-                pack.files[mappedFileName] = {
-                    blob: fileContent,
-                    name: mappedFileName,
-                    originalPath: path,
-                    _content: textContent,
-                    get content() { 
-                        return Promise.resolve(this._content);
-                    }
-                };
-            }
-        }
 
-        function renderPacksList() {
-            if (skinPacks.length === 0) {
-                packsListContainer.style.display = 'none';
-                emptyState.style.display = 'block';
-                return;
-            }
+                    const bestFolder = Object.entries(folderScores).sort((a, b) => b[1] - a[1])[0];
+                    return bestFolder && bestFolder[1] >= 3 ? bestFolder[0] : '';
+                },
 
-            packsListContainer.style.display = 'block';
-            emptyState.style.display = 'none';
-            packCount.textContent = `${skinPacks.length} 个`;
+                mapFileName(path, corePath) {
+                    const fileName = path.split('/').pop().toLowerCase();
+                    const coreFiles = ['manifest.json', 'geometry.json', 'skins.json'];
+                    
+                    if (path.startsWith(corePath)) {
+                        return coreFiles.includes(fileName) ? fileName : path.substring(corePath.length).toLowerCase();
+                    }
+                    return path.toLowerCase();
+                },
 
-            packsList.innerHTML = skinPacks.map((pack, index) => {
-                const isReady = pack.status === 'ready';
-                const isError = pack.status === 'error';
-                
-                return `
-                    <div class="pack-item ${isError ? 'error' : ''}" 
-                         data-index="${index}" 
-                         draggable="${!isError}"
-                         data-id="${pack.id}">
-                        <div class="pack-handle" style="${isError ? 'opacity: 0.3; cursor: not-allowed;' : ''}">
-                            <i class="fas fa-grip-vertical"></i>
-                        </div>
-                        <div class="pack-number">${index + 1}</div>
-                        <div class="pack-info">
-                            <div class="pack-name">${pack.fileName}</div>
-                            ${pack.rootPath ? `<div class="pack-path"><i class="fas fa-folder-open"></i> ${pack.rootPath}</div>` : ''}
-                            <div class="pack-meta">
-                                ${isReady ? 
-                                    `<span class="pack-status"><i class="fas fa-check-circle"></i> ${pack.skinCount} 个皮肤</span>` :
-                                    isError ?
-                                    `<span class="pack-status error"><i class="fas fa-exclamation-circle"></i> ${pack.errorMsg || '加载失败'}</span>` :
-                                    `<span class="pack-status" style="background: rgba(59, 133, 38, 0.1); color: #3b8526;"><i class="fas fa-spinner fa-spin"></i> 读取中...</span>`
+                async loadCore(files, packName) {
+                    const coreData = {};
+                    
+                    for (const fileName of CORE_FILES) {
+                        const file = files[fileName];
+                        if (!file) throw new Error(`${packName} 缺少 ${fileName}`);
+                        
+                        let content = file._content;
+                        if (elements.fixComments.checked) {
+                            logger.add(`🌍 国外作者适配：清理 ${packName} 的 ${fileName}`);
+                            content = utils.removeCommentsAndFixGeometry(content);
+                        }
+                        
+                        try {
+                            coreData[fileName] = JSON.parse(content);
+                        } catch {
+                            try {
+                                coreData[fileName] = JSON.parse(utils.fixJsonSyntax(content));
+                                logger.add(`✅ ${fileName} 自动修复成功`);
+                            } catch (e) {
+                                throw new Error(`${fileName} JSON解析失败且无法自动修复：${e.message}`);
+                            }
+                        }
+
+                        if (fileName === 'geometry.json' && coreData[fileName]?.['geometry.null']) {
+                            delete coreData[fileName]['geometry.null'];
+                            logger.add(`🗑️ 已移除 geometry.null 空定义（国外作者包适配）`);
+                        }
+                    }
+                    
+                    return coreData;
+                }
+            };
+
+            // 模型-贴图关系扫描
+            const relationScanner = {
+                scan(coreData, packId) {
+                    const relations = {
+                        modelToTextures: new Map(),
+                        textureToModels: new Map(),
+                        skinToModel: new Map(),
+                        skinToTexture: new Map()
+                    };
+
+                    const skins = coreData['skins.json']?.skins;
+                    if (!skins) return relations;
+
+                    skins.forEach((skin, idx) => {
+                        const skinName = skin.localization_name || `skin_${idx}`;
+                        const modelName = skin.geometry;
+                        const textureName = skin.texture.toLowerCase();
+
+                        relations.skinToModel.set(skinName, modelName);
+                        relations.skinToTexture.set(skinName, textureName);
+
+                        this.addToMap(relations.modelToTextures, modelName, textureName);
+                        this.addToMap(relations.textureToModels, textureName, modelName);
+                    });
+
+                    // 转换为数组
+                    for (const map of [relations.modelToTextures, relations.textureToModels]) {
+                        for (const [key, val] of map) map.set(key, Array.from(val));
+                    }
+
+                    state.modelTextureRelations.set(packId, relations);
+                    this.logRelations(relations);
+                    return relations;
+                },
+
+                addToMap(map, key, value) {
+                    if (!map.has(key)) map.set(key, new Set());
+                    map.get(key).add(value);
+                },
+
+                logRelations(r) {
+                    logger.add(`🔍 扫描皮肤包关联关系：`);
+                    logger.add(`   - 模型数：${r.modelToTextures.size} | 贴图数：${r.textureToModels.size} | 皮肤数：${r.skinToModel.size}`);
+
+                    for (const [model, textures] of r.modelToTextures) {
+                        if (textures.length > 1) logger.add(`   ⚠️ 模型【${model}】关联多个贴图：${textures.join(', ')}`);
+                    }
+                    for (const [texture, models] of r.textureToModels) {
+                        if (models.length > 1) logger.add(`   ⚠️ 贴图【${texture}】关联多个模型：${models.join(', ')}`);
+                    }
+                }
+            };
+
+            // 命名处理器
+            const namingHandler = {
+                compatibleSimplify(core, packId, startIndex) {
+                    const relations = state.modelTextureRelations.get(packId);
+                    if (!relations) return { skins: [], geoRenameMap: new Map(), textureMap: new Map() };
+
+                    const modelHasMultiTextures = new Map();
+                    const textureHasMultiModels = new Map();
+                    const modelTextureSuffixMap = new Map();
+
+                    // 分析多重关联
+                    for (const [model, textures] of relations.modelToTextures) {
+                        if (textures.length > 1) {
+                            modelHasMultiTextures.set(model, textures);
+                            modelTextureSuffixMap.set(model, new Map(textures.map((t, i) => [t, i === 0 ? '' : `_${i + 1}`])));
+                        }
+                    }
+                    for (const [texture, models] of relations.textureToModels) {
+                        if (models.length > 1) textureHasMultiModels.set(texture, models);
+                    }
+
+                    const modelNewNameMap = new Map();
+                    const textureNewNameMap = new Map();
+                    let baseIndex = startIndex;
+
+                    // 处理单一关联
+                    for (const [model] of relations.modelToTextures) {
+                        if (!modelHasMultiTextures.has(model) && !this.hasMultiModels(textureHasMultiModels, model)) {
+                            if (!modelNewNameMap.has(model)) {
+                                const newName = `geometry.skin${baseIndex}`;
+                                modelNewNameMap.set(model, newName);
+                                
+                                const textures = relations.modelToTextures.get(model);
+                                if (textures.length === 1) {
+                                    textureNewNameMap.set(textures[0], `skin${baseIndex}.png`);
                                 }
+                                baseIndex++;
+                            }
+                        }
+                    }
+
+                    // 处理多贴图模型
+                    for (const [model, textures] of modelHasMultiTextures) {
+                        if (!modelNewNameMap.has(model)) {
+                            const newName = `geometry.skin${baseIndex}`;
+                            modelNewNameMap.set(model, newName);
+                            
+                            textures.forEach((texture, idx) => {
+                                if (!textureNewNameMap.has(texture)) {
+                                    const suffix = idx === 0 ? '' : `_${idx + 1}`;
+                                    textureNewNameMap.set(texture, `skin${baseIndex}${suffix}.png`);
+                                }
+                            });
+                            baseIndex++;
+                        }
+                    }
+
+                    // 处理多模型贴图
+                    for (const [texture, models] of textureHasMultiModels) {
+                        if (!textureNewNameMap.has(texture)) {
+                            textureNewNameMap.set(texture, `skin${baseIndex}.png`);
+                        }
+                        const baseName = textureNewNameMap.get(texture).replace('.png', '');
+
+                        models.forEach((model, idx) => {
+                            if (!modelNewNameMap.has(model)) {
+                                const suffix = idx === 0 ? '' : `_${idx + 1}`;
+                                modelNewNameMap.set(model, `geometry.${baseName}${suffix}`);
+                            }
+                        });
+                        baseIndex++;
+                    }
+
+                    return this.buildResult(core, relations, modelNewNameMap, textureNewNameMap, modelTextureSuffixMap);
+                },
+
+                hasMultiModels(textureHasMultiModels, model) {
+                    return Array.from(textureHasMultiModels.values()).some(models => models.includes(model));
+                },
+
+                buildResult(core, relations, modelMap, textureMap, suffixMap) {
+                    const modifiedSkins = [];
+                    const geoRenameMap = new Map();
+                    const textureRenameMap = new Map();
+
+                    modelMap.forEach((newName, oldName) => geoRenameMap.set(oldName, newName));
+                    textureMap.forEach((newName, oldName) => textureRenameMap.set(oldName, newName));
+
+                    core['skins.json'].skins.forEach((skin, idx) => {
+                        const skinName = skin.localization_name || `skin_${idx}`;
+                        const oldModel = skin.geometry;
+                        const oldTexture = relations.skinToTexture.get(skinName);
+
+                        const newModel = modelMap.get(oldModel) || oldModel;
+                        const newTexture = textureMap.get(oldTexture) || oldTexture;
+                        
+                        let newSkinName = newModel.replace('geometry.', '');
+                        if (suffixMap.has(oldModel) && suffixMap.get(oldModel).has(oldTexture)) {
+                            newSkinName += suffixMap.get(oldModel).get(oldTexture);
+                        }
+
+                        modifiedSkins.push({ ...skin, localization_name: newSkinName, geometry: newModel, texture: newTexture });
+                        logger.add(`🔄 兼容重命名：皮肤【${skinName}】→【${newSkinName}】`);
+                    });
+
+                    return { modifiedSkins, geoRenameMap, textureMap: textureRenameMap };
+                },
+
+                simplifySingle(core, packId, startIndex) {
+                    const modifiedSkins = [];
+                    const geoRenameMap = new Map();
+                    const textureMap = new Map();
+
+                    core['skins.json']?.skins?.forEach((skin, idx) => {
+                        const baseName = `skin${startIndex + idx}`;
+                        const newGeo = `geometry.${baseName}`;
+                        const newTex = `${baseName}.png`;
+
+                        geoRenameMap.set(skin.geometry, newGeo);
+                        textureMap.set(skin.texture.toLowerCase(), newTex);
+
+                        modifiedSkins.push({ ...skin, localization_name: baseName, geometry: newGeo, texture: newTex });
+                        logger.add(`🔄 简化命名：${skin.localization_name} → ${baseName}`);
+                    });
+
+                    return { modifiedSkins, geoRenameMap, textureMap };
+                },
+
+                modifyDuplicate(core, existingSkins, packPrefix) {
+                    const existingNames = new Set(existingSkins.map(s => s.localization_name));
+                    const existingGeo = new Set(existingSkins.map(s => s.geometry));
+                    
+                    const modifiedSkins = [];
+                    const geoRenameMap = new Map();
+                    const textureMap = new Map();
+
+                    core['skins.json']?.skins?.forEach(skin => {
+                        let newName = skin.localization_name;
+                        let newGeo = skin.geometry;
+                        let newTex = skin.texture.toLowerCase();
+
+                        if (existingNames.has(newName)) newName += `_${packPrefix}`;
+                        if (existingGeo.has(newGeo)) newGeo += `_${packPrefix}`;
+
+                        existingNames.add(newName);
+                        existingGeo.add(newGeo);
+
+                        geoRenameMap.set(skin.geometry, newGeo);
+                        textureMap.set(skin.texture.toLowerCase(), newTex);
+                        modifiedSkins.push({ ...skin, localization_name: newName, geometry: newGeo, texture: newTex });
+                    });
+
+                    return { modifiedSkins, geoRenameMap, textureMap };
+                }
+            };
+
+            // UI 渲染
+            const renderer = {
+                packsList() {
+                    const { skinPacks } = state;
+                    
+                    if (skinPacks.length === 0) {
+                        elements.packsListContainer.style.display = 'none';
+                        elements.emptyState.style.display = 'block';
+                        return;
+                    }
+
+                    elements.packsListContainer.style.display = 'block';
+                    elements.emptyState.style.display = 'none';
+                    elements.packCount.textContent = `${skinPacks.length} 个`;
+
+                    elements.packsList.innerHTML = skinPacks.map((pack, index) => this.createPackItem(pack, index)).join('');
+                    this.attachDragEvents();
+                    this.attachExpandEvents();
+                },
+
+                createPackItem(pack, index) {
+                    const isReady = pack.status === 'ready';
+                    const isError = pack.status === 'error';
+                    
+                    // 解析skins数据用于显示
+                    let skins = [];
+                    if (isReady && pack.files['skins.json']) {
+                        try {
+                            const data = JSON.parse(pack.files['skins.json']._content);
+                            skins = data.skins || [];
+                        } catch (e) {
+                            console.error('Failed to parse skins for display:', e);
+                        }
+                    }
+
+                    return `
+                        <div class="pack-item ${isError ? 'error' : ''}" data-index="${index}" draggable="${!isError}" data-id="${pack.id}">
+                            <div class="pack-header">
+                                <div class="pack-handle" style="${isError ? 'opacity: 0.3; cursor: not-allowed;' : ''}">
+                                    <i class="fas fa-grip-vertical"></i>
+                                </div>
+                                <div class="pack-number">${index + 1}</div>
+                                <div class="pack-info">
+                                    <div class="pack-name">${pack.fileName}</div>
+                                    ${pack.rootPath ? `<div class="pack-path"><i class="fas fa-folder-open"></i> ${pack.rootPath}</div>` : ''}
+                                    <div class="pack-meta">
+                                        ${isReady 
+                                            ? `<span class="pack-status"><i class="fas fa-check-circle"></i> ${pack.skinCount} 个皮肤</span>`
+                                            : isError
+                                                ? `<span class="pack-status error"><i class="fas fa-exclamation-circle"></i> ${pack.errorMsg || '加载失败'}</span>`
+                                                : `<span class="pack-status" style="background: rgba(59, 133, 38, 0.1); color: #3b8526;"><i class="fas fa-spinner fa-spin"></i> 读取中...</span>`
+                                        }
+                                    </div>
+                                </div>
+                                <div class="pack-actions">
+                                    ${isReady ? `
+                                        <button class="pack-btn expand" onclick="window.togglePackExpand('${pack.id}')" title="展开/收起皮肤列表">
+                                            <i class="fas fa-list"></i>
+                                            <span>查看</span>
+                                        </button>
+                                    ` : ''}
+                                    <button class="pack-btn delete" onclick="window.removePack('${pack.id}')" title="删除整个皮肤包">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </button>
+                                </div>
                             </div>
+                            ${isReady ? `
+                                <div class="skins-expandable" id="skins-expand-${pack.id}">
+                                    <div class="skins-list" id="skins-list-${pack.id}">
+                                        ${skins.map((skin, idx) => this.createSkinItem(pack.id, skin, idx, skins.length)).join('')}
+                                    </div>
+                                </div>
+                            ` : ''}
                         </div>
-                        <div class="pack-actions">
-                            <button class="pack-btn delete" onclick="removePack('${pack.id}')" title="删除">
+                    `;
+                },
+
+                createSkinItem(packId, skin, index, total) {
+                    const animKeys = skin.animations ? Object.keys(skin.animations) : [];
+                    const hasHideArmor = skin.hide_armor === true;
+                    const canDelete = total > 1;
+
+                    return `
+                        <div class="skin-item" data-skin-index="${index}">
+                            <div class="skin-index">${index + 1}</div>
+                            <div class="skin-details">
+                                <div class="skin-name">
+                                    <i class="fas fa-user-circle" style="color: var(--mc-green);"></i>
+                                    ${skin.localization_name || `skin_${index}`}
+                                </div>
+                                <div class="skin-geometry">
+                                    <i class="fas fa-cube" style="font-size: 10px;"></i> ${skin.geometry}
+                                </div>
+                                <div class="skin-texture">
+                                    <i class="fas fa-image" style="font-size: 10px;"></i> ${skin.texture}
+                                </div>
+                                ${animKeys.length > 0 ? `
+                                    <div class="skin-animations">
+                                        ${animKeys.slice(0, 3).map(key => `
+                                            <span class="anim-tag">${key}</span>
+                                        `).join('')}
+                                        ${animKeys.length > 3 ? `<span class="anim-tag">+${animKeys.length - 3}</span>` : ''}
+                                    </div>
+                                ` : ''}
+                                <div class="skin-flags">
+                                    <span class="flag-tag ${hasHideArmor ? 'active' : ''}">
+                                        <i class="fas fa-tshirt"></i> ${hasHideArmor ? '隐藏盔甲' : '显示盔甲'}
+                                    </span>
+                                    <span class="flag-tag">
+                                        <i class="fas fa-tag"></i> ${skin.type || 'free'}
+                                    </span>
+                                </div>
+                            </div>
+                            <button class="skin-delete-btn" onclick="window.deleteSkin('${packId}', ${index})" 
+                                    title="${canDelete ? '删除此皮肤' : '至少需要保留1个皮肤'}" ${!canDelete ? 'disabled' : ''}>
                                 <i class="fas fa-trash-alt"></i>
                             </button>
                         </div>
-                    </div>
-                `;
-            }).join('');
+                    `;
+                },
 
-            const items = packsList.querySelectorAll('.pack-item');
-            items.forEach(item => {
-                const isError = item.classList.contains('error');
-                if (!isError) {
-                    item.addEventListener('dragstart', handleDragStart);
-                    item.addEventListener('dragend', handleDragEnd);
-                    item.addEventListener('dragover', handleDragOver);
-                    item.addEventListener('drop', handleDrop);
-                    item.addEventListener('dragenter', handleDragEnter);
-                    item.addEventListener('dragleave', handleDragLeave);
+                attachDragEvents() {
+                    const items = elements.packsList.querySelectorAll('.pack-item:not(.error)');
+                    items.forEach(item => {
+                        item.addEventListener('dragstart', e => {
+                            state.dragStartIndex = +item.dataset.index;
+                            item.classList.add('dragging');
+                            e.dataTransfer.effectAllowed = 'move';
+                        });
+                        item.addEventListener('dragend', () => item.classList.remove('dragging'));
+                        item.addEventListener('dragover', e => e.preventDefault());
+                        item.addEventListener('dragenter', () => item.classList.add('drag-over'));
+                        item.addEventListener('dragleave', () => item.classList.remove('drag-over'));
+                        item.addEventListener('drop', e => {
+                            e.stopPropagation();
+                            const endIndex = +item.dataset.index;
+                            if (state.dragStartIndex !== endIndex) {
+                                const [moved] = state.skinPacks.splice(state.dragStartIndex, 1);
+                                state.skinPacks.splice(endIndex, 0, moved);
+                                logger.add(`🔄 已调整顺序: 将第 ${state.dragStartIndex + 1} 位移至第 ${endIndex + 1} 位`);
+                                this.packsList();
+                            }
+                        });
+                    });
+                },
+
+                attachExpandEvents() {
+                    // 点击展开按钮的事件通过onclick内联处理
+                },
+
+                updateUI() {
+                    const readyPacks = state.skinPacks.filter(p => p.status === 'ready');
+                    const allReady = readyPacks.length === state.skinPacks.length && state.skinPacks.length >= 2;
+                    
+                    elements.mergeBtn.disabled = !allReady || state.mergeInProgress;
+                    elements.mergeBtnText.textContent = state.skinPacks.length < 2 
+                        ? `请至少上传 2 个皮肤包 (${state.skinPacks.length}/2)` 
+                        : `开始合并 ${state.skinPacks.length} 个皮肤包`;
+                },
+
+                refreshPackSkins(packId) {
+                    // 只刷新指定pack的皮肤列表部分
+                    const pack = state.skinPacks.find(p => p.id === packId);
+                    if (!pack || !pack.files['skins.json']) return;
+
+                    const skinsListEl = document.getElementById(`skins-list-${packId}`);
+                    if (!skinsListEl) return;
+
+                    try {
+                        const data = JSON.parse(pack.files['skins.json']._content);
+                        const skins = data.skins || [];
+                        pack.skinCount = skins.length;
+                        
+                        // 更新头部计数
+                        const packItem = document.querySelector(`[data-id="${packId}"]`);
+                        if (packItem) {
+                            const statusEl = packItem.querySelector('.pack-status');
+                            if (statusEl) {
+                                statusEl.innerHTML = `<i class="fas fa-check-circle"></i> ${pack.skinCount} 个皮肤`;
+                            }
+                        }
+
+                        skinsListEl.innerHTML = skins.map((skin, idx) => this.createSkinItem(packId, skin, idx, skins.length)).join('');
+                    } catch (e) {
+                        console.error('Failed to refresh skins:', e);
+                    }
                 }
-            });
-        }
-
-        window.removePack = function(id) {
-            const index = skinPacks.findIndex(p => p.id === id);
-            if (index !== -1) {
-                const pack = skinPacks[index];
-                skinPacks.splice(index, 1);
-                modelTextureRelations.delete(pack.id);
-                logAdd(`🗑️ 已移除 ${pack.fileName}`);
-                renderPacksList();
-                updateUI();
-            }
-        };
-
-        function handleDragStart(e) {
-            dragStartIndex = +this.getAttribute('data-index');
-            this.classList.add('dragging');
-            e.dataTransfer.effectAllowed = 'move';
-            e.dataTransfer.setData('text/html', this.innerHTML);
-        }
-
-        function handleDragEnd(e) {
-            this.classList.remove('dragging');
-            packsList.querySelectorAll('.pack-item').forEach(item => {
-                item.classList.remove('drag-over');
-            });
-        }
-
-        function handleDragOver(e) {
-            e.preventDefault();
-            e.dataTransfer.dropEffect = 'move';
-        }
-
-        function handleDragEnter(e) {
-            this.classList.add('drag-over');
-        }
-
-        function handleDragLeave(e) {
-            this.classList.remove('drag-over');
-        }
-
-        function handleDrop(e) {
-            e.stopPropagation();
-            const dragEndIndex = +this.getAttribute('data-index');
-            
-            if (dragStartIndex !== dragEndIndex) {
-                const itemToMove = skinPacks[dragStartIndex];
-                skinPacks.splice(dragStartIndex, 1);
-                skinPacks.splice(dragEndIndex, 0, itemToMove);
-                
-                logAdd(`🔄 已调整顺序: 将第 ${dragStartIndex + 1} 位移至第 ${dragEndIndex + 1} 位`);
-                renderPacksList();
-            }
-            return false;
-        }
-
-        function updateUI() {
-            const readyPacks = skinPacks.filter(p => p.status === 'ready');
-            const allReady = readyPacks.length === skinPacks.length && skinPacks.length >= 2;
-            
-            mergeBtn.disabled = !allReady || mergeInProgress;
-            mergeBtnText.textContent = skinPacks.length < 2 ? 
-                `请至少上传 2 个皮肤包 (${skinPacks.length}/2)` : 
-                `开始合并 ${skinPacks.length} 个皮肤包`;
-        }
-
-        document.querySelectorAll('.preset-pill').forEach(button => {
-            button.addEventListener('click', () => {
-                const presetId = button.dataset.preset;
-                const isActive = button.classList.contains('active');
-
-                if (isActive) {
-                    button.classList.remove('active');
-                    logAdd(`❌ 已关闭预设${presetId}：${presetConfigs[presetId].name}`);
-                } else {
-                    button.classList.add('active');
-                    logAdd(`✅ 已启用预设${presetId}：${presetConfigs[presetId].name}`);
-                }
-
-                applyPresets();
-            });
-        });
-
-        function applyPresets() {
-            const activePresets = document.querySelectorAll('.preset-pill.active');
-            
-            document.getElementById('compatibleRenameModel').checked = false;
-            document.getElementById('simplifyNaming').checked = false;
-            document.getElementById('replaceUuid').checked = false;
-            document.getElementById('addHideArmor').checked = false;
-            fixComments.checked = false;
-            document.getElementById('outputMcpack').checked = false;
-
-            activePresets.forEach(button => {
-                const presetId = button.dataset.preset;
-                const settings = presetConfigs[presetId].settings;
-                Object.entries(settings).forEach(([key, value]) => {
-                    const el = document.getElementById(key);
-                    if (el && value) el.checked = true;
-                });
-            });
-        }
-
-        function logAdd(text) {
-            const div = document.createElement('div');
-            div.textContent = `[${new Date().toLocaleTimeString()}] ${text}`;
-            logContent.appendChild(div);
-            document.getElementById('log').scrollTop = document.getElementById('log').scrollHeight;
-        }
-
-        function getSafeFileName(name) {
-            return name.replace(/[\\/:*?"<>|]/g, '_').trim();
-        }
-
-        function generateUUID() {
-            return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-                const r = Math.random() * 16 | 0;
-                const v = c === 'x' ? r : (r & 0x3 | 0x8);
-                return v.toString(16);
-            });
-        }
-
-        function removeComments(jsonStr) {
-            return jsonStr
-                .replace(/(".*?")|(\/\/.*)/g, (match, str) => str || '')
-                .replace(/^\s*[\r\n]/gm, '')
-                .trim();
-        }
-
-        function fixJsonSyntax(jsonStr) {
-            jsonStr = jsonStr.replace(/,\s*}/g, '}');
-            jsonStr = jsonStr.replace(/,\s*]/g, ']');
-            jsonStr = jsonStr.replace(/(?<!\\)'/g, '"');
-            jsonStr = jsonStr.replace(/([{,]\s*)(\w+)(\s*:)/g, '$1"$2"$3');
-            return jsonStr;
-        }
-
-        function removeCommentsAndFixGeometry(jsonStr) {
-            let cleaned = removeComments(jsonStr);
-            cleaned = cleaned.replace(/,\s*"geometry\.null"\s*:\s*\{\s*\}/g, '');
-            cleaned = cleaned.replace(/"geometry\.null"\s*:\s*\{\s*\},?/g, '');
-            return cleaned;
-        }
-
-        function scanModelTextureRelations(coreData, packId) {
-            const relations = {
-                modelToTextures: new Map(),
-                textureToModels: new Map(),
-                skinToModel: new Map(),
-                skinToTexture: new Map(),
-                skinTextureSuffix: new Map()
             };
 
-            if (!coreData['skins.json'] || !coreData['skins.json'].skins) return relations;
-
-            coreData['skins.json'].skins.forEach((skin, skinIndex) => {
-                const skinName = skin.localization_name || `skin_${skinIndex}`;
-                const modelName = skin.geometry;
-                const textureName = skin.texture.toLowerCase();
-
-                relations.skinToModel.set(skinName, modelName);
-                relations.skinToTexture.set(skinName, textureName);
-
-                if (!relations.modelToTextures.has(modelName)) {
-                    relations.modelToTextures.set(modelName, new Set());
-                }
-                relations.modelToTextures.get(modelName).add(textureName);
-
-                if (!relations.textureToModels.has(textureName)) {
-                    relations.textureToModels.set(textureName, new Set());
-                }
-                relations.textureToModels.get(textureName).add(modelName);
-            });
-
-            for (const [model, textures] of relations.modelToTextures) {
-                relations.modelToTextures.set(model, Array.from(textures));
-            }
-            for (const [texture, models] of relations.textureToModels) {
-                relations.textureToModels.set(texture, Array.from(models));
-            }
-
-            modelTextureRelations.set(packId, relations);
-            
-            logAdd(`🔍 扫描皮肤包关联关系：`);
-            logAdd(`   - 模型数：${relations.modelToTextures.size} | 贴图数：${relations.textureToModels.size} | 皮肤数：${relations.skinToModel.size}`);
-
-            for (const [model, textures] of relations.modelToTextures) {
-                if (textures.length > 1) {
-                    logAdd(`   ⚠️ 模型【${model}】关联多个贴图：${textures.join(', ')}`);
-                }
-            }
-            for (const [texture, models] of relations.textureToModels) {
-                if (models.length > 1) {
-                    logAdd(`   ⚠️ 贴图【${texture}】关联多个模型：${models.join(', ')}`);
-                }
-            }
-
-            return relations;
-        }
-
-        function compatibleSimplifyEntries(core, packId, startIndex) {
-            const relations = modelTextureRelations.get(packId);
-            if (!relations) return { skins: [], geoRenameMap: new Map(), textureMap: new Map() };
-
-            const modifiedSkins = [];
-            const geoRenameMap = new Map();
-            const textureMap = new Map();
-            const modelTextureSuffixMap = new Map();
-
-            const modelHasMultiTextures = new Map();
-            const textureHasMultiModels = new Map();
-
-            for (const [modelName, textures] of relations.modelToTextures) {
-                if (textures.length > 1) {
-                    modelHasMultiTextures.set(modelName, textures);
-                    logAdd(`📌 模型【${modelName}】关联多个贴图，将保留模型名，修改贴图名`);
-                    const suffixMap = new Map();
-                    textures.forEach((texture, idx) => {
-                        suffixMap.set(texture, idx === 0 ? '' : `_${idx + 1}`);
+            // 事件处理
+            const events = {
+                init() {
+                    // 上传事件
+                    elements.uploadZone.addEventListener('click', () => elements.fileInput.click());
+                    elements.uploadZone.addEventListener('dragover', e => {
+                        e.preventDefault();
+                        elements.uploadZone.classList.add('dragover');
                     });
-                    modelTextureSuffixMap.set(modelName, suffixMap);
-                }
-            }
+                    elements.uploadZone.addEventListener('dragleave', () => elements.uploadZone.classList.remove('dragover'));
+                    elements.uploadZone.addEventListener('drop', e => {
+                        e.preventDefault();
+                        elements.uploadZone.classList.remove('dragover');
+                        this.handleFiles(Array.from(e.dataTransfer.files).filter(f => f.name.endsWith('.zip')));
+                    });
+                    elements.fileInput.addEventListener('change', e => {
+                        this.handleFiles(Array.from(e.target.files));
+                        elements.fileInput.value = '';
+                    });
 
-            for (const [textureName, models] of relations.textureToModels) {
-                if (models.length > 1) {
-                    textureHasMultiModels.set(textureName, models);
-                    logAdd(`📌 贴图【${textureName}】关联多个模型，将保留贴图名，修改模型名`);
-                }
-            }
+                    // 预设按钮
+                    document.querySelectorAll('.preset-pill').forEach(btn => {
+                        btn.addEventListener('click', () => {
+                            btn.classList.toggle('active');
+                            const presetId = btn.dataset.preset;
+                            const isActive = btn.classList.contains('active');
+                            logger.add(`${isActive ? '✅' : '❌'} ${isActive ? '已启用' : '已关闭'}预设${presetId}：${PRESET_CONFIGS[presetId].name}`);
+                            this.applyPresets();
+                        });
+                    });
 
-            const modelNewNameMap = new Map();
-            const textureNewNameMap = new Map();
-            let baseIndex = startIndex;
+                    // 合并按钮
+                    elements.mergeBtn.addEventListener('click', () => this.startMerge());
 
-            for (const [modelName] of relations.modelToTextures) {
-                if (!modelHasMultiTextures.has(modelName) && !Array.from(textureHasMultiModels.values()).some(models => models.includes(modelName))) {
-                    if (!modelNewNameMap.has(modelName)) {
-                        const newModelName = `geometry.skin${baseIndex}`;
-                        modelNewNameMap.set(modelName, newModelName);
-                        geoRenameMap.set(modelName, newModelName);
-
-                        const textures = relations.modelToTextures.get(modelName);
-                        if (textures.length === 1) {
-                            const textureName = textures[0];
-                            const newTextureName = `skin${baseIndex}.png`.toLowerCase();
-                            textureNewNameMap.set(textureName, newTextureName);
-                            textureMap.set(textureName, newTextureName);
+                    // 全局函数
+                    window.removePack = id => {
+                        const idx = state.skinPacks.findIndex(p => p.id === id);
+                        if (idx !== -1) {
+                            const pack = state.skinPacks[idx];
+                            state.skinPacks.splice(idx, 1);
+                            state.modelTextureRelations.delete(pack.id);
+                            logger.add(`🗑️ 已移除 ${pack.fileName}`);
+                            renderer.packsList();
+                            renderer.updateUI();
                         }
-                        baseIndex++;
-                    }
-                }
-            }
+                    };
 
-            for (const [modelName, textures] of modelHasMultiTextures) {
-                if (!modelNewNameMap.has(modelName)) {
-                    const newModelName = `geometry.skin${baseIndex}`;
-                    modelNewNameMap.set(modelName, newModelName);
-                    geoRenameMap.set(modelName, newModelName);
-                    logAdd(`🔧 模型【${modelName}】统一重命名为：${newModelName}`);
-
-                    const baseTextureName = `skin${baseIndex}`;
-                    textures.forEach((textureName, idx) => {
-                        if (!textureNewNameMap.has(textureName)) {
-                            const suffix = idx === 0 ? '' : `_${idx + 1}`;
-                            const newTextureName = `${baseTextureName}${suffix}.png`.toLowerCase();
-                            textureNewNameMap.set(textureName, newTextureName);
-                            textureMap.set(textureName, newTextureName);
-                            if (!modelTextureSuffixMap.has(modelName)) {
-                                modelTextureSuffixMap.set(modelName, new Map());
+                    window.togglePackExpand = packId => {
+                        const expandEl = document.getElementById(`skins-expand-${packId}`);
+                        if (expandEl) {
+                            expandEl.classList.toggle('expanded');
+                            const btn = document.querySelector(`[data-id="${packId}"] .pack-btn.expand`);
+                            if (btn) {
+                                const isExpanded = expandEl.classList.contains('expanded');
+                                btn.innerHTML = isExpanded ? 
+                                    '<i class="fas fa-chevron-up"></i><span>收起</span>' : 
+                                    '<i class="fas fa-list"></i><span>查看</span>';
                             }
-                            modelTextureSuffixMap.get(modelName).set(textureName, suffix);
-                            logAdd(`🔧 模型【${modelName}】的贴图【${textureName}】→ ${newTextureName}`);
                         }
+                    };
+
+                    window.deleteSkin = (packId, skinIndex) => {
+                        if (skinDeleter.deleteSkin(packId, skinIndex)) {
+                            renderer.refreshPackSkins(packId);
+                        }
+                    };
+                },
+
+                async handleFiles(files) {
+                    const newPacks = [];
+                    
+                    for (const file of files) {
+                        if (!file.name.endsWith('.zip')) continue;
+                        
+                        const existingIdx = state.skinPacks.findIndex(p => p.fileName === file.name);
+                        if (existingIdx !== -1) {
+                            logger.add(`⚠️ ${file.name} 已存在，将替换旧版本`);
+                            state.skinPacks.splice(existingIdx, 1);
+                        }
+
+                        newPacks.push({
+                            id: `${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+                            fileName: file.name,
+                            name: utils.getSafeFileName(file.name.replace('.zip', '')),
+                            files: {},
+                            status: 'loading',
+                            rootPath: ''
+                        });
+                    }
+
+                    state.skinPacks.push(...newPacks);
+                    renderer.packsList();
+
+                    await Promise.all(newPacks.map(async pack => {
+                        const file = files.find(f => f.name === pack.fileName);
+                        if (!file) return;
+
+                        try {
+                            logger.add(`正在读取 ${pack.fileName}...`);
+                            await fileHandler.extractZip(file, pack);
+                            
+                            const missing = CORE_FILES.filter(f => !pack.files[f]);
+                            if (missing.length) throw new Error(`缺少核心文件: ${missing.join(' ')}`);
+                            
+                            pack.skinCount = utils.countSkins(await pack.files['skins.json'].content);
+                            pack.status = 'ready';
+                            logger.add(`✅ ${pack.fileName} 已加载 (${pack.skinCount} 个皮肤)`);
+                            if (pack.rootPath) logger.add(`   📁 检测到子文件夹结构: ${pack.rootPath}`);
+                        } catch (err) {
+                            pack.status = 'error';
+                            pack.errorMsg = err.message;
+                            logger.add(`❌ ${pack.fileName} 读取失败: ${err.message}`);
+                        }
+                        renderer.packsList();
+                    }));
+
+                    renderer.updateUI();
+                },
+
+                applyPresets() {
+                    const activePresets = document.querySelectorAll('.preset-pill.active');
+                    const settings = { compatibleRenameModel: false, simplifyNaming: false, replaceUuid: false, addHideArmor: false, fixComments: false, outputMcpack: false };
+                    
+                    activePresets.forEach(btn => {
+                        Object.assign(settings, PRESET_CONFIGS[btn.dataset.preset].settings);
                     });
-                    baseIndex++;
-                }
-            }
 
-            for (const [textureName, models] of textureHasMultiModels) {
-                if (!textureNewNameMap.has(textureName)) {
-                    const baseTextureName = `skin${baseIndex}`;
-                    const newTextureName = `${baseTextureName}.png`.toLowerCase();
-                    textureNewNameMap.set(textureName, newTextureName);
-                    textureMap.set(textureName, newTextureName);
-                    logAdd(`🔧 贴图【${textureName}】基础名称：${newTextureName}`);
-                }
-                const baseTextureName = textureNewNameMap.get(textureName).replace('.png', '');
+                    Object.entries(settings).forEach(([key, val]) => {
+                        const el = document.getElementById(key);
+                        if (el) el.checked = val;
+                    });
+                },
 
-                models.forEach((modelName, idx) => {
-                    if (!modelNewNameMap.has(modelName)) {
-                        const suffix = idx === 0 ? '' : `_${idx + 1}`;
-                        const newModelName = `geometry.${baseTextureName}${suffix}`;
-                        modelNewNameMap.set(modelName, newModelName);
-                        geoRenameMap.set(modelName, newModelName);
-                        if (!modelTextureSuffixMap.has(modelName)) {
-                            modelTextureSuffixMap.set(modelName, new Map());
-                        }
-                        modelTextureSuffixMap.get(modelName).set(textureName, suffix);
-                        logAdd(`🔧 模型【${modelName}】→ ${newModelName}`);
-                    }
-                });
-                baseIndex++;
-            }
+                async startMerge() {
+                    if (state.mergeInProgress) return;
+                    state.mergeInProgress = true;
+                    renderer.updateUI();
+                    
+                    elements.progressContainer.style.display = 'block';
+                    elements.resultContainer.style.display = 'none';
+                    logger.add('=== 开始合并皮肤包 ===');
+                    logger.add(`📦 共合并 ${state.skinPacks.length} 个皮肤包`);
 
-            core['skins.json'].skins.forEach((skin, index) => {
-                const skinName = skin.localization_name || `skin_${index}`;
-                const oldModelName = skin.geometry;
-                const oldTextureName = relations.skinToTexture.get(skinName);
-
-                const newModelName = modelNewNameMap.get(oldModelName) || oldModelName;
-                const newTextureName = textureNewNameMap.get(oldTextureName) || oldTextureName;
-
-                let newSkinName = newModelName.replace('geometry.', '');
-                if (modelTextureSuffixMap.has(oldModelName) && modelTextureSuffixMap.get(oldModelName).has(oldTextureName)) {
-                    const suffix = modelTextureSuffixMap.get(oldModelName).get(oldTextureName);
-                    newSkinName += suffix;
-                }
-
-                const modifiedSkin = {
-                    ...skin,
-                    localization_name: newSkinName,
-                    geometry: newModelName,
-                    texture: newTextureName
-                };
-                modifiedSkins.push(modifiedSkin);
-
-                logAdd(`🔄 兼容重命名：皮肤【${skinName}】→【${newSkinName}】`);
-            });
-
-            return { modifiedSkins, geoRenameMap, textureMap };
-        }
-
-        function simplifySinglePackEntries(core, packId, startIndex) {
-            const modifiedSkins = [];
-            const geoRenameMap = new Map();
-            const textureMap = new Map();
-
-            if (!core['skins.json'] || !core['skins.json'].skins) {
-                return { modifiedSkins, geoRenameMap, textureMap };
-            }
-
-            core['skins.json'].skins.forEach((skin, index) => {
-                const baseName = `skin${startIndex + index}`;
-                const newGeometryName = `geometry.${baseName}`;
-                const newTextureName = `${baseName}.png`.toLowerCase();
-
-                geoRenameMap.set(skin.geometry, newGeometryName);
-                textureMap.set(skin.texture.toLowerCase(), newTextureName);
-
-                const modifiedSkin = {
-                    ...skin,
-                    localization_name: baseName,
-                    geometry: newGeometryName,
-                    texture: newTextureName
-                };
-                modifiedSkins.push(modifiedSkin);
-                logAdd(`🔄 简化命名：${skin.localization_name} → ${baseName}`);
-            });
-
-            return { modifiedSkins, geoRenameMap, textureMap };
-        }
-
-        function modifyDuplicateEntries(core, existingSkins, startIndex, packPrefix) {
-            const existingNames = new Set(existingSkins.map(s => s.localization_name));
-            const existingGeo = new Set();
-            
-            existingSkins.forEach(s => existingGeo.add(s.geometry));
-
-            const modifiedSkins = [];
-            const geoRenameMap = new Map();
-            const textureMap = new Map();
-
-            core['skins.json'].skins.forEach((skin, idx) => {
-                let newName = skin.localization_name;
-                let newGeo = skin.geometry;
-                let newTex = skin.texture.toLowerCase();
-                let suffix = '';
-
-                if (existingNames.has(newName)) {
-                    suffix = `_${packPrefix}`;
-                    newName += suffix;
-                }
-                if (existingGeo.has(newGeo)) {
-                    newGeo += `_${packPrefix}`;
-                }
-
-                existingNames.add(newName);
-                existingGeo.add(newGeo);
-
-                geoRenameMap.set(skin.geometry, newGeo);
-                textureMap.set(skin.texture.toLowerCase(), newTex);
-
-                modifiedSkins.push({
-                    ...skin,
-                    localization_name: newName,
-                    geometry: newGeo,
-                    texture: newTex
-                });
-            });
-
-            return { modifiedSkins, geoRenameMap, textureMap };
-        }
-
-        async function loadCoreFiles(files, packName) {
-            const coreFiles = ['manifest.json', 'geometry.json', 'skins.json'];
-            const coreData = {};
-            
-            for (const fileName of coreFiles) {
-                const file = files[fileName];
-                if (!file) throw new Error(`${packName} 缺少 ${fileName}`);
-                
-                let content = file._content;
-                
-                if (fixComments.checked) {
-                    logAdd(`🌍 国外作者适配：清理 ${packName} 的 ${fileName}`);
-                    content = removeCommentsAndFixGeometry(content);
-                }
-                
-                try {
-                    coreData[fileName] = JSON.parse(content);
-                } catch (e) {
-                    logAdd(`⚠️ ${packName} 的 ${fileName} 包含语法错误，尝试自动修复...`);
                     try {
-                        const fixedContent = fixJsonSyntax(content);
-                        coreData[fileName] = JSON.parse(fixedContent);
-                        logAdd(`✅ ${fileName} 自动修复成功`);
-                    } catch (error2) {
-                        throw new Error(`${fileName} JSON解析失败且无法自动修复：${error2.message}`);
+                        utils.updateProgress(10, '读取核心文件...');
+                        const packsData = await Promise.all(state.skinPacks.map(async (pack, i) => ({
+                            pack,
+                            core: await fileHandler.loadCore(pack.files, `包${i + 1}(${pack.name})`)
+                        })));
+
+                        utils.updateProgress(25, '扫描模型-贴图关联关系...');
+                        packsData.forEach(({ pack, core }) => relationScanner.scan(core, pack.id));
+
+                        utils.updateProgress(40, elements.compatibleRenameModel.checked ? '执行重名模型兼容命名...' : 
+                            (elements.simplifyNaming.checked ? '执行命名简化...' : '处理重复字段...'));
+
+                        const result = await this.processPacks(packsData);
+                        
+                        if (elements.addHideArmor.checked) {
+                            utils.updateProgress(60, '处理隐藏盔甲...');
+                            result.skins = result.skins.map(s => s.type === 'free' && !s.hide_armor ? { ...s, hide_armor: true } : s);
+                            const count = result.skins.filter(s => s.hide_armor).length;
+                            if (count) logger.add(`🛡️ 已为 ${count} 个皮肤启用隐藏盔甲`);
+                        }
+
+                        utils.updateProgress(70, '合并文件...');
+                        const outputFiles = this.buildOutputFiles(result, packsData[0].core['manifest.json']);
+
+                        utils.updateProgress(80, '收集贴图文件...');
+                        this.collectTextures(outputFiles, state.skinPacks);
+
+                        utils.updateProgress(90, '生成压缩包...');
+                        const zipBlob = await this.generateZip(outputFiles);
+                        const suffix = elements.outputMcpack.checked ? '.mcpack' : '.zip';
+                        const fileName = `merged_${state.skinPacks.length}packs_${Date.now()}${suffix}`;
+
+                        utils.updateProgress(100, '完成！');
+                        elements.resultContainer.style.display = 'block';
+                        elements.downloadBtn.onclick = () => saveAs(zipBlob, fileName);
+                        logger.add(`✅ 合并成功！共 ${result.skins.length} 个皮肤`);
+
+                    } catch (err) {
+                        logger.add(`❌ 错误: ${err.message}`);
+                        console.error(err);
+                    } finally {
+                        state.mergeInProgress = false;
+                        renderer.updateUI();
                     }
-                }
-                
-                if (fileName === 'geometry.json' && coreData[fileName]) {
-                    if (coreData[fileName]['geometry.null'] !== undefined) {
-                        delete coreData[fileName]['geometry.null'];
-                        logAdd(`🗑️ 已移除 geometry.null 空定义（国外作者包适配）`);
-                    }
-                }
-            }
-            
-            return coreData;
-        }
+                },
 
-        mergeBtn.addEventListener('click', async () => {
-            if (mergeInProgress) return;
-            mergeInProgress = true;
-            updateUI();
-            progressContainer.style.display = 'block';
-            resultContainer.style.display = 'none';
-            logAdd('=== 开始合并皮肤包 ===');
-            logAdd(`📦 共合并 ${skinPacks.length} 个皮肤包`);
-
-            try {
-                updateProgress(10, '读取核心文件...');
-                
-                const packsData = [];
-                for (let i = 0; i < skinPacks.length; i++) {
-                    const pack = skinPacks[i];
-                    const core = await loadCoreFiles(pack.files, `包${i + 1}(${pack.name})`);
-                    packsData.push({ pack, core });
-                }
-
-                updateProgress(25, '扫描模型-贴图关联关系...');
-                for (const { pack, core } of packsData) {
-                    scanModelTextureRelations(core, pack.id);
-                }
-
-                updateProgress(40, compatibleRenameModel.checked ? '执行重名模型兼容命名...' : (simplifyNaming.checked ? '执行命名简化...' : '处理重复字段...'));
-                
-                let allModifiedSkins = [];
-                let mergedGeo = {};
-                let mergedManifest = null;
-                
-                for (let i = 0; i < packsData.length; i++) {
-                    const { pack, core } = packsData[i];
-                    const startIdx = allModifiedSkins.length;
+                async processPacks(packsData) {
+                    const allSkins = [];
+                    const mergedGeo = {};
                     
-                    let result;
-                    if (compatibleRenameModel.checked) {
-                        result = compatibleSimplifyEntries(core, pack.id, startIdx);
-                        allModifiedSkins.push(...result.modifiedSkins);
-                        
-                        for (const [oldKey, geoData] of Object.entries(core['geometry.json'])) {
-                            const newKey = result.geoRenameMap.get(oldKey) || oldKey;
-                            mergedGeo[newKey] = geoData;
+                    for (let i = 0; i < packsData.length; i++) {
+                        const { pack, core } = packsData[i];
+                        const startIdx = allSkins.length;
+                        let result;
+
+                        if (elements.compatibleRenameModel.checked) {
+                            result = namingHandler.compatibleSimplify(core, pack.id, startIdx);
+                        } else if (elements.simplifyNaming.checked) {
+                            result = namingHandler.simplifySingle(core, pack.id, startIdx);
+                        } else {
+                            const prefix = utils.getSafeFileName(pack.name).substring(0, 8) || `pack${i+1}`;
+                            result = namingHandler.modifyDuplicate(core, allSkins, prefix);
                         }
+
+                        allSkins.push(...result.modifiedSkins);
                         
-                        pack.geoRenameMap = result.geoRenameMap;
-                        pack.textureMap = result.textureMap;
-                        
-                    } else if (simplifyNaming.checked) {
-                        result = simplifySinglePackEntries(core, pack.id, startIdx);
-                        allModifiedSkins.push(...result.modifiedSkins);
-                        
-                        for (const [oldKey, geoData] of Object.entries(core['geometry.json'])) {
-                            const newKey = result.geoRenameMap.get(oldKey) || oldKey;
-                            mergedGeo[newKey] = geoData;
-                        }
-                        
-                        pack.geoRenameMap = result.geoRenameMap;
-                        pack.textureMap = result.textureMap;
-                    } else {
-                        const packPrefix = getSafeFileName(pack.name).substring(0, 8) || `pack${i+1}`;
-                        result = modifyDuplicateEntries(core, allModifiedSkins, startIdx, packPrefix);
-                        allModifiedSkins.push(...result.modifiedSkins);
-                        
-                        for (const [oldKey, geoData] of Object.entries(core['geometry.json'])) {
-                            const newKey = result.geoRenameMap.get(oldKey) || oldKey;
-                            mergedGeo[newKey] = geoData;
-                        }
-                        
+                        Object.entries(core['geometry.json']).forEach(([key, val]) => {
+                            mergedGeo[result.geoRenameMap.get(key) || key] = val;
+                        });
+
                         pack.geoRenameMap = result.geoRenameMap;
                         pack.textureMap = result.textureMap;
                     }
-                    
-                    if (i === 0) mergedManifest = core['manifest.json'];
-                }
 
-                if (document.getElementById('addHideArmor').checked) {
-                    updateProgress(60, '处理隐藏盔甲...');
-                    allModifiedSkins = processSkinsForHideArmor(allModifiedSkins);
-                }
+                    return { skins: allSkins, geometry: mergedGeo };
+                },
 
-                updateProgress(70, '合并文件...');
-                
-                if (document.getElementById('replaceUuid').checked && mergedManifest) {
-                    mergedManifest.header.uuid = generateUUID();
-                    if (mergedManifest.modules) mergedManifest.modules[0].uuid = generateUUID();
-                }
-
-                const outputFiles = {
-                    'manifest.json': JSON.stringify(mergedManifest),
-                    'skins.json': JSON.stringify({ skins: allModifiedSkins })
-                };
-
-                let geoStr = JSON.stringify(mergedGeo);
-                const lastBraceIndex = geoStr.lastIndexOf('}');
-                if (lastBraceIndex !== -1) {
-                    geoStr = geoStr.substring(0, lastBraceIndex) + ',' + geoStr.substring(lastBraceIndex);
-                }
-                outputFiles['geometry.json'] = geoStr;
-
-                updateProgress(80, '收集贴图文件...');
-                for (const pack of skinPacks) {
-                    for (const [fileName, file] of Object.entries(pack.files)) {
-                        if (fileName.endsWith('.png') || fileName.endsWith('.jpg')) {
-                            const newFileName = pack.textureMap.get(fileName) || fileName;
-                            const blob = file.blob || file;
-                            outputFiles[newFileName] = blob;
-                        }
+                buildOutputFiles(result, manifest) {
+                    if (elements.replaceUuid.checked && manifest) {
+                        manifest.header.uuid = utils.generateUUID();
+                        if (manifest.modules) manifest.modules[0].uuid = utils.generateUUID();
                     }
+
+                    let geoStr = JSON.stringify(result.geometry);
+                    const lastBrace = geoStr.lastIndexOf('}');
+                    if (lastBrace !== -1) {
+                        geoStr = geoStr.substring(0, lastBrace) + ',' + geoStr.substring(lastBrace);
+                    }
+
+                    return {
+                        'manifest.json': JSON.stringify(manifest),
+                        'skins.json': JSON.stringify({ skins: result.skins }),
+                        'geometry.json': geoStr
+                    };
+                },
+
+                collectTextures(outputFiles, packs) {
+                    packs.forEach(pack => {
+                        Object.entries(pack.files).forEach(([name, file]) => {
+                            if (name.endsWith('.png') || name.endsWith('.jpg')) {
+                                const newName = pack.textureMap.get(name) || name;
+                                outputFiles[newName] = file.blob || file;
+                            }
+                        });
+                    });
+                },
+
+                async generateZip(files) {
+                    const zip = new JSZip();
+                    Object.entries(files).forEach(([name, content]) => {
+                        zip.file(name, typeof content === 'string' ? content : content);
+                    });
+                    return await zip.generateAsync({ type: 'blob', compression: 'DEFLATE' });
                 }
+            };
 
-                updateProgress(90, '生成压缩包...');
-                const zipBlob = await generateZip(outputFiles);
-                
-                const suffix = document.getElementById('outputMcpack').checked ? '.mcpack' : '.zip';
-                const fileName = `merged_${skinPacks.length}packs_${new Date().getTime()}${suffix}`;
-
-                updateProgress(100, '完成！');
-                resultContainer.style.display = 'block';
-                downloadBtn.onclick = () => saveAs(zipBlob, fileName);
-                logAdd(`✅ 合并成功！共 ${allModifiedSkins.length} 个皮肤`);
-
-            } catch (error) {
-                logAdd(`❌ 错误: ${error.message}`);
-                console.error(error);
-            } finally {
-                mergeInProgress = false;
-                updateUI();
-            }
-        });
-
-        function updateProgress(percent, text) {
-            progressFill.style.width = `${percent}%`;
-            progressText.innerHTML = `<i class="fas fa-spinner"></i> ${text}`;
-        }
-
-        function processSkinsForHideArmor(skins) {
-            let modifiedCount = 0;
-            const result = skins.map(skin => {
-                if (skin.type === "free" && !skin.hide_armor) {
-                    modifiedCount++;
-                    return { ...skin, hide_armor: true };
-                }
-                return skin;
-            });
-            if (modifiedCount > 0) {
-                logAdd(`🛡️ 已为 ${modifiedCount} 个皮肤启用隐藏盔甲`);
-            }
-            return result;
-        }
-
-        async function generateZip(files) {
-            const zip = new JSZip();
-            for (const [fileName, file] of Object.entries(files)) {
-                if (typeof file === 'string') {
-                    zip.file(fileName, file);
-                } else if (file.blob) {
-                    zip.file(fileName, file.blob);
-                } else {
-                    zip.file(fileName, file);
-                }
-            }
-            return await zip.generateAsync({ type: 'blob', compression: 'DEFLATE' });
-        }
+            // 初始化
+            events.init();
+        })();
     </script>
 </body>
 </html>
