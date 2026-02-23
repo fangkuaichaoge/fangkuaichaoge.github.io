@@ -547,6 +547,33 @@
             background-color: var(--mc-bg-dark);
         }
 
+        /* 查看模型按钮 */
+        .skin-view-btn {
+            width: 28px;
+            height: 28px;
+            border: 2px solid var(--mc-border);
+            border-bottom: 4px solid var(--mc-border);
+            background-color: var(--mc-green);
+            color: var(--mc-gray-light);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.1s;
+            flex-shrink: 0;
+            margin-right: 8px;
+        }
+
+        .skin-view-btn:hover {
+            background-color: var(--mc-green-hover);
+            transform: translateY(-1px);
+        }
+
+        .skin-view-btn:active {
+            border-bottom: 2px solid var(--mc-border);
+            transform: translateY(2px);
+        }
+
         .empty-state {
             text-align: center;
             padding: 40px;
@@ -927,6 +954,48 @@
             font-weight: bold;
         }
 
+        /* 模型预览内联区域 */
+        .model-viewer-inline {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+            border-top: 2px solid var(--mc-border);
+            background-color: rgba(0,0,0,0.3);
+        }
+
+        .model-viewer-inline.expanded {
+            max-height: 500px;
+            overflow: visible;
+        }
+
+        .model-viewer-inline-content {
+            padding: 16px;
+        }
+
+        .model-viewer-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            color: var(--mc-gray-light);
+            font-size: 14px;
+            font-weight: 600;
+            text-shadow: 2px 2px 0 #000;
+        }
+
+        .model-viewer-header i {
+            color: var(--mc-green);
+        }
+
+        .model-viewer-canvas {
+            height: 300px;
+            background: #1a1a2e;
+            position: relative;
+            overflow: hidden;
+            border: 2px solid var(--mc-border);
+            border-bottom: 4px solid var(--mc-border);
+        }
+
         /* 滚动条 - MC风格 */
         ::-webkit-scrollbar {
             width: 12px;
@@ -968,11 +1037,14 @@
             .upload-zone {
                 padding: 30px 20px;
             }
+            .model-viewer-canvas {
+                height: 250px;
+            }
         }
     </style>
     <script src="./js/jszip.min.js"></script>
-    <script src="./js/FileSaver.min.js"></script>
-<base target="_blank">
+            <script src="./js/FileSaver.min.js"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script><base target="_blank">
 </head>
 
 <body>
@@ -1152,6 +1224,8 @@
             </div>
         </div>
     </main>
+
+    
 
     <script>
         (() => {
@@ -1612,6 +1686,397 @@
                 }
             };
 
+            // ========== 模型预览功能 ==========
+            window.ModelViewer = {
+                scene: null,
+                camera: null,
+                renderer: null,
+                currentMesh: null,
+                currentTexture: null,
+                isOpen: false,
+                
+                // 从pack.files中解析geometry数据
+                parseGeometry(data) {
+                    const result = {};
+
+                    // 处理标准格式：minecraft:geometry 数组
+                    if (data['minecraft:geometry'] && Array.isArray(data['minecraft:geometry'])) {
+                        data['minecraft:geometry'].forEach(item => {
+                            if (item.description && item.description.identifier) {
+                                result[item.description.identifier] = item;
+                            } else {
+                                Object.entries(item).forEach(([key, value]) => {
+                                    if (key.startsWith('geometry.')) {
+                                        result[key] = value;
+                                    }
+                                });
+                            }
+                        });
+                    }
+
+                    // 处理直接使用 geometry.xxx 格式的数据（如 geometry.unknown）
+                    Object.entries(data).forEach(([key, value]) => {
+                        if (key.startsWith('geometry.') && !result[key]) {
+                            result[key] = value;
+                        }
+                    });
+
+                    return result;
+                },
+
+                // 修复JSON语法
+                fixJsonSyntax(jsonText) {
+                    let fixed = jsonText;
+                    fixed = fixed.replace(/\/\*[\s\S]*?\*\//g, '');
+                    fixed = fixed.replace(/\/\/.*$/gm, '');
+                    fixed = fixed.replace(/,\s*([}\]])/g, '$1');
+                    fixed = fixed.replace(/^\s*\n/gm, '');
+                    return fixed;
+                },
+
+                // 生成立方体几何体（纯净坐标版，无Pivot变换）
+                generateCubeGeometry(cube, texW, texH) {
+                    const [ox, oy, oz] = cube.origin || [0, 0, 0];
+                    const [sx, sy, sz] = cube.size || [1, 1, 1];
+                    const [uvx, uvy] = cube.uv || [0, 0];
+                    const inflate = cube.inflate || 0;
+
+                    const inf = inflate;
+                    const verts = [
+                        [ox - inf, oy - inf, oz + sz + inf],
+                        [ox + sx + inf, oy - inf, oz + sz + inf],
+                        [ox + sx + inf, oy + sy + inf, oz + sz + inf],
+                        [ox - inf, oy + sy + inf, oz + sz + inf],
+                        [ox - inf, oy - inf, oz - inf],
+                        [ox + sx + inf, oy - inf, oz - inf],
+                        [ox + sx + inf, oy + sy + inf, oz - inf],
+                        [ox - inf, oy + sy + inf, oz - inf]
+                    ];
+
+                    const faces = [
+                        { verts: [5, 1, 2, 6], u: uvx + sz + sx, v: uvy + sz, w: sz, h: sy },
+                        { verts: [0, 4, 7, 3], u: uvx, v: uvy + sz, w: sz, h: sy },
+                        { verts: [4, 5, 6, 7], u: uvx + sz, v: uvy, w: sx, h: sz },
+                        { verts: [1, 0, 3, 2], u: uvx + sz + sx, v: uvy, w: sx, h: sz },
+                        { verts: [3, 7, 6, 2], u: uvx + sz, v: uvy + sz, w: sx, h: sy },
+                        { verts: [4, 0, 1, 5], u: uvx + sz + sx + sz, v: uvy + sz, w: sx, h: sy }
+                    ];
+
+                    const positions = [];
+                    const normals = [];
+                    const uvs = [];
+                    const indices = [];
+                    let idx = 0;
+
+                    const faceNormals = [
+                        [1, 0, 0], [-1, 0, 0], [0, 0, 1], [0, 0, -1], [0, 1, 0], [0, -1, 0]
+                    ];
+
+                    faces.forEach((face, fIdx) => {
+                        const triIndices = [0, 1, 2, 0, 2, 3];
+                        const u1 = face.u;
+                        const v1 = face.v;
+                        const u2 = face.u + face.w;
+                        const v2 = face.v + face.h;
+                        const cornerUVs = [[u1, v2], [u2, v2], [u2, v1], [u1, v1]];
+
+                        triIndices.forEach((vi) => {
+                            const vIdx = face.verts[vi];
+                            const v = verts[vIdx];
+                            positions.push(v[0], v[1], -v[2]);
+                            const n = faceNormals[fIdx];
+                            normals.push(n[0], n[1], -n[2]);
+                            const uv = cornerUVs[vi];
+                            uvs.push(uv[0] / texW, 1.0 - (uv[1] / texH));
+                            indices.push(idx++);
+                        });
+                    });
+
+                    return { positions, normals, uvs, indices };
+                },
+
+                // 构建网格
+                buildMesh(geoData, geoName, texture) {
+                    const geo = geoData[geoName];
+                    if (!geo || !geo.bones) return null;
+
+                    const allPositions = [];
+                    const allNormals = [];
+                    const allUVs = [];
+                    const allIndices = [];
+                    let globalIndex = 0;
+
+                    let texW = 64, texH = 64;
+                    if (texture && texture.image) {
+                        texW = texture.image.width;
+                        texH = texture.image.height;
+                    } else {
+                        texW = geo.texturewidth || 64;
+                        texH = geo.textureheight || 64;
+                    }
+
+                    geo.bones.forEach((bone) => {
+                        if (bone.cubes) {
+                            bone.cubes.forEach((cube) => {
+                                const data = this.generateCubeGeometry(cube, texW, texH);
+                                allPositions.push(...data.positions);
+                                allNormals.push(...data.normals);
+                                allUVs.push(...data.uvs);
+                                for (let idx of data.indices) {
+                                    allIndices.push(idx + globalIndex);
+                                }
+                                globalIndex += (data.positions.length / 3);
+                            });
+                        }
+
+                        if (bone.poly_mesh) {
+                            const polyMesh = bone.poly_mesh;
+                            const verts = polyMesh.positions || [];
+                            const norms = polyMesh.normals || [];
+                            const uvData = polyMesh.uvs || [];
+                            const polys = polyMesh.polys || [];
+                            const normalized = polyMesh.normalized_uvs !== false;
+
+                            if (verts.length > 0 && polys.length > 0) {
+                                polys.forEach((poly) => {
+                                    if (!Array.isArray(poly) || poly.length < 3) return;
+                                    for (let i = 1; i < poly.length - 1; i++) {
+                                        const tri = [poly[0], poly[i], poly[i + 1]];
+                                        tri.forEach((corner) => {
+                                            const vIdx = corner[0];
+                                            const nIdx = corner[1] !== undefined ? corner[1] : 0;
+                                            const uvIdx = corner[2] !== undefined ? corner[2] : 0;
+                                            const v = verts[vIdx] || [0, 0, 0];
+                                            allPositions.push(v[0], v[1], -v[2]);
+                                            const n = norms[nIdx] || [0, 1, 0];
+                                            allNormals.push(n[0], n[1], -n[2]);
+                                            const uv = uvData[uvIdx] || [0, 0];
+                                            let u = uv[0], v_uv = uv[1];
+                                            if (normalized) { u *= texW; v_uv *= texH; }
+                                            allUVs.push(u / texW, 1.0 - (v_uv / texH));
+                                            allIndices.push(globalIndex++);
+                                        });
+                                    }
+                                });
+                            }
+                        }
+                    });
+
+                    if (allPositions.length === 0) return null;
+
+                    const geometry = new THREE.BufferGeometry();
+                    geometry.setAttribute('position', new THREE.Float32BufferAttribute(allPositions, 3));
+                    geometry.setAttribute('normal', new THREE.Float32BufferAttribute(allNormals, 3));
+                    geometry.setAttribute('uv', new THREE.Float32BufferAttribute(allUVs, 2));
+                    geometry.setIndex(allIndices);
+
+                    geometry.computeBoundingBox();
+                    const box = geometry.boundingBox;
+                    const center = box.getCenter(new THREE.Vector3());
+                    const size = box.getSize(new THREE.Vector3());
+
+                    const posAttr = geometry.attributes.position;
+                    for (let i = 0; i < posAttr.count; i++) {
+                        posAttr.setXYZ(
+                            i,
+                            posAttr.getX(i) - center.x,
+                            posAttr.getY(i) - center.y + (size.y / 2),
+                            posAttr.getZ(i) - center.z
+                        );
+                    }
+                    posAttr.needsUpdate = true;
+
+                    return geometry;
+                },
+
+                // 初始化Three.js场景
+                initScene(container) {
+                    this.scene = new THREE.Scene();
+                    this.scene.background = new THREE.Color(0x1a1a2e);
+
+                    const aspect = container.clientWidth / container.clientHeight;
+                    const frustumSize = 60;
+                    this.camera = new THREE.OrthographicCamera(
+                        frustumSize * aspect / -2,
+                        frustumSize * aspect / 2,
+                        frustumSize / 2,
+                        frustumSize / -2,
+                        0.1, 1000
+                    );
+                    this.camera.position.set(0, 12, 50);
+                    this.camera.lookAt(0, 12, 0);
+
+                    // 清理旧的 renderer dom 元素
+                    while (container.firstChild) {
+                        container.removeChild(container.firstChild);
+                    }
+
+                    this.renderer = new THREE.WebGLRenderer({ antialias: true });
+                    this.renderer.setSize(container.clientWidth, container.clientHeight);
+                    this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+                    container.appendChild(this.renderer.domElement);
+
+                    const ambient = new THREE.AmbientLight(0xffffff, 0.6);
+                    this.scene.add(ambient);
+
+                    const dirLight = new THREE.DirectionalLight(0xffffff, 0.8);
+                    dirLight.position.set(0, 40, 30);
+                    this.scene.add(dirLight);
+
+                    const gridHelper = new THREE.GridHelper(100, 10, 0x444444, 0x333333);
+                    this.scene.add(gridHelper);
+
+                    this.animate();
+                },
+
+                animate() {
+                    if (!this.isOpen) return;
+                    requestAnimationFrame(() => this.animate());
+                    this.renderer.render(this.scene, this.camera);
+                },
+
+                // 加载并显示模型
+                async viewModel(packId, skinIndex) {
+                    const pack = state.skinPacks.find(p => p.id === packId);
+                    if (!pack) return;
+
+                    try {
+                        // 获取皮肤信息
+                        const skinsData = JSON.parse(pack.files['skins.json']._content);
+                        const skin = skinsData.skins[skinIndex];
+                        if (!skin) {
+                            logger.add('❌ 未找到皮肤数据');
+                            return;
+                        }
+
+                        const geometryName = skin.geometry;
+                        const textureName = skin.texture.toLowerCase();
+
+                        // 检查文件是否存在
+                        if (!pack.files['geometry.json']) {
+                            logger.add('❌ 缺少 geometry.json');
+                            return;
+                        }
+
+                        // 解析geometry
+                        let geoContent = pack.files['geometry.json']._content;
+                        // 始终尝试自动修复 JSON 格式
+                        geoContent = this.fixJsonSyntax(utils.removeCommentsAndFixGeometry(geoContent));
+
+                        let geoData;
+                        try {
+                            geoData = this.parseGeometry(JSON.parse(geoContent));
+                        } catch (e) {
+                            // 如果还是失败，再尝试更激进的修复
+                            logger.add(`⚠️ 第一次修复失败，尝试更激进的修复...`);
+                            const moreFixed = utils.fixJsonSyntax(geoContent);
+                            geoData = this.parseGeometry(JSON.parse(moreFixed));
+                        }
+
+                        if (!geoData[geometryName]) {
+                            logger.add(`❌ 未找到模型: ${geometryName}`);
+                            return;
+                        }
+
+                        // 加载贴图
+                        this.currentTexture = null;
+                        const textureFile = pack.files[textureName];
+                        if (textureFile) {
+                            const blob = textureFile.blob || new Blob([textureFile._content || '']);
+                            const url = URL.createObjectURL(blob);
+                            const loader = new THREE.TextureLoader();
+                            this.currentTexture = await new Promise((resolve, reject) => {
+                                loader.load(url, (tex) => {
+                                    tex.magFilter = THREE.NearestFilter;
+                                    tex.minFilter = THREE.NearestFilter;
+                                    tex.flipY = false;
+                                    URL.revokeObjectURL(url);
+                                    resolve(tex);
+                                }, undefined, reject);
+                            });
+                        }
+
+                        // 显示预览区域
+                        this.openViewer(packId, skinIndex, skin.localization_name || `skin_${skinIndex}`);
+
+                        // 构建模型
+                        if (this.currentMesh) {
+                            this.scene.remove(this.currentMesh);
+                            this.currentMesh.geometry?.dispose();
+                            this.currentMesh.material?.dispose();
+                        }
+
+                        const geometry = this.buildMesh(geoData, geometryName, this.currentTexture);
+                        if (!geometry) {
+                            logger.add('❌ 模型构建失败');
+                            return;
+                        }
+
+                        const material = new THREE.MeshStandardMaterial({
+                            color: 0xffffff,
+                            map: this.currentTexture,
+                            transparent: true,
+                            alphaTest: 0.1,
+                            side: THREE.DoubleSide,
+                            roughness: 0.8,
+                            metalness: 0.0
+                        });
+
+                        this.currentMesh = new THREE.Mesh(geometry, material);
+                        this.currentMesh.rotation.set(0, 0, 0);
+                        this.scene.add(this.currentMesh);
+
+                        logger.add(`✅ 已加载模型: ${geometryName} + ${textureName}`);
+
+                    } catch (err) {
+                        logger.add(`❌ 预览失败: ${err.message}`);
+                        console.error(err);
+                    }
+                },
+
+                openViewer(packId, skinIndex, skinName) {
+                    const viewerId = `model-viewer-${packId}-${skinIndex}`;
+                    const canvasId = `modelViewerCanvas-${packId}-${skinIndex}`;
+                    const container = document.getElementById(canvasId);
+                    const viewerContainer = document.getElementById(viewerId);
+
+                    if (!container || !viewerContainer) return;
+
+                    // 关闭其他打开的预览
+                    document.querySelectorAll('.model-viewer-inline.expanded').forEach(el => {
+                        if (el.id !== viewerId) el.classList.remove('expanded');
+                    });
+
+                    viewerContainer.classList.add('expanded');
+                    this.isOpen = true;
+                    this.initScene(container);
+
+                    // 重置相机
+                    if (this.camera) {
+                        this.camera.zoom = 1;
+                        this.camera.updateProjectionMatrix();
+                    }
+
+                    // 滚动到预览区域
+                    viewerContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                },
+
+                closeViewer(packId, skinIndex) {
+                    const viewerId = `model-viewer-${packId}-${skinIndex}`;
+                    const viewerContainer = document.getElementById(viewerId);
+                    if (viewerContainer) {
+                        viewerContainer.classList.remove('expanded');
+                    }
+                    this.isOpen = false;
+                    if (this.currentMesh) {
+                        this.scene.remove(this.currentMesh);
+                        this.currentMesh.geometry?.dispose();
+                        this.currentMesh.material?.dispose();
+                        this.currentMesh = null;
+                    }
+                }
+            };
+
             // UI 渲染
             const renderer = {
                 packsList() {
@@ -1725,10 +2190,24 @@
                                     </span>
                                 </div>
                             </div>
-                            <button class="skin-delete-btn" onclick="window.deleteSkin('${packId}', ${index})" 
+                            <button class="skin-view-btn" onclick="window.viewSkinModel('${packId}', ${index})" title="查看3D模型">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                            <button class="skin-delete-btn" onclick="window.deleteSkin('${packId}', ${index})"
                                     title="${canDelete ? '删除此皮肤' : '至少需要保留1个皮肤'}" ${!canDelete ? 'disabled' : ''}>
                                 <i class="fas fa-trash-alt"></i>
                             </button>
+                        </div>
+                        <div class="model-viewer-inline" id="model-viewer-${packId}-${index}">
+                            <div class="model-viewer-inline-content">
+                                <div class="model-viewer-header">
+                                    <span><i class="fas fa-cube"></i> 3D 预览</span>
+                                    <button class="pack-btn delete" onclick="window.closeModelViewer('${packId}', ${index})" title="关闭">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                </div>
+                                <div class="model-viewer-canvas" id="modelViewerCanvas-${packId}-${index}"></div>
+                            </div>
                         </div>
                     `;
                 },
@@ -1866,6 +2345,15 @@
                         if (skinDeleter.deleteSkin(packId, skinIndex)) {
                             renderer.refreshPackSkins(packId);
                         }
+                    };
+
+                    // 模型预览全局函数
+                    window.viewSkinModel = (packId, skinIndex) => {
+                        window.ModelViewer.viewModel(packId, skinIndex);
+                    };
+
+                    window.closeModelViewer = (packId, skinIndex) => {
+                        window.ModelViewer.closeViewer(packId, skinIndex);
                     };
                 },
 
@@ -2028,16 +2516,22 @@
                         if (manifest.modules) manifest.modules[0].uuid = utils.generateUUID();
                     }
 
-                    let geoStr = JSON.stringify(result.geometry);
-                    const lastBrace = geoStr.lastIndexOf('}');
-                    if (lastBrace !== -1) {
-                        geoStr = geoStr.substring(0, lastBrace) + ',' + geoStr.substring(lastBrace);
-                    }
+                    // 自定义格式化 geometry.json，在最后一个 geometry 对象的大括号后也添加逗号
+                    const geometryKeys = Object.keys(result.geometry);
+                    let geometryJsonStr = '';
+                    
+                    geometryKeys.forEach((key) => {
+                        const val = result.geometry[key];
+                        const geoStr = `    "${key}": ${JSON.stringify(val, null, 4).replace(/^/gm, '    ')}`;
+                        geometryJsonStr += geoStr + ',\n';
+                    });
+
+                    const finalGeometryJson = `{\n${geometryJsonStr}}`;
 
                     return {
                         'manifest.json': JSON.stringify(manifest),
                         'skins.json': JSON.stringify({ skins: result.skins }),
-                        'geometry.json': geoStr
+                        'geometry.json': finalGeometryJson
                     };
                 },
 
