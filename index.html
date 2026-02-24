@@ -547,6 +547,108 @@
             background-color: var(--mc-bg-dark);
         }
 
+        /* 多选模式相关样式 */
+        .skins-list-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 12px;
+            background-color: var(--mc-bg-button);
+            border: 2px solid var(--mc-border);
+            border-bottom: 4px solid var(--mc-border);
+            margin-bottom: 8px;
+        }
+
+        .skins-list-header-left {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--mc-text-muted);
+            font-size: 12px;
+            font-weight: 600;
+            text-shadow: 1px 1px 0 #000;
+        }
+
+        .btn-multi-delete {
+            padding: 6px 14px;
+            background-color: var(--mc-red);
+            border: 2px solid var(--mc-border);
+            border-bottom: 4px solid var(--mc-border);
+            color: var(--mc-gray-light);
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.1s;
+            text-shadow: 1px 1px 0 rgba(0,0,0,0.3);
+        }
+
+        .btn-multi-delete:hover:not(:disabled) {
+            background-color: var(--mc-red-hover);
+            transform: translateY(-1px);
+        }
+
+        .btn-multi-delete:active:not(:disabled) {
+            border-bottom: 2px solid var(--mc-border);
+            transform: translateY(2px);
+        }
+
+        .btn-multi-delete:disabled {
+            background-color: var(--mc-bg-dark);
+            color: var(--mc-text-muted);
+            cursor: not-allowed;
+            opacity: 0.5;
+        }
+
+        .btn-toggle-multi {
+            padding: 6px 14px;
+            background-color: var(--mc-bg-panel);
+            border: 2px solid var(--mc-border);
+            border-bottom: 4px solid var(--mc-border);
+            color: var(--mc-gray-light);
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.1s;
+            text-shadow: 1px 1px 0 rgba(0,0,0,0.3);
+        }
+
+        .btn-toggle-multi:hover {
+            background-color: var(--mc-green);
+            transform: translateY(-1px);
+        }
+
+        .btn-toggle-multi.active {
+            background-color: var(--mc-green);
+            border-bottom: 2px solid var(--mc-border);
+            transform: translateY(2px);
+        }
+
+        .skin-item.multi-selected {
+            background-color: rgba(59, 133, 38, 0.2);
+            border-color: var(--mc-green);
+        }
+
+        .skin-item .skin-checkbox-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 24px;
+            flex-shrink: 0;
+        }
+
+        .skin-checkbox {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+            accent-color: var(--mc-green);
+        }
+
         /* 查看模型按钮 */
         .skin-view-btn {
             width: 28px;
@@ -2123,7 +2225,7 @@
                                     <div class="pack-name">${pack.fileName}</div>
                                     ${pack.rootPath ? `<div class="pack-path"><i class="fas fa-folder-open"></i> ${pack.rootPath}</div>` : ''}
                                     <div class="pack-meta">
-                                        ${isReady 
+                                        ${isReady
                                             ? `<span class="pack-status"><i class="fas fa-check-circle"></i> ${pack.skinCount} 个皮肤</span>`
                                             : isError
                                                 ? `<span class="pack-status error"><i class="fas fa-exclamation-circle"></i> ${pack.errorMsg || '加载失败'}</span>`
@@ -2146,6 +2248,15 @@
                             ${isReady ? `
                                 <div class="skins-expandable" id="skins-expand-${pack.id}">
                                     <div class="skins-list" id="skins-list-${pack.id}">
+                                        <div class="skins-list-header" id="skins-list-header-${pack.id}">
+                                            <div class="skins-list-header-left">
+                                                <span style="font-size: 12px; color: var(--mc-text-muted);">多选皮肤</span>
+                                            </div>
+                                            <button class="btn-toggle-multi" id="btn-multi-delete-${pack.id}" onclick="window.deleteSelectedSkins('${pack.id}')" disabled>
+                                                <i class="fas fa-trash-alt"></i>
+                                                <span>删除选中 (<span id="selected-count-${pack.id}">0</span>)</span>
+                                            </button>
+                                        </div>
                                         ${skins.map((skin, idx) => this.createSkinItem(pack.id, skin, idx, skins.length)).join('')}
                                     </div>
                                 </div>
@@ -2160,7 +2271,10 @@
                     const canDelete = total > 1;
 
                     return `
-                        <div class="skin-item" data-skin-index="${index}">
+                        <div class="skin-item" data-skin-index="${index}" id="skin-item-${packId}-${index}">
+                            <div class="skin-checkbox-wrapper">
+                                <input type="checkbox" class="skin-checkbox" data-pack-id="${packId}" data-skin-index="${index}" onchange="window.updateSelectedCount('${packId}')" title="选择此皮肤">
+                            </div>
                             <div class="skin-index">${index + 1}</div>
                             <div class="skin-details">
                                 <div class="skin-name">
@@ -2273,7 +2387,14 @@
                             }
                         }
 
-                        skinsListEl.innerHTML = skins.map((skin, idx) => this.createSkinItem(packId, skin, idx, skins.length)).join('');
+                        // 保留头部栏（多选删除工具栏），只刷新皮肤列表
+                        const headerEl = document.getElementById(`skins-list-header-${packId}`);
+                        const headerHTML = headerEl ? headerEl.outerHTML : '';
+
+                        skinsListEl.innerHTML = headerHTML + skins.map((skin, idx) => this.createSkinItem(packId, skin, idx, skins.length)).join('');
+
+                        // 重新绑定 checkbox 事件和更新计数
+                        window.updateSelectedCount(packId);
                     } catch (e) {
                         console.error('Failed to refresh skins:', e);
                     }
@@ -2345,6 +2466,72 @@
                         if (skinDeleter.deleteSkin(packId, skinIndex)) {
                             renderer.refreshPackSkins(packId);
                         }
+                    };
+
+                    // 多选删除相关函数
+                    window.updateSelectedCount = (packId) => {
+                        const checkboxes = document.querySelectorAll(`.skin-checkbox[data-pack-id="${packId}"]`);
+                        const selectedCount = Array.from(checkboxes).filter(cb => cb.checked).length;
+                        const countDisplay = document.getElementById(`selected-count-${packId}`);
+                        const deleteBtn = document.getElementById(`btn-multi-delete-${packId}`);
+
+                        if (countDisplay) {
+                            countDisplay.textContent = selectedCount;
+                        }
+                        if (deleteBtn) {
+                            deleteBtn.disabled = selectedCount === 0;
+                        }
+
+                        // 更新选中项的高亮状态
+                        checkboxes.forEach(cb => {
+                            const skinIndex = cb.dataset.skinIndex;
+                            const skinItem = document.getElementById(`skin-item-${packId}-${skinIndex}`);
+                            if (skinItem) {
+                                skinItem.classList.toggle('multi-selected', cb.checked);
+                            }
+                        });
+                    };
+
+                    window.deleteSelectedSkins = (packId) => {
+                        const checkboxes = document.querySelectorAll(`.skin-checkbox[data-pack-id="${packId}"]`);
+                        const selectedIndices = Array.from(checkboxes)
+                            .filter(cb => cb.checked)
+                            .map(cb => parseInt(cb.dataset.skinIndex))
+                            .sort((a, b) => b - a); // 从大到小删除，避免索引偏移
+
+                        if (selectedIndices.length === 0) return;
+
+                        const pack = state.skinPacks.find(p => p.id === packId);
+                        if (!pack || !pack.files['skins.json']) return;
+
+                        const skinsData = JSON.parse(pack.files['skins.json']._content);
+                        const remainingSkins = skinsData.skins.length - selectedIndices.length;
+
+                        if (remainingSkins < 1) {
+                            logger.add(`⚠️ 无法删除：${pack.fileName} 至少需要保留 1 个皮肤`);
+                            return;
+                        }
+
+                        // 批量删除皮肤
+                        let deletedCount = 0;
+                        for (const skinIndex of selectedIndices) {
+                            const deletedSkin = skinsData.skins[skinIndex];
+                            if (deletedSkin) {
+                                skinDeleter.cleanupUnusedTexture(pack, deletedSkin.texture, 
+                                    skinsData.skins.filter((_, idx) => !selectedIndices.includes(idx)));
+                                deletedCount++;
+                            }
+                        }
+
+                        // 过滤掉选中的皮肤
+                        skinsData.skins = skinsData.skins.filter((_, idx) => !selectedIndices.includes(idx));
+                        
+                        // 更新文件内容
+                        pack.files['skins.json']._content = JSON.stringify(skinsData, null, 2);
+                        pack.skinCount = skinsData.skins.length;
+
+                        logger.add(`🗑️ 已批量删除 ${deletedCount} 个皮肤 (${pack.fileName})`);
+                        renderer.refreshPackSkins(packId);
                     };
 
                     // 模型预览全局函数
