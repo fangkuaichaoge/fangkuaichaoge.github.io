@@ -1,0 +1,328 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="theme-color" content="#1b1b1b">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <title>Minecraft 皮肤工作室</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- 左侧边栏 -->
+    <aside class="sidebar">
+        <div class="logo">
+            <i class="fas fa-cube"></i>
+        </div>
+        <div class="version">v1.0</div>
+    </aside>
+
+    <!-- 主内容区 -->
+    <div class="main-wrapper">
+        <!-- 顶部工具栏 -->
+        <header class="top-bar">
+            <h1 class="page-title">
+                <i class="fas fa-palette"></i>
+                Skin Studio
+            </h1>
+            <div class="toolbar-actions">
+                <button class="btn btn-primary" id="uploadModel">
+                    <i class="fas fa-upload"></i> <span class="btn-text">上传模型</span>
+                </button>
+                <button class="btn btn-primary" id="uploadTexture">
+                    <i class="fas fa-image"></i> <span class="btn-text">上传纹理</span>
+                </button>
+            </div>
+        </header>
+
+        <div class="content-area">
+            <!-- 左侧皮肤列表 -->
+            <div class="skin-list-panel">
+                <div class="panel-header">
+                    <h3 class="panel-title">
+                        <i class="fas fa-list"></i> 皮肤列表
+                    </h3>
+                    <!-- 移动端关闭按钮（仅移动端显示） -->
+                    <button class="panel-close-btn mobile-only" onclick="document.querySelector('.skin-list-panel').classList.remove('open'); document.querySelector('.mobile-overlay')?.classList.remove('active');" style="display:none;">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <!-- 皮肤列表容器 -->
+                <ul id="skins">
+                    <!-- 动态生成的皮肤项 -->
+                </ul>
+                <!-- 添加皮肤按钮 -->
+                <li id="addSkin">
+                    <span><i class="fas fa-plus"></i> 添加皮肤</span>
+                </li>
+                <!-- 导出按钮 -->
+                <li id="export">
+                    <span><i class="fas fa-download"></i> 导出包</span>
+                </li>
+            </div>
+
+            <!-- 中间画布区域 -->
+            <div class="canvas-container">
+                <canvas id="primaryCanvas"></canvas>
+                
+                <!-- 3D 移动控制器 -->
+                <div id="point3DMover">
+                    <div class="moveHandle" id="point3DMoverX">
+                        <div class="arrow"></div>
+                    </div>
+                    <div class="moveHandle" id="point3DMoverY">
+                        <div class="arrow"></div>
+                    </div>
+                    <div class="moveHandle" id="point3DMoverZ">
+                        <div class="arrow"></div>
+                    </div>
+                    <div class="circle"></div>
+                </div>
+            </div>
+
+            <!-- 右侧属性面板 -->
+            <div class="properties-panel">
+                <div class="panel-section">
+                    <h3 class="panel-title">
+                        <i class="fas fa-cog"></i> 属性
+                    </h3>
+                    <ul id="inspector" class="inspector-list">
+                        <li id="inspectDefaultActions" class="action-buttons">
+                            <div class="prop-label" style="color: var(--mc-text-muted); font-size: 12px;">
+                                <i class="fas fa-info-circle"></i> 选择骨骼或组以编辑属性
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="panel-section">
+                    <h3 class="panel-title">
+                        <i class="fas fa-sitemap"></i> 几何层级
+                        <div class="geometry-actions">
+                            <button class="geo-btn" id="addBoneFromGeo" title="添加骨骼">
+                                <i class="fas fa-bone"></i>
+                            </button>
+                            <button class="geo-btn geo-btn-danger" id="deleteBone" title="删除骨骼" style="display:none;">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </h3>
+                    <ul id="groupTree" class="group-tree" multiple>
+                        <!-- 层级树将动态生成 -->
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="gl-matrix-min.js"></script>
+    <script src="zip.js"></script>
+    <script>
+        // 禁用 Web Workers 以支持本地文件协议
+        zip.useWebWorkers = false;
+    </script>
+    <script src="data.js"></script>
+    <script src="obj_parser.js"></script>
+    <script src="renderer.js"></script>
+    <script src="ui.js"></script>
+    <script>
+        let uiManager = new UiManager();
+    </script>
+    
+    <!-- 移动端增强脚本 -->
+    <script>
+        // 移动端手势增强和面板滑动关闭功能
+        (function() {
+            'use strict';
+            
+            // 防止双击缩放
+            let lastTouchEnd = 0;
+            document.addEventListener('touchstart', function(event) {
+                if (event.touches.length > 1) {
+                    event.preventDefault();
+                }
+            }, { passive: false });
+            
+            document.addEventListener('touchend', function(event) {
+                const now = Date.now();
+                if (now - lastTouchEnd <= 300) {
+                    event.preventDefault();
+                }
+                lastTouchEnd = now;
+            }, { passive: false });
+            
+            // 防止下拉刷新
+            document.addEventListener('scroll', function(e) {
+                e.preventDefault();
+            }, { passive: false });
+            
+            // 面板滑动关闭功能
+            function initSwipeToClose() {
+                const skinPanel = document.querySelector('.skin-list-panel');
+                const propPanel = document.querySelector('.properties-panel');
+                const overlay = document.querySelector('.mobile-overlay');
+                
+                // 皮肤面板滑动关闭（向左滑）
+                if (skinPanel) {
+                    initPanelSwipe(skinPanel, 'left', overlay);
+                }
+                // 属性面板滑动关闭（向右滑）
+                if (propPanel) {
+                    initPanelSwipe(propPanel, 'right', overlay);
+                }
+            }
+            
+            function initPanelSwipe(panel, direction, overlay) {
+                let startX = 0;
+                let currentX = 0;
+                let isDragging = false;
+                const threshold = 60;
+                
+                panel.addEventListener('touchstart', function(e) {
+                    if (e.touches.length === 1 && panel.classList.contains('open')) {
+                        startX = e.touches[0].clientX;
+                        isDragging = true;
+                        panel.style.transition = 'none';
+                    }
+                }, { passive: true });
+                
+                panel.addEventListener('touchmove', function(e) {
+                    if (!isDragging || e.touches.length !== 1 || !panel.classList.contains('open')) return;
+                    
+                    currentX = e.touches[0].clientX;
+                    const deltaX = currentX - startX;
+                    
+                    if (direction === 'left' && deltaX < 0) {
+                        panel.style.transform = 'translateX(' + deltaX + 'px)';
+                    } else if (direction === 'right' && deltaX > 0) {
+                        panel.style.transform = 'translateX(' + deltaX + 'px)';
+                    }
+                }, { passive: true });
+                
+                panel.addEventListener('touchend', function(e) {
+                    if (!isDragging) return;
+                    isDragging = false;
+                    panel.style.transition = '';
+                    
+                    let shouldClose = false;
+                    
+                    if (direction === 'left') {
+                        const deltaX = currentX - startX;
+                        shouldClose = deltaX < -threshold;
+                    } else if (direction === 'right') {
+                        const deltaX = currentX - startX;
+                        shouldClose = deltaX > threshold;
+                    }
+                    
+                    if (shouldClose) {
+                        panel.classList.remove('open');
+                        if (overlay) overlay.classList.remove('active');
+                    } else {
+                        panel.style.transform = '';
+                    }
+                    
+                    currentX = 0;
+                    startX = 0;
+                }, { passive: true });
+                
+                panel.addEventListener('touchcancel', function() {
+                    isDragging = false;
+                    panel.style.transition = '';
+                    panel.style.transform = '';
+                    currentX = 0;
+                    startX = 0;
+                });
+            }
+            
+            // 画布区域双指缩放优化
+            function initCanvasPinchZoom() {
+                const canvas = document.getElementById('primaryCanvas');
+                if (!canvas) return;
+                
+                let initialDistance = 0;
+                let initialZoom = 1;
+                let currentZoom = 1;
+                
+                canvas.addEventListener('touchstart', function(e) {
+                    if (e.touches.length === 2) {
+                        e.preventDefault();
+                        const dx = e.touches[0].clientX - e.touches[1].clientX;
+                        const dy = e.touches[0].clientY - e.touches[1].clientY;
+                        initialDistance = Math.sqrt(dx * dx + dy * dy);
+                    }
+                }, { passive: false });
+                
+                canvas.addEventListener('touchmove', function(e) {
+                    if (e.touches.length === 2) {
+                        e.preventDefault();
+                        const dx = e.touches[0].clientX - e.touches[1].clientX;
+                        const dy = e.touches[0].clientY - e.touches[1].clientY;
+                        const distance = Math.sqrt(dx * dx + dy * dy);
+                        
+                        if (initialDistance > 0) {
+                            const scale = distance / initialDistance;
+                            currentZoom = Math.max(0.5, Math.min(3, initialZoom * scale));
+                        }
+                    }
+                }, { passive: false });
+                
+                canvas.addEventListener('touchend', function(e) {
+                    if (e.touches.length < 2) {
+                        initialDistance = 0;
+                        initialZoom = currentZoom;
+                    }
+                });
+            }
+            
+            // 页面加载完成后初始化
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', function() {
+                    setTimeout(function() {
+                        initSwipeToClose();
+                        initCanvasPinchZoom();
+                        // 移动端显示关闭按钮
+                        if (window.innerWidth <= 600) {
+                            document.querySelectorAll('.mobile-only').forEach(function(btn) {
+                                btn.style.display = 'flex';
+                            });
+                        }
+                    }, 500);
+                });
+            } else {
+                setTimeout(function() {
+                    initSwipeToClose();
+                    initCanvasPinchZoom();
+                    // 移动端显示关闭按钮
+                    if (window.innerWidth <= 600) {
+                        document.querySelectorAll('.mobile-only').forEach(function(btn) {
+                            btn.style.display = 'flex';
+                        });
+                    }
+                }, 500);
+            }
+            
+            // 监听窗口大小变化，重新初始化
+            window.addEventListener('resize', function() {
+                if (window.innerWidth <= 600) {
+                    setTimeout(function() {
+                        initSwipeToClose();
+                        // 显示关闭按钮
+                        document.querySelectorAll('.mobile-only').forEach(function(btn) {
+                            btn.style.display = 'flex';
+                        });
+                    }, 300);
+                } else {
+                    // 网页端隐藏关闭按钮
+                    document.querySelectorAll('.mobile-only').forEach(function(btn) {
+                        btn.style.display = 'none';
+                    });
+                }
+            });
+        })();
+    </script>
+</body>
+</html>
