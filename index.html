@@ -1471,7 +1471,7 @@
                     const newData = { ...data, skins: newSkins };
                     
                     // 格式化输出，确保格式严谨
-                    return JSON.stringify(newData, null, 2);
+                    return JSON.stringify(newData);
                 },
 
                 cleanupUnusedTexture(pack, textureName, remainingSkins) {
@@ -2527,7 +2527,7 @@
                         skinsData.skins = skinsData.skins.filter((_, idx) => !selectedIndices.includes(idx));
                         
                         // 更新文件内容
-                        pack.files['skins.json']._content = JSON.stringify(skinsData, null, 2);
+                        pack.files['skins.json']._content = JSON.stringify(skinsData);
                         pack.skinCount = skinsData.skins.length;
 
                         logger.add(`🗑️ 已批量删除 ${deletedCount} 个皮肤 (${pack.fileName})`);
@@ -2709,7 +2709,7 @@
                     
                     geometryKeys.forEach((key) => {
                         const val = result.geometry[key];
-                        const geoStr = `    "${key}": ${JSON.stringify(val, null, 4).replace(/^/gm, '    ')}`;
+                        const geoStr = `    "${key}": ${JSON.stringify(val).replace(/^/gm, '    ')}`;
                         geometryJsonStr += geoStr + ',\n';
                     });
 
