@@ -1174,6 +1174,231 @@
                 height: 250px;
             }
         }
+
+        /* 移动端适配 - 手机竖屏 */
+        @media (max-width: 600px) {
+            .sidebar {
+                display: none;
+            }
+            .main-content {
+                margin-left: 0;
+                padding: 12px;
+                padding-bottom: 80px;
+            }
+            .page-header {
+                padding: 12px;
+            }
+            .page-title {
+                font-size: 18px;
+            }
+            .glass-container {
+                padding: 16px;
+                margin-bottom: 16px;
+            }
+            .section-header {
+                font-size: 14px;
+                margin-bottom: 12px;
+            }
+            .upload-zone {
+                padding: 24px 16px;
+            }
+            .upload-icon-main {
+                width: 48px;
+                height: 48px;
+                font-size: 22px;
+            }
+            .upload-title-main {
+                font-size: 15px;
+            }
+            .upload-subtitle-main {
+                font-size: 12px;
+            }
+            
+            /* 预设按钮优化 - 两列布局 */
+            .preset-pills {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 8px;
+            }
+            .preset-pill {
+                padding: 12px 8px;
+                font-size: 12px;
+                text-align: center;
+            }
+            .preset-pill.active {
+                border-bottom-width: 4px;
+            }
+            .preset-hint {
+                font-size: 11px;
+                flex-wrap: wrap;
+            }
+            
+            /* 选项网格 - 单列紧凑布局 */
+            .options-grid {
+                grid-template-columns: 1fr;
+                gap: 8px;
+                padding: 12px;
+            }
+            .option-item {
+                padding: 10px 12px;
+            }
+            .option-label {
+                font-size: 12px;
+            }
+            .option-label i {
+                display: none;
+            }
+            .toggle-switch {
+                width: 40px;
+                height: 22px;
+            }
+            .slider:before {
+                height: 14px;
+                width: 14px;
+            }
+            input:checked + .slider:before {
+                transform: translateX(18px);
+            }
+            
+            /* 合并按钮 */
+            .btn-merge {
+                padding: 14px;
+                font-size: 14px;
+            }
+            
+            /* 包列表项 */
+            .pack-header {
+                padding: 10px 12px;
+                gap: 10px;
+            }
+            .pack-number {
+                width: 28px;
+                height: 28px;
+                font-size: 12px;
+            }
+            .pack-name {
+                font-size: 13px;
+            }
+            .pack-meta {
+                font-size: 10px;
+                flex-wrap: wrap;
+            }
+            .pack-actions {
+                gap: 6px;
+            }
+            .pack-btn {
+                width: 28px;
+                height: 28px;
+            }
+            
+            /* 皮肤列表项 */
+            .skin-item {
+                padding: 8px 10px;
+            }
+            .skin-name {
+                font-size: 12px;
+            }
+            .skin-geometry, .skin-texture {
+                font-size: 10px;
+            }
+            .skin-view-btn, .skin-delete-btn {
+                width: 24px;
+                height: 24px;
+                font-size: 11px;
+            }
+            
+            /* 进度条 */
+            .progress-container {
+                padding: 16px;
+            }
+            .progress-bar-bg {
+                height: 16px;
+            }
+            .progress-text {
+                font-size: 12px;
+            }
+            
+            /* 结果区域 */
+            .result-icon {
+                width: 44px;
+                height: 44px;
+                font-size: 20px;
+            }
+            .result-title {
+                font-size: 16px;
+            }
+            .btn-download {
+                padding: 12px 20px;
+                font-size: 13px;
+            }
+            
+            /* 日志区域 */
+            .log-container {
+                padding: 12px;
+                max-height: 200px;
+            }
+            .log-header {
+                font-size: 12px;
+            }
+            .log-content {
+                font-size: 11px;
+            }
+            
+            /* 皮肤展开区域 */
+            .skins-list-header {
+                flex-wrap: wrap;
+                gap: 8px;
+                padding: 8px 10px;
+            }
+            .skins-list-header-left {
+                font-size: 11px;
+            }
+            .btn-multi-delete, .btn-toggle-multi {
+                padding: 6px 10px;
+                font-size: 11px;
+            }
+        }
+
+        /* 超窄屏幕适配 */
+        @media (max-width: 400px) {
+            .main-content {
+                padding: 10px;
+                padding-bottom: 70px;
+            }
+            .page-title {
+                font-size: 16px;
+            }
+            .preset-pills {
+                grid-template-columns: 1fr;
+            }
+            .preset-pill {
+                padding: 10px 8px;
+            }
+            .glass-container {
+                padding: 12px;
+            }
+            .upload-zone {
+                padding: 20px 12px;
+            }
+            .upload-icon-main {
+                width: 40px;
+                height: 40px;
+                font-size: 18px;
+            }
+            .upload-title-main {
+                font-size: 14px;
+            }
+            .option-item {
+                padding: 8px 10px;
+            }
+            .option-label {
+                font-size: 11px;
+            }
+            .btn-merge {
+                padding: 12px;
+                font-size: 13px;
+            }
+        }
     </style>
     <script src="./js/jszip.min.js"></script>
             <script src="./js/FileSaver.min.js"></script>
@@ -2851,6 +3076,157 @@
             events.init();
         })();
     </script>
+
+    <!-- 移动端底部导航栏 -->
+    <nav class="mobile-nav-main">
+        <a href="index.html" class="mobile-nav-item active">
+            <i class="fas fa-layer-group"></i>
+            <span>合并工具</span>
+        </a>
+        <a href="skinstudio/index.html" class="mobile-nav-item mobile-nav-studio">
+            <i class="fas fa-palette"></i>
+            <span>皮肤工作室</span>
+        </a>
+    </nav>
+
+    <style>
+        /* 移动端底部导航栏样式 - 优化设计 */
+        .mobile-nav-main {
+            display: none;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top, rgba(27, 27, 27, 0.98), rgba(42, 42, 42, 0.95));
+            border-top: 3px solid var(--mc-border);
+            z-index: 1000;
+            justify-content: space-evenly;
+            align-items: stretch;
+            padding: 4px 4px 0;
+            padding-bottom: env(safe-area-inset-bottom);
+            height: calc(60px + env(safe-area-inset-bottom));
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        .mobile-nav-main .mobile-nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 10px 16px;
+            color: var(--mc-text-muted);
+            text-decoration: none;
+            transition: all 0.2s ease;
+            min-width: 0;
+            flex: 1;
+            border-radius: 0;
+            position: relative;
+            -webkit-tap-highlight-color: transparent;
+            border: none;
+            background: transparent;
+        }
+
+        .mobile-nav-main .mobile-nav-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%) scaleX(0);
+            width: 60px;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--mc-green), transparent);
+            transition: transform 0.25s ease;
+            border-radius: 0 0 3px 3px;
+        }
+
+        .mobile-nav-main .mobile-nav-item.active {
+            color: var(--mc-green);
+        }
+
+        .mobile-nav-main .mobile-nav-item.active::before {
+            transform: translateX(-50%) scaleX(1);
+        }
+
+        .mobile-nav-main .mobile-nav-item:active {
+            transform: scale(0.9);
+        }
+
+        .mobile-nav-main .mobile-nav-item i {
+            font-size: 24px;
+            margin-bottom: 4px;
+            transition: all 0.2s ease;
+        }
+
+        .mobile-nav-main .mobile-nav-item.active i {
+            transform: scale(1.1);
+            text-shadow: 0 0 8px rgba(59, 133, 38, 0.5);
+        }
+
+        .mobile-nav-main .mobile-nav-item span {
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.2px;
+            transition: all 0.2s ease;
+        }
+
+        .mobile-nav-main .mobile-nav-item.active span {
+            color: var(--mc-green);
+        }
+
+        /* 皮肤工作室按钮特殊样式 - 更突出美观 */
+        .mobile-nav-studio {
+            position: relative;
+            border-left: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .mobile-nav-studio i {
+            font-size: 26px !important;
+            transition: all 0.2s ease;
+        }
+
+        .mobile-nav-studio:active {
+            transform: scale(0.92);
+            background: linear-gradient(135deg, rgba(59, 133, 38, 0.25) 0%, rgba(59, 133, 38, 0.15) 100%);
+        }
+
+        .mobile-nav-studio:active i {
+            transform: scale(1.1);
+            background: linear-gradient(135deg, var(--mc-green) 0%, #5cb85c 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .mobile-nav-studio:active span {
+            color: var(--mc-green);
+            font-weight: 700;
+        }
+
+        .mobile-nav-studio::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%) scaleX(0);
+            width: 50px;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--mc-green), transparent);
+            transition: transform 0.3s ease;
+            border-radius: 0 0 3px 3px;
+        }
+
+        .mobile-nav-studio:active::before {
+            transform: translateX(-50%) scaleX(1);
+        }
+
+        @media (max-width: 600px) {
+            .mobile-nav-main {
+                display: flex;
+            }
+        }
+    </style>
 </body>
 </html>
 
