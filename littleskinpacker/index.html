@@ -31,6 +31,8 @@
             --mc-red-hover: #a04545;
             --mc-orange: #e07a3f;
             --mc-orange-hover: #f08d4f;
+            --mc-blue: #3c44aa;
+            --mc-blue-hover: #4a54d8;
         }
 
         body {
@@ -120,7 +122,6 @@
             color: var(--mc-text-muted);
         }
 
-        /* 搜索类型选择器 */
         #searchType {
             flex: 0 0 auto;
             width: 110px;
@@ -140,33 +141,8 @@
             padding: 10px;
         }
 
-        /* 搜索按钮增强 */
         .btn-search {
             min-width: 120px;
-        }
-
-        /* 搜索类型标签 */
-        .search-type-indicator {
-            display: inline-block;
-            padding: 4px 12px;
-            margin-left: 8px;
-            border-radius: 4px;
-            font-size: 12px;
-            font-weight: 600;
-            text-shadow: 1px 1px 0 rgba(0,0,0,0.3);
-        }
-
-        .search-type-indicator.skin {
-            background-color: var(--mc-green);
-            color: var(--mc-gray-light);
-        }
-
-        .search-type-indicator.cape {
-            background-color: var(--mc-orange);
-            color: var(--mc-gray-light);
-        }
-
-        .btn-search {
             padding: 14px 24px;
             background-color: var(--mc-green);
             color: var(--mc-gray-light);
@@ -205,10 +181,83 @@
             align-items: center;
             gap: 8px;
             min-height: 20px;
+            flex-wrap: wrap;
         }
 
         .search-meta i {
             color: var(--mc-green);
+        }
+
+        .proxy-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 10px;
+            background-color: var(--mc-bg-button);
+            border: 2px solid var(--mc-border);
+            font-size: 11px;
+            margin-left: auto;
+        }
+
+        .proxy-status.active {
+            border-color: var(--mc-green);
+            color: var(--mc-green);
+        }
+
+        .proxy-status.error {
+            border-color: var(--mc-red);
+            color: var(--mc-red);
+        }
+
+        .proxy-selector {
+            margin-top: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .proxy-selector label {
+            font-size: 12px;
+            color: var(--mc-text-muted);
+            font-weight: 600;
+        }
+
+        .proxy-select {
+            padding: 6px 10px;
+            background-color: var(--mc-bg-button);
+            border: 2px solid var(--mc-border);
+            color: var(--mc-gray-light);
+            font-size: 12px;
+            font-family: "Microsoft YaHei", sans-serif;
+            cursor: pointer;
+        }
+
+        .proxy-select:focus {
+            outline: none;
+            border-color: var(--mc-blue);
+        }
+
+        .btn-test-proxy {
+            padding: 6px 12px;
+            background-color: var(--mc-blue);
+            color: var(--mc-gray-light);
+            border: 2px solid var(--mc-border);
+            border-bottom: 4px solid var(--mc-border);
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.1s;
+        }
+
+        .btn-test-proxy:hover {
+            background-color: var(--mc-blue-hover);
+            transform: translateY(-1px);
+        }
+
+        .btn-test-proxy:active {
+            border-bottom: 2px solid var(--mc-border);
+            transform: translateY(1px);
         }
 
         .pagination {
@@ -320,9 +369,6 @@
             gap: 12px;
             transition: all 0.1s;
             box-shadow: inset 0 1px 0 rgba(255,255,255,0.1);
-        }
-
-        .skin-card {
             position: relative;
             overflow: hidden;
         }
@@ -455,14 +501,6 @@
 
         .btn-skin-action.remove:hover {
             background-color: var(--mc-red-hover);
-        }
-
-        .btn-skin-action.assign-cape {
-            background-color: var(--mc-orange);
-        }
-
-        .btn-skin-action.assign-cape:hover {
-            background-color: var(--mc-orange-hover);
         }
 
         .empty-state {
@@ -800,7 +838,27 @@
                     <span>搜索</span>
                 </button>
             </div>
-            <div class="search-meta" id="status"></div>
+            <div class="search-meta" id="status">
+                <span id="proxyStatus" class="proxy-status">
+                    <i class="fas fa-circle-notch fa-spin"></i> 检查代理中...
+                </span>
+            </div>
+            
+            <!-- 代理选择器 -->
+            <div class="proxy-selector">
+                <label for="proxySelect"><i class="fas fa-server"></i> 代理服务器:</label>
+                <select id="proxySelect" class="proxy-select">
+                    <option value="direct">直接连接 (Direct)</option>
+                    <option value="allorigins">AllOrigins (国际)</option>
+                    <option value="corsproxy">CorsProxy.io (国际)</option>
+                    <option value="thingproxy">ThingProxy (国际)</option>
+                    <option value="codetabs">CodeTabs (国际)</option>
+                </select>
+                <button id="testProxyBtn" class="btn-test-proxy">
+                    <i class="fas fa-vial"></i> 测试代理
+                </button>
+            </div>
+
             <div class="pagination">
                 <button id="prevPage" class="pagination-btn" disabled>
                     <i class="fas fa-chevron-left"></i> <span>上一页</span>
@@ -899,20 +957,42 @@
     <script>
         const LITTLESKIN_API = 'https://littleskin.cn';
 
-        // CORS 代理配置
-        const PROXIES = [
-            { name: 'allorigins', url: 'https://api.allorigins.win/get?url=', type: 'json' },
-            { name: 'direct', url: '', type: 'direct' }
-        ];
-        let currentProxyIndex = 0;
-
-        function getProxyUrl(apiUrl) {
-            const proxy = PROXIES[currentProxyIndex];
-            if (proxy.type === 'direct') {
-                return apiUrl;
+        // CORS 代理配置 - 多个备选
+        const PROXIES = {
+            direct: { 
+                name: '直接连接', 
+                url: '', 
+                type: 'direct',
+                enabled: true 
+            },
+            allorigins: { 
+                name: 'AllOrigins', 
+                url: 'https://api.allorigins.win/get?url=', 
+                type: 'json',
+                enabled: true 
+            },
+            corsproxy: { 
+                name: 'CorsProxy.io', 
+                url: 'https://corsproxy.io/?', 
+                type: 'direct',
+                enabled: true 
+            },
+            thingproxy: { 
+                name: 'ThingProxy', 
+                url: 'https://thingproxy.freeboard.io/fetch/', 
+                type: 'direct',
+                enabled: true 
+            },
+            codetabs: { 
+                name: 'CodeTabs', 
+                url: 'https://api.codetabs.com/v1/proxy?quest=', 
+                type: 'direct',
+                enabled: true 
             }
-            return proxy.url + encodeURIComponent(apiUrl);
-        }
+        };
+
+        let currentProxy = 'direct';
+        let proxyWorking = false;
 
         // DOM 元素
         const searchBtn = document.getElementById("searchBtn");
@@ -929,6 +1009,9 @@
         const prevPageBottomBtn = document.getElementById("prevPageBottom");
         const nextPageBottomBtn = document.getElementById("nextPageBottom");
         const pageInfoBottomEl = document.getElementById("pageInfoBottom");
+        const proxySelect = document.getElementById("proxySelect");
+        const proxyStatusEl = document.getElementById("proxyStatus");
+        const testProxyBtn = document.getElementById("testProxyBtn");
         
         // 皮肤库元素
         const downloadBtn = document.getElementById("downloadBtn");
@@ -955,6 +1038,14 @@
         const capeCart = [];
         const CART_LIMIT = 100;
 
+        function getProxyUrl(apiUrl) {
+            const proxy = PROXIES[currentProxy];
+            if (proxy.type === 'direct') {
+                return apiUrl;
+            }
+            return proxy.url + encodeURIComponent(apiUrl);
+        }
+
         function getPreviewUrl(tid) {
             return `https://littleskin.cn/preview/${tid}?height=150`;
         }
@@ -964,7 +1055,94 @@
         }
 
         function setStatus(message) {
+            const proxyStatusHtml = proxyStatusEl ? proxyStatusEl.outerHTML : '';
             statusEl.innerHTML = message ? '<i class="fas fa-info-circle"></i> ' + message : "";
+            if (proxyStatusHtml) {
+                statusEl.appendChild(proxyStatusEl);
+            }
+        }
+
+        function updateProxyStatus(status, message) {
+            proxyWorking = status === 'success';
+            proxyStatusEl.className = 'proxy-status ' + (status === 'success' ? 'active' : status === 'error' ? 'error' : '');
+            proxyStatusEl.innerHTML = status === 'loading' 
+                ? '<i class="fas fa-circle-notch fa-spin"></i> ' + message
+                : status === 'success'
+                ? '<i class="fas fa-check-circle"></i> ' + message
+                : '<i class="fas fa-exclamation-circle"></i> ' + message;
+        }
+
+        async function testProxy(proxyKey = null) {
+            const proxyToTest = proxyKey || currentProxy;
+            updateProxyStatus('loading', '测试 ' + PROXIES[proxyToTest].name + '...');
+            
+            const testUrl = `${LITTLESKIN_API}/skinlib/list?keyword=test&page=1&filter=skin`;
+            const proxy = PROXIES[proxyToTest];
+            
+            try {
+                let fetchUrl;
+                if (proxy.type === 'direct') {
+                    fetchUrl = testUrl;
+                } else {
+                    fetchUrl = proxy.url + encodeURIComponent(testUrl);
+                }
+
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 10000);
+                
+                const response = await fetch(fetchUrl, {
+                    method: 'GET',
+                    headers: { 'Accept': 'application/json' },
+                    signal: controller.signal
+                });
+                clearTimeout(timeoutId);
+
+                if (!response.ok) throw new Error('HTTP ' + response.status);
+
+                let data;
+                if (proxy.type === 'json') {
+                    const result = await response.json();
+                    data = JSON.parse(result.contents);
+                } else {
+                    data = await response.json();
+                }
+
+                if (data && Array.isArray(data.data)) {
+                    updateProxyStatus('success', PROXIES[proxyToTest].name + ' 可用');
+                    PROXIES[proxyToTest].enabled = true;
+                    return true;
+                } else {
+                    throw new Error('Invalid data');
+                }
+            } catch (error) {
+                updateProxyStatus('error', PROXIES[proxyToTest].name + ' 失败');
+                PROXIES[proxyToTest].enabled = false;
+                console.error('代理测试失败:', error);
+                return false;
+            }
+        }
+
+        async function autoSelectProxy() {
+            updateProxyStatus('loading', '自动选择最佳代理...');
+            
+            // 先测试直接连接
+            if (await testProxy('direct')) {
+                currentProxy = 'direct';
+                proxySelect.value = 'direct';
+                return;
+            }
+
+            // 测试其他代理
+            for (const [key, proxy] of Object.entries(PROXIES)) {
+                if (key === 'direct') continue;
+                if (await testProxy(key)) {
+                    currentProxy = key;
+                    proxySelect.value = key;
+                    return;
+                }
+            }
+
+            updateProxyStatus('error', '所有代理都不可用');
         }
 
         function setProgress(show, text) {
@@ -996,7 +1174,6 @@
             currentResults = list;
             resultsCountEl.textContent = String(list.length);
             
-            // 更新结果标题
             updateResultsHeader();
 
             if (list.length === 0) {
@@ -1036,7 +1213,6 @@
 
                 const meta = document.createElement("div");
                 meta.className = "skin-meta";
-                // 披风显示类型，皮肤显示模型
                 let typeLabel = "模型";
                 if (item.type === "alex") typeLabel = "模型 Alex";
                 else if (item.type === "steve") typeLabel = "模型 Steve";
@@ -1103,7 +1279,6 @@
             cartCountEl.textContent = "(" + cart.length + ")";
             capeCartCountEl.textContent = "(" + capeCart.length + ")";
 
-            // 渲染皮肤库
             cartListEl.innerHTML = "";
             if (cart.length === 0) {
                 cartListEl.innerHTML = `
@@ -1145,7 +1320,6 @@
                     info.appendChild(nameEl);
                     info.appendChild(meta);
 
-                    // 披风选择下拉框
                     const capeSelect = document.createElement("select");
                     capeSelect.className = "cape-select";
                     const noneOption = document.createElement("option");
@@ -1203,7 +1377,6 @@
                 });
             }
 
-            // 渲染披风库
             capeCartListEl.innerHTML = "";
             if (capeCart.length === 0) {
                 capeCartListEl.innerHTML = `
@@ -1322,7 +1495,6 @@
         function removeFromCapeCart(tid) {
             const index = capeCart.findIndex(c => c.tid === tid);
             if (index >= 0) {
-                // 同时移除皮肤库中分配了该披风的引用
                 cart.forEach(item => {
                     if (item.cape === tid) {
                         item.cape = null;
@@ -1349,6 +1521,11 @@
                 return;
             }
 
+            if (!proxyWorking && currentProxy !== 'direct') {
+                setStatus("当前代理不可用，请切换代理或测试连接");
+                return;
+            }
+
             setStatus("搜索中...");
             searchBtn.disabled = true;
             isSearching = true;
@@ -1356,65 +1533,55 @@
             updateResultsHeader();
             updatePagination();
 
-            // 构建 API URL
-            // 披风：/skinlib/list?keyword=xxx&page=1&filter=cape
-            // 皮肤：/skinlib/list?keyword=xxx&page=1&filter=skin
             const apiUrl = currentSearchType === "cape"
                 ? `${LITTLESKIN_API}/skinlib/list?keyword=${encodeURIComponent(keyword)}&page=${currentPage}&filter=cape`
                 : `${LITTLESKIN_API}/skinlib/list?keyword=${encodeURIComponent(keyword)}&page=${currentPage}&filter=skin`;
 
-            let success = false;
-            let data = null;
+            try {
+                const proxy = PROXIES[currentProxy];
+                const proxyUrl = getProxyUrl(apiUrl);
+                
+                console.log('使用代理:', proxy.name);
+                console.log('请求 URL:', proxyUrl);
+                
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 30000);
+                
+                const response = await fetch(proxyUrl, {
+                    method: 'GET',
+                    headers: { 'Accept': 'application/json' },
+                    signal: controller.signal
+                });
+                clearTimeout(timeoutId);
 
-            for (let attempt = 0; attempt < PROXIES.length; attempt++) {
-                try {
-                    const proxy = PROXIES[currentProxyIndex];
-                    const proxyUrl = getProxyUrl(apiUrl);
-                    
-                    console.log('尝试 [' + (attempt + 1) + '/' + PROXIES.length + ']: ' + proxy.name);
-                    console.log('请求 URL: ' + proxyUrl);
-                    
-                    const response = await fetch(proxyUrl, {
-                        method: 'GET',
-                        headers: { 'Accept': 'application/json' }
-                    });
+                if (!response.ok) throw new Error('HTTP ' + response.status);
 
-                    if (!response.ok) throw new Error('HTTP ' + response.status);
-
-                    // 处理 allorigins 的 JSON 包装响应
-                    if (proxy.type === 'json') {
-                        const result = await response.json();
-                        if (result.contents) {
-                            data = JSON.parse(result.contents);
-                        } else {
-                            throw new Error('allorigins 返回空内容');
-                        }
-                    } else {
-                        data = await response.json();
-                    }
-
-                    console.log('请求成功：' + proxy.name);
-                    success = true;
-                    break;
-
-                } catch (error) {
-                    console.warn('请求失败 [' + PROXIES[currentProxyIndex].name + ']: ' + error.message);
-                    currentProxyIndex = (currentProxyIndex + 1) % PROXIES.length;
+                let data;
+                if (proxy.type === 'json') {
+                    const result = await response.json();
+                    if (!result.contents) throw new Error('代理返回空内容');
+                    data = JSON.parse(result.contents);
+                } else {
+                    data = await response.json();
                 }
-            }
 
-            if (success && data) {
                 const list = Array.isArray(data.data) ? data.data : [];
                 hasNextPage = Boolean(data.next_page_url);
                 renderResults(list);
                 setStatus('本页共 ' + list.length + ' 条结果');
-            } else {
-                console.error("搜索失败：所有代理都不可用");
-                setStatus("搜索失败，请检查网络连接或稍后重试");
+
+            } catch (error) {
+                console.error("搜索失败:", error);
+                setStatus("搜索失败: " + error.message);
+                if (error.name === 'AbortError') {
+                    setStatus("请求超时，请尝试切换代理");
+                }
                 resultsEl.innerHTML = `
                     <div class="empty-state">
                         <i class="fas fa-exclamation-triangle"></i>
-                        <p>搜索失败，所有代理服务器都不可用</p>
+                        <p>搜索失败</p>
+                        <p style="font-size: 12px; margin-top: 8px;">${error.message}</p>
+                        <p style="font-size: 12px; margin-top: 8px;">建议：尝试切换代理服务器或检查网络连接</p>
                     </div>
                 `;
             }
@@ -1426,7 +1593,10 @@
 
         async function downloadSkinImage(tid) {
             try {
-                const response = await fetch(getTextureUrl(tid));
+                // 下载图片时也需要使用代理
+                const url = getTextureUrl(tid);
+                const proxyUrl = getProxyUrl(url);
+                const response = await fetch(proxyUrl);
                 if (!response.ok) throw new Error('HTTP ' + response.status);
                 return await response.blob();
             } catch (error) {
@@ -1435,7 +1605,6 @@
             }
         }
 
-        // 检查图片尺寸，返回 { width, height } 或 null
         async function getImageDimensions(blob) {
             return new Promise((resolve) => {
                 const img = new Image();
@@ -1490,7 +1659,6 @@
                 skins: []
             };
 
-            // 下载所有披风
             const capeMap = {};
             const capesToDownload = [...new Set(cart.filter(item => item.cape).map(item => item.cape))];
             const invalidCapes = [];
@@ -1512,7 +1680,6 @@
                 }
             }
 
-            // 移除无效披风的分配
             if (invalidCapes.length > 0) {
                 cart.forEach(item => {
                     if (item.cape && invalidCapes.includes(item.cape)) {
@@ -1521,7 +1688,6 @@
                 });
             }
 
-            // 下载皮肤
             let successCount = 0;
             let failCount = 0;
 
@@ -1545,7 +1711,6 @@
                         type: "free"
                     };
 
-                    // 如果分配了披风，添加 cape 字段
                     if (item.cape && capeMap[item.cape]) {
                         skinEntry.cape = capeMap[item.cape];
                     }
@@ -1602,18 +1767,22 @@
 
         searchTypeEl.addEventListener("change", () => {
             currentPage = 1;
-            currentProxyIndex = 0;  // 重置代理
-            
-            // 只更新 UI，不自动搜索
             updateResultsHeader();
             updatePagination();
-            
-            // 清空结果框
             resultsCountEl.textContent = '0';
             const typeName = searchTypeEl.value === 'skin' ? '皮肤' : '披风';
             const iconClass = searchTypeEl.value === 'skin' ? 'fa-th-large' : 'fa-user-astronaut';
             resultsEl.innerHTML = '<div class="empty-state"><i class="fas ' + iconClass + '"></i><p>输入关键词搜索' + typeName + '</p></div>';
-            statusEl.innerHTML = '';
+            setStatus("");
+        });
+
+        proxySelect.addEventListener("change", async () => {
+            currentProxy = proxySelect.value;
+            await testProxy(currentProxy);
+        });
+
+        testProxyBtn.addEventListener("click", async () => {
+            await testProxy(currentProxy);
         });
 
         downloadBtn.addEventListener("click", generatePack);
@@ -1658,6 +1827,7 @@
         // 初始化
         updatePagination();
         updateCartUI();
+        autoSelectProxy(); // 自动选择最佳代理
     </script>
 </body>
 </html>
