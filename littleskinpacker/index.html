@@ -1435,6 +1435,23 @@
             }
         }
 
+        // 检查图片尺寸，返回 { width, height } 或 null
+        async function getImageDimensions(blob) {
+            return new Promise((resolve) => {
+                const img = new Image();
+                const url = URL.createObjectURL(blob);
+                img.onload = () => {
+                    URL.revokeObjectURL(url);
+                    resolve({ width: img.width, height: img.height });
+                };
+                img.onerror = () => {
+                    URL.revokeObjectURL(url);
+                    resolve(null);
+                };
+                img.src = url;
+            });
+        }
+
         async function generatePack() {
             if (cart.length === 0) {
                 setStatus("皮肤库为空");
@@ -1476,16 +1493,32 @@
             // 下载所有披风
             const capeMap = {};
             const capesToDownload = [...new Set(cart.filter(item => item.cape).map(item => item.cape))];
-            
+            const invalidCapes = [];
+
             for (let i = 0; i < capesToDownload.length; i++) {
                 const capeTid = capesToDownload[i];
                 setProgress(true, `正在下载披风 ${i + 1}/${capesToDownload.length}`);
                 const blob = await downloadSkinImage(capeTid);
                 if (blob) {
-                    const fileName = `cape_${capeTid}.png`;
-                    zip.file(fileName, blob);
-                    capeMap[capeTid] = fileName;
+                    const dimensions = await getImageDimensions(blob);
+                    if (dimensions && dimensions.width === 64 && dimensions.height === 32) {
+                        const fileName = `cape_${capeTid}.png`;
+                        zip.file(fileName, blob);
+                        capeMap[capeTid] = fileName;
+                    } else {
+                        invalidCapes.push(capeTid);
+                        console.warn(`披风 TID:${capeTid} 分辨率不符合要求 (${dimensions?.width}x${dimensions?.height})，已跳过`);
+                    }
                 }
+            }
+
+            // 移除无效披风的分配
+            if (invalidCapes.length > 0) {
+                cart.forEach(item => {
+                    if (item.cape && invalidCapes.includes(item.cape)) {
+                        item.cape = null;
+                    }
+                });
             }
 
             // 下载皮肤
