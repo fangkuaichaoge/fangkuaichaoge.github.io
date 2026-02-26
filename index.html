@@ -1725,11 +1725,13 @@
                         const oldModel = skin.geometry;
                         const oldTexture = relations.skinToTexture.get(skinName);
 
-                        const newModel = modelMap.get(oldModel) || oldModel;
+                        // 如果是 humanoid.custom 或 humanoid.customSlim，保持 geometry 不变
+                        const isCustomHumanoid = oldModel === 'geometry.humanoid.custom' || oldModel === 'geometry.humanoid.customSlim';
+                        const newModel = isCustomHumanoid ? oldModel : (modelMap.get(oldModel) || oldModel);
                         const newTexture = textureMap.get(oldTexture) || oldTexture;
-                        
-                        let newSkinName = newModel.replace('geometry.', '');
-                        if (suffixMap.has(oldModel) && suffixMap.get(oldModel).has(oldTexture)) {
+
+                        let newSkinName = isCustomHumanoid ? skinName : newModel.replace('geometry.', '');
+                        if (!isCustomHumanoid && suffixMap.has(oldModel) && suffixMap.get(oldModel).has(oldTexture)) {
                             newSkinName += suffixMap.get(oldModel).get(oldTexture);
                         }
 
@@ -1747,14 +1749,25 @@
 
                     core['skins.json']?.skins?.forEach((skin, idx) => {
                         const baseName = `skin${startIndex + idx}`;
-                        const newGeo = `geometry.${baseName}`;
-                        const newTex = `${baseName}.png`;
+                        
+                        // 如果是 humanoid.custom 或 humanoid.customSlim，保持 geometry 和名称不变
+                        const isCustomHumanoid = skin.geometry === 'geometry.humanoid.custom' || skin.geometry === 'geometry.humanoid.customSlim';
+                        
+                        if (isCustomHumanoid) {
+                            geoRenameMap.set(skin.geometry, skin.geometry);
+                            textureMap.set(skin.texture.toLowerCase(), skin.texture.toLowerCase());
+                            modifiedSkins.push({ ...skin });
+                            logger.add(`✅ 保留自定义模型：${skin.localization_name}`);
+                        } else {
+                            const newGeo = `geometry.${baseName}`;
+                            const newTex = `${baseName}.png`;
 
-                        geoRenameMap.set(skin.geometry, newGeo);
-                        textureMap.set(skin.texture.toLowerCase(), newTex);
+                            geoRenameMap.set(skin.geometry, newGeo);
+                            textureMap.set(skin.texture.toLowerCase(), newTex);
 
-                        modifiedSkins.push({ ...skin, localization_name: baseName, geometry: newGeo, texture: newTex });
-                        logger.add(`🔄 简化命名：${skin.localization_name} → ${baseName}`);
+                            modifiedSkins.push({ ...skin, localization_name: baseName, geometry: newGeo, texture: newTex });
+                            logger.add(`🔄 简化命名：${skin.localization_name} → ${baseName}`);
+                        }
                     });
 
                     return { modifiedSkins, geoRenameMap, textureMap };
@@ -1763,7 +1776,7 @@
                 modifyDuplicate(core, existingSkins, packPrefix) {
                     const existingNames = new Set(existingSkins.map(s => s.localization_name));
                     const existingGeo = new Set(existingSkins.map(s => s.geometry));
-                    
+
                     const modifiedSkins = [];
                     const geoRenameMap = new Map();
                     const textureMap = new Map();
@@ -1773,11 +1786,16 @@
                         let newGeo = skin.geometry;
                         let newTex = skin.texture.toLowerCase();
 
-                        if (existingNames.has(newName)) newName += `_${packPrefix}`;
-                        if (existingGeo.has(newGeo)) newGeo += `_${packPrefix}`;
+                        // 如果是 humanoid.custom 或 humanoid.customSlim，保持 geometry 和名称不变
+                        const isCustomHumanoid = skin.geometry === 'geometry.humanoid.custom' || skin.geometry === 'geometry.humanoid.customSlim';
+                        
+                        if (!isCustomHumanoid) {
+                            if (existingNames.has(newName)) newName += `_${packPrefix}`;
+                            if (existingGeo.has(newGeo)) newGeo += `_${packPrefix}`;
 
-                        existingNames.add(newName);
-                        existingGeo.add(newGeo);
+                            existingNames.add(newName);
+                            existingGeo.add(newGeo);
+                        }
 
                         geoRenameMap.set(skin.geometry, newGeo);
                         textureMap.set(skin.texture.toLowerCase(), newTex);
@@ -2641,8 +2659,17 @@
                             if (count) logger.add(`🛡️ 已为 ${count} 个皮肤启用隐藏盔甲`);
                         }
 
+                        // 处理 cape 重命名
+                        utils.updateProgress(65, '处理披风重命名...');
+                        const capeFiles = this.processCapeRename(result, state.skinPacks);
+
                         utils.updateProgress(70, '合并文件...');
                         const outputFiles = this.buildOutputFiles(result, packsData[0].core['manifest.json']);
+
+                        // 添加 cape 文件到输出
+                        capeFiles.forEach((content, name) => {
+                            outputFiles[name] = content;
+                        });
 
                         utils.updateProgress(80, '收集贴图文件...');
                         this.collectTextures(outputFiles, state.skinPacks);
@@ -2697,6 +2724,50 @@
                     return { skins: allSkins, geometry: mergedGeo };
                 },
 
+                /**
+                 * 处理 cape 文件重命名
+                 * 检测 skins.json 中的 cape 字段，将对应的 png 文件按顺序重命名为 cape1.png, cape2.png...
+                 */
+                processCapeRename(result, packs) {
+                    const capeMap = new Map(); // 旧 cape 名 -> 新 cape 名
+                    const capeFiles = new Map(); // 用于存储 cape 文件内容
+                    let capeCounter = 1;
+
+                    // 收集所有需要重命名的 cape（只要是 png 文件就重命名）
+                    result.skins.forEach(skin => {
+                        if (skin.cape && skin.cape.endsWith('.png')) {
+                            const capeLower = skin.cape.toLowerCase();
+                            if (!capeMap.has(capeLower)) {
+                                const newCapeName = `cape${capeCounter}.png`;
+                                capeMap.set(capeLower, newCapeName);
+                                capeCounter++;
+                            }
+                        }
+                    });
+
+                    // 更新 skins 中的 cape 字段
+                    result.skins.forEach(skin => {
+                        if (skin.cape && capeMap.has(skin.cape.toLowerCase())) {
+                            skin.cape = capeMap.get(skin.cape.toLowerCase());
+                        }
+                    });
+
+                    // 收集 cape 文件并建立映射
+                    packs.forEach(pack => {
+                        Object.entries(pack.files).forEach(([name, file]) => {
+                            const nameLower = name.toLowerCase();
+                            if (capeMap.has(nameLower)) {
+                                const newCapeName = capeMap.get(nameLower);
+                                pack.textureMap.set(name, newCapeName);
+                                capeFiles.set(newCapeName, file.blob || file);
+                                logger.add(`🦅 Cape 重命名：${name} → ${newCapeName}`);
+                            }
+                        });
+                    });
+
+                    return capeFiles;
+                },
+
                 buildOutputFiles(result, manifest) {
                     if (elements.replaceUuid.checked && manifest) {
                         manifest.header.uuid = utils.generateUUID();
@@ -2706,7 +2777,7 @@
                     // 自定义格式化 geometry.json，在最后一个 geometry 对象的大括号后也添加逗号
                     const geometryKeys = Object.keys(result.geometry);
                     let geometryJsonStr = '';
-                    
+
                     geometryKeys.forEach((key) => {
                         const val = result.geometry[key];
                         const geoStr = `    "${key}": ${JSON.stringify(val).replace(/^/gm, '    ')}`;
