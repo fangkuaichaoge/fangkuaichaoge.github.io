@@ -656,6 +656,32 @@
             transform: translateY(2px);
         }
 
+        .btn-invert-selection {
+            padding: 6px 14px;
+            background-color: var(--mc-bg-panel);
+            border: 2px solid var(--mc-border);
+            border-bottom: 4px solid var(--mc-border);
+            color: var(--mc-gray-light);
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.1s;
+            text-shadow: 1px 1px 0 rgba(0,0,0,0.3);
+        }
+
+        .btn-invert-selection:hover {
+            background-color: var(--mc-green);
+            transform: translateY(-1px);
+        }
+
+        .btn-invert-selection:active {
+            border-bottom: 2px solid var(--mc-border);
+            transform: translateY(2px);
+        }
+
         .skin-item.multi-selected {
             background-color: rgba(59, 133, 38, 0.2);
             border-color: var(--mc-green);
@@ -1695,7 +1721,7 @@
 
                     const skinsContent = pack.files['skins.json']._content;
                     const skinsData = JSON.parse(skinsContent);
-                    
+
                     if (skinsData.skins.length <= 1) {
                         logger.add(`⚠️ 无法删除：${pack.fileName} 至少需要保留1个皮肤`);
                         return false;
@@ -1706,16 +1732,16 @@
                     // 获取要删除的皮肤信息
                     const deletedSkin = skinsData.skins[skinIndex];
                     const newSkins = skinsData.skins.filter((_, idx) => idx !== skinIndex);
-                    
+
                     // 重建JSON字符串，智能处理逗号
                     const newJsonString = this.rebuildSkinsJson(skinsContent, skinsData.skins, skinIndex);
-                    
+
                     // 更新文件内容
                     pack.files['skins.json']._content = newJsonString;
                     pack.skinCount = newSkins.length;
-                    
-                    // 如果该皮肤有专属贴图且不再被使用，标记为待删除
-                    this.cleanupUnusedTexture(pack, deletedSkin.texture, newSkins);
+
+                    // 检查并清理未使用的模型和贴图
+                    this.cleanupUnusedResources(pack, deletedSkin, newSkins);
 
                     logger.add(`🗑️ 已删除皮肤: ${deletedSkin.localization_name || `skin_${skinIndex}`} (${pack.fileName})`);
                     return true;
@@ -1725,26 +1751,123 @@
                     // 解析原始JSON字符串以准确定位
                     const data = JSON.parse(originalContent);
                     const skinArray = data.skins;
-                    
+
                     // 构建新的skins数组
                     const newSkins = skinArray.filter((_, idx) => idx !== deleteIndex);
-                    
+
                     // 重建整个JSON对象
                     const newData = { ...data, skins: newSkins };
-                    
+
                     // 格式化输出，确保格式严谨
                     return JSON.stringify(newData);
                 },
 
-                cleanupUnusedTexture(pack, textureName, remainingSkins) {
-                    const textureLower = textureName.toLowerCase();
-                    const stillInUse = remainingSkins.some(s => s.texture.toLowerCase() === textureLower);
-                    
-                    if (!stillInUse && pack.files[textureLower]) {
-                        // 标记贴图为未使用（实际删除在合并时处理）
-                        pack.files[textureLower]._unused = true;
-                        logger.add(`   📎 贴图 ${textureName} 不再被使用`);
+                cleanupUnusedResources(pack, deletedSkin, remainingSkins) {
+                    // 检查模型是否还被其他皮肤使用
+                    const deletedGeometry = deletedSkin.geometry;
+                    const geometryStillInUse = remainingSkins.some(s => s.geometry === deletedGeometry);
+
+                    if (!geometryStillInUse) {
+                        // 从 geometry.json 中删除该模型
+                        if (pack.files['geometry.json']) {
+                            const geoContent = pack.files['geometry.json']._content;
+                            try {
+                                const geoData = JSON.parse(geoContent);
+                                if (geoData[deletedGeometry]) {
+                                    delete geoData[deletedGeometry];
+                                    pack.files['geometry.json']._content = JSON.stringify(geoData);
+                                    logger.add(`   🧊 已删除未使用的模型: ${deletedGeometry}`);
+                                }
+                            } catch (e) {
+                                console.error('Failed to update geometry.json:', e);
+                            }
+                        }
                     }
+
+                    // 检查贴图是否还被其他皮肤使用
+                    const deletedTexture = deletedSkin.texture.toLowerCase();
+                    const textureStillInUse = remainingSkins.some(s => s.texture.toLowerCase() === deletedTexture);
+
+                    if (!textureStillInUse) {
+                        // 从 pack.files 中删除该贴图文件
+                        if (pack.files[deletedTexture]) {
+                            delete pack.files[deletedTexture];
+                            logger.add(`   📎 已删除未使用的贴图: ${deletedTexture}`);
+                        }
+                    }
+
+                    // 检查 cape 是否还需要清理
+                    if (deletedSkin.cape) {
+                        const deletedCape = deletedSkin.cape.toLowerCase();
+                        const capeStillInUse = remainingSkins.some(s => s.cape && s.cape.toLowerCase() === deletedCape);
+
+                        if (!capeStillInUse) {
+                            if (pack.files[deletedCape]) {
+                                delete pack.files[deletedCape];
+                                logger.add(`   🦅 已删除未使用的披风: ${deletedCape}`);
+                            }
+                        }
+                    }
+                },
+
+                // 批量清理未使用的资源
+                cleanupUnusedResourcesBatch(pack, deletedSkins, remainingSkins) {
+                    // 收集所有被删除的皮肤使用的模型、贴图、cape
+                    const deletedGeometries = new Set();
+                    const deletedTextures = new Set();
+                    const deletedCapes = new Set();
+
+                    deletedSkins.forEach(skin => {
+                        deletedGeometries.add(skin.geometry);
+                        deletedTextures.add(skin.texture.toLowerCase());
+                        if (skin.cape) {
+                            deletedCapes.add(skin.cape.toLowerCase());
+                        }
+                    });
+
+                    // 收集剩余皮肤使用的模型、贴图、cape
+                    const usedGeometries = new Set(remainingSkins.map(s => s.geometry));
+                    const usedTextures = new Set(remainingSkins.map(s => s.texture.toLowerCase()));
+                    const usedCapes = new Set(remainingSkins.filter(s => s.cape).map(s => s.cape.toLowerCase()));
+
+                    // 删除不再使用的模型
+                    if (pack.files['geometry.json']) {
+                        const geoContent = pack.files['geometry.json']._content;
+                        try {
+                            const geoData = JSON.parse(geoContent);
+                            let deletedGeoCount = 0;
+
+                            deletedGeometries.forEach(geometry => {
+                                if (!usedGeometries.has(geometry) && geoData[geometry]) {
+                                    delete geoData[geometry];
+                                    deletedGeoCount++;
+                                    logger.add(`   🧊 已删除未使用的模型: ${geometry}`);
+                                }
+                            });
+
+                            if (deletedGeoCount > 0) {
+                                pack.files['geometry.json']._content = JSON.stringify(geoData);
+                            }
+                        } catch (e) {
+                            console.error('Failed to update geometry.json:', e);
+                        }
+                    }
+
+                    // 删除不再使用的贴图
+                    deletedTextures.forEach(texture => {
+                        if (!usedTextures.has(texture) && pack.files[texture]) {
+                            delete pack.files[texture];
+                            logger.add(`   📎 已删除未使用的贴图: ${texture}`);
+                        }
+                    });
+
+                    // 删除不再使用的 cape
+                    deletedCapes.forEach(cape => {
+                        if (!usedCapes.has(cape) && pack.files[cape]) {
+                            delete pack.files[cape];
+                            logger.add(`   🦅 已删除未使用的披风: ${cape}`);
+                        }
+                    });
                 }
             };
 
@@ -2532,10 +2655,16 @@
                                             <div class="skins-list-header-left">
                                                 <span style="font-size: 12px; color: var(--mc-text-muted);">多选皮肤</span>
                                             </div>
-                                            <button class="btn-toggle-multi" id="btn-multi-delete-${pack.id}" onclick="window.deleteSelectedSkins('${pack.id}')" disabled>
-                                                <i class="fas fa-trash-alt"></i>
-                                                <span>删除选中 (<span id="selected-count-${pack.id}">0</span>)</span>
-                                            </button>
+                                            <div style="display: flex; gap: 8px;">
+                                                <button class="btn-invert-selection" onclick="window.invertSelection('${pack.id}')" title="反选所有皮肤">
+                                                    <i class="fas fa-exchange-alt"></i>
+                                                    <span>反选</span>
+                                                </button>
+                                                <button class="btn-toggle-multi" id="btn-multi-delete-${pack.id}" onclick="window.deleteSelectedSkins('${pack.id}')" disabled>
+                                                    <i class="fas fa-trash-alt"></i>
+                                                    <span>删除选中 (<span id="selected-count-${pack.id}">0</span>)</span>
+                                                </button>
+                                            </div>
                                         </div>
                                         ${skins.map((skin, idx) => this.createSkinItem(pack.id, skin, idx, skins.length)).join('')}
                                     </div>
@@ -2773,45 +2902,47 @@
                     };
 
                     window.deleteSelectedSkins = (packId) => {
+                                            const checkboxes = document.querySelectorAll(`.skin-checkbox[data-pack-id="${packId}"]`);
+                                            const selectedIndices = Array.from(checkboxes)
+                                                .filter(cb => cb.checked)
+                                                .map(cb => parseInt(cb.dataset.skinIndex))
+                                                .sort((a, b) => b - a); // 从大到小删除，避免索引偏移
+                    
+                                            if (selectedIndices.length === 0) return;
+                    
+                                            const pack = state.skinPacks.find(p => p.id === packId);
+                                            if (!pack || !pack.files['skins.json']) return;
+                    
+                                            const skinsData = JSON.parse(pack.files['skins.json']._content);
+                                            const remainingSkins = skinsData.skins.length - selectedIndices.length;
+                    
+                                            if (remainingSkins < 1) {
+                                                logger.add(`⚠️ 无法删除：${pack.fileName} 至少需要保留 1 个皮肤`);
+                                                return;
+                                            }
+                    
+                                            // 收集要删除的皮肤
+                                            const deletedSkins = selectedIndices.map(idx => skinsData.skins[idx]).filter(s => s);
+                                            const newSkins = skinsData.skins.filter((_, idx) => !selectedIndices.includes(idx));
+                    
+                                            // 批量清理未使用的资源
+                                            skinDeleter.cleanupUnusedResourcesBatch(pack, deletedSkins, newSkins);
+                    
+                                            // 更新文件内容
+                                            skinsData.skins = newSkins;
+                                            pack.files['skins.json']._content = JSON.stringify(skinsData);
+                                            pack.skinCount = newSkins.length;
+                    
+                                            logger.add(`🗑️ 已批量删除 ${deletedSkins.length} 个皮肤 (${pack.fileName})`);
+                                            renderer.refreshPackSkins(packId);
+                                        };
+                    window.invertSelection = (packId) => {
                         const checkboxes = document.querySelectorAll(`.skin-checkbox[data-pack-id="${packId}"]`);
-                        const selectedIndices = Array.from(checkboxes)
-                            .filter(cb => cb.checked)
-                            .map(cb => parseInt(cb.dataset.skinIndex))
-                            .sort((a, b) => b - a); // 从大到小删除，避免索引偏移
-
-                        if (selectedIndices.length === 0) return;
-
-                        const pack = state.skinPacks.find(p => p.id === packId);
-                        if (!pack || !pack.files['skins.json']) return;
-
-                        const skinsData = JSON.parse(pack.files['skins.json']._content);
-                        const remainingSkins = skinsData.skins.length - selectedIndices.length;
-
-                        if (remainingSkins < 1) {
-                            logger.add(`⚠️ 无法删除：${pack.fileName} 至少需要保留 1 个皮肤`);
-                            return;
-                        }
-
-                        // 批量删除皮肤
-                        let deletedCount = 0;
-                        for (const skinIndex of selectedIndices) {
-                            const deletedSkin = skinsData.skins[skinIndex];
-                            if (deletedSkin) {
-                                skinDeleter.cleanupUnusedTexture(pack, deletedSkin.texture, 
-                                    skinsData.skins.filter((_, idx) => !selectedIndices.includes(idx)));
-                                deletedCount++;
-                            }
-                        }
-
-                        // 过滤掉选中的皮肤
-                        skinsData.skins = skinsData.skins.filter((_, idx) => !selectedIndices.includes(idx));
-                        
-                        // 更新文件内容
-                        pack.files['skins.json']._content = JSON.stringify(skinsData);
-                        pack.skinCount = skinsData.skins.length;
-
-                        logger.add(`🗑️ 已批量删除 ${deletedCount} 个皮肤 (${pack.fileName})`);
-                        renderer.refreshPackSkins(packId);
+                        checkboxes.forEach(cb => {
+                            cb.checked = !cb.checked;
+                        });
+                        window.updateSelectedCount(packId);
+                        logger.add(`🔄 已反选皮肤包 (${packId}) 的所有皮肤`);
                     };
 
                     // 模型预览全局函数
