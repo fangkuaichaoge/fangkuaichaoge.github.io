@@ -2166,6 +2166,9 @@
                     const geoRenameMap = new Map();
                     const textureMap = new Map();
 
+                    // 获取包序号：从 packPrefix 中提取数字（如 pack1、pack2）
+                    const packIndex = packPrefix.match(/pack(\d+)/) ? packPrefix.match(/pack(\d+)/)[1] : packPrefix;
+
                     core['skins.json']?.skins?.forEach(skin => {
                         let newName = skin.localization_name;
                         let newGeo = skin.geometry;
@@ -2173,10 +2176,10 @@
 
                         // 如果是 humanoid.custom 或 humanoid.customSlim，保持 geometry 和名称不变
                         const isCustomHumanoid = skin.geometry === 'geometry.humanoid.custom' || skin.geometry === 'geometry.humanoid.customSlim';
-                        
+
                         if (!isCustomHumanoid) {
                             if (existingNames.has(newName)) newName += `_${packPrefix}`;
-                            if (existingGeo.has(newGeo)) newGeo += `_${packPrefix}`;
+                            if (existingGeo.has(newGeo)) newGeo += `pack${packIndex}`;
 
                             existingNames.add(newName);
                             existingGeo.add(newGeo);
