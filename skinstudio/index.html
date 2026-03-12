@@ -1,10 +1,4 @@
-<!DOCTYPE html>
-<!-- 
-    Minecraft Skin Studio - Merged Version
-    Generated: 2026-02-27 16:04:33
-    This file contains all CSS and JavaScript code, can be opened directly in browser
--->
-<!doctype html>
+﻿<!doctype html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
@@ -2023,12 +2017,3197 @@ THE SOFTWARE.
 */
 !function(t,n){"object"==typeof exports&&"undefined"!=typeof module?n(exports):"function"==typeof define&&define.amd?define(["exports"],n):n((t=t||self).glMatrix={})}(this,(function(t){"use strict";var n="undefined"!=typeof Float32Array?Float32Array:Array,a=Math.random;var r=Math.PI/180;Math.hypot||(Math.hypot=function(){for(var t=0,n=arguments.length;n--;)t+=arguments[n]*arguments[n];return Math.sqrt(t)});var e=Object.freeze({__proto__:null,EPSILON:1e-6,get ARRAY_TYPE(){return n},RANDOM:a,setMatrixArrayType:function(t){n=t},toRadian:function(t){return t*r},equals:function(t,n){return Math.abs(t-n)<=1e-6*Math.max(1,Math.abs(t),Math.abs(n))}});function u(t,n,a){var r=n[0],e=n[1],u=n[2],o=n[3],i=a[0],h=a[1],c=a[2],s=a[3];return t[0]=r*i+u*h,t[1]=e*i+o*h,t[2]=r*c+u*s,t[3]=e*c+o*s,t}function o(t,n,a){return t[0]=n[0]-a[0],t[1]=n[1]-a[1],t[2]=n[2]-a[2],t[3]=n[3]-a[3],t}var i=u,h=o,c=Object.freeze({__proto__:null,create:function(){var t=new n(4);return n!=Float32Array&&(t[1]=0,t[2]=0),t[0]=1,t[3]=1,t},clone:function(t){var a=new n(4);return a[0]=t[0],a[1]=t[1],a[2]=t[2],a[3]=t[3],a},copy:function(t,n){return t[0]=n[0],t[1]=n[1],t[2]=n[2],t[3]=n[3],t},identity:function(t){return t[0]=1,t[1]=0,t[2]=0,t[3]=1,t},fromValues:function(t,a,r,e){var u=new n(4);return u[0]=t,u[1]=a,u[2]=r,u[3]=e,u},set:function(t,n,a,r,e){return t[0]=n,t[1]=a,t[2]=r,t[3]=e,t},transpose:function(t,n){if(t===n){var a=n[1];t[1]=n[2],t[2]=a}else t[0]=n[0],t[1]=n[2],t[2]=n[1],t[3]=n[3];return t},invert:function(t,n){var a=n[0],r=n[1],e=n[2],u=n[3],o=a*u-e*r;return o?(o=1/o,t[0]=u*o,t[1]=-r*o,t[2]=-e*o,t[3]=a*o,t):null},adjoint:function(t,n){var a=n[0];return t[0]=n[3],t[1]=-n[1],t[2]=-n[2],t[3]=a,t},determinant:function(t){return t[0]*t[3]-t[2]*t[1]},multiply:u,rotate:function(t,n,a){var r=n[0],e=n[1],u=n[2],o=n[3],i=Math.sin(a),h=Math.cos(a);return t[0]=r*h+u*i,t[1]=e*h+o*i,t[2]=r*-i+u*h,t[3]=e*-i+o*h,t},scale:function(t,n,a){var r=n[0],e=n[1],u=n[2],o=n[3],i=a[0],h=a[1];return t[0]=r*i,t[1]=e*i,t[2]=u*h,t[3]=o*h,t},fromRotation:function(t,n){var a=Math.sin(n),r=Math.cos(n);return t[0]=r,t[1]=a,t[2]=-a,t[3]=r,t},fromScaling:function(t,n){return t[0]=n[0],t[1]=0,t[2]=0,t[3]=n[1],t},str:function(t){return"mat2("+t[0]+", "+t[1]+", "+t[2]+", "+t[3]+")"},frob:function(t){return Math.hypot(t[0],t[1],t[2],t[3])},LDU:function(t,n,a,r){return t[2]=r[2]/r[0],a[0]=r[0],a[1]=r[1],a[3]=r[3]-t[2]*a[1],[t,n,a]},add:function(t,n,a){return t[0]=n[0]+a[0],t[1]=n[1]+a[1],t[2]=n[2]+a[2],t[3]=n[3]+a[3],t},subtract:o,exactEquals:function(t,n){return t[0]===n[0]&&t[1]===n[1]&&t[2]===n[2]&&t[3]===n[3]},equals:function(t,n){var a=t[0],r=t[1],e=t[2],u=t[3],o=n[0],i=n[1],h=n[2],c=n[3];return Math.abs(a-o)<=1e-6*Math.max(1,Math.abs(a),Math.abs(o))&&Math.abs(r-i)<=1e-6*Math.max(1,Math.abs(r),Math.abs(i))&&Math.abs(e-h)<=1e-6*Math.max(1,Math.abs(e),Math.abs(h))&&Math.abs(u-c)<=1e-6*Math.max(1,Math.abs(u),Math.abs(c))},multiplyScalar:function(t,n,a){return t[0]=n[0]*a,t[1]=n[1]*a,t[2]=n[2]*a,t[3]=n[3]*a,t},multiplyScalarAndAdd:function(t,n,a,r){return t[0]=n[0]+a[0]*r,t[1]=n[1]+a[1]*r,t[2]=n[2]+a[2]*r,t[3]=n[3]+a[3]*r,t},mul:i,sub:h});function s(t,n,a){var r=n[0],e=n[1],u=n[2],o=n[3],i=n[4],h=n[5],c=a[0],s=a[1],M=a[2],f=a[3],l=a[4],v=a[5];return t[0]=r*c+u*s,t[1]=e*c+o*s,t[2]=r*M+u*f,t[3]=e*M+o*f,t[4]=r*l+u*v+i,t[5]=e*l+o*v+h,t}function M(t,n,a){return t[0]=n[0]-a[0],t[1]=n[1]-a[1],t[2]=n[2]-a[2],t[3]=n[3]-a[3],t[4]=n[4]-a[4],t[5]=n[5]-a[5],t}var f=s,l=M,v=Object.freeze({__proto__:null,create:function(){var t=new n(6);return n!=Float32Array&&(t[1]=0,t[2]=0,t[4]=0,t[5]=0),t[0]=1,t[3]=1,t},clone:function(t){var a=new n(6);return a[0]=t[0],a[1]=t[1],a[2]=t[2],a[3]=t[3],a[4]=t[4],a[5]=t[5],a},copy:function(t,n){return t[0]=n[0],t[1]=n[1],t[2]=n[2],t[3]=n[3],t[4]=n[4],t[5]=n[5],t},identity:function(t){return t[0]=1,t[1]=0,t[2]=0,t[3]=1,t[4]=0,t[5]=0,t},fromValues:function(t,a,r,e,u,o){var i=new n(6);return i[0]=t,i[1]=a,i[2]=r,i[3]=e,i[4]=u,i[5]=o,i},set:function(t,n,a,r,e,u,o){return t[0]=n,t[1]=a,t[2]=r,t[3]=e,t[4]=u,t[5]=o,t},invert:function(t,n){var a=n[0],r=n[1],e=n[2],u=n[3],o=n[4],i=n[5],h=a*u-r*e;return h?(h=1/h,t[0]=u*h,t[1]=-r*h,t[2]=-e*h,t[3]=a*h,t[4]=(e*i-u*o)*h,t[5]=(r*o-a*i)*h,t):null},determinant:function(t){return t[0]*t[3]-t[1]*t[2]},multiply:s,rotate:function(t,n,a){var r=n[0],e=n[1],u=n[2],o=n[3],i=n[4],h=n[5],c=Math.sin(a),s=Math.cos(a);return t[0]=r*s+u*c,t[1]=e*s+o*c,t[2]=r*-c+u*s,t[3]=e*-c+o*s,t[4]=i,t[5]=h,t},scale:function(t,n,a){var r=n[0],e=n[1],u=n[2],o=n[3],i=n[4],h=n[5],c=a[0],s=a[1];return t[0]=r*c,t[1]=e*c,t[2]=u*s,t[3]=o*s,t[4]=i,t[5]=h,t},translate:function(t,n,a){var r=n[0],e=n[1],u=n[2],o=n[3],i=n[4],h=n[5],c=a[0],s=a[1];return t[0]=r,t[1]=e,t[2]=u,t[3]=o,t[4]=r*c+u*s+i,t[5]=e*c+o*s+h,t},fromRotation:function(t,n){var a=Math.sin(n),r=Math.cos(n);return t[0]=r,t[1]=a,t[2]=-a,t[3]=r,t[4]=0,t[5]=0,t},fromScaling:function(t,n){return t[0]=n[0],t[1]=0,t[2]=0,t[3]=n[1],t[4]=0,t[5]=0,t},fromTranslation:function(t,n){return t[0]=1,t[1]=0,t[2]=0,t[3]=1,t[4]=n[0],t[5]=n[1],t},str:function(t){return"mat2d("+t[0]+", "+t[1]+", "+t[2]+", "+t[3]+", "+t[4]+", "+t[5]+")"},frob:function(t){return Math.hypot(t[0],t[1],t[2],t[3],t[4],t[5],1)},add:function(t,n,a){return t[0]=n[0]+a[0],t[1]=n[1]+a[1],t[2]=n[2]+a[2],t[3]=n[3]+a[3],t[4]=n[4]+a[4],t[5]=n[5]+a[5],t},subtract:M,multiplyScalar:function(t,n,a){return t[0]=n[0]*a,t[1]=n[1]*a,t[2]=n[2]*a,t[3]=n[3]*a,t[4]=n[4]*a,t[5]=n[5]*a,t},multiplyScalarAndAdd:function(t,n,a,r){return t[0]=n[0]+a[0]*r,t[1]=n[1]+a[1]*r,t[2]=n[2]+a[2]*r,t[3]=n[3]+a[3]*r,t[4]=n[4]+a[4]*r,t[5]=n[5]+a[5]*r,t},exactEquals:function(t,n){return t[0]===n[0]&&t[1]===n[1]&&t[2]===n[2]&&t[3]===n[3]&&t[4]===n[4]&&t[5]===n[5]},equals:function(t,n){var a=t[0],r=t[1],e=t[2],u=t[3],o=t[4],i=t[5],h=n[0],c=n[1],s=n[2],M=n[3],f=n[4],l=n[5];return Math.abs(a-h)<=1e-6*Math.max(1,Math.abs(a),Math.abs(h))&&Math.abs(r-c)<=1e-6*Math.max(1,Math.abs(r),Math.abs(c))&&Math.abs(e-s)<=1e-6*Math.max(1,Math.abs(e),Math.abs(s))&&Math.abs(u-M)<=1e-6*Math.max(1,Math.abs(u),Math.abs(M))&&Math.abs(o-f)<=1e-6*Math.max(1,Math.abs(o),Math.abs(f))&&Math.abs(i-l)<=1e-6*Math.max(1,Math.abs(i),Math.abs(l))},mul:f,sub:l});function b(){var t=new n(9);return n!=Float32Array&&(t[1]=0,t[2]=0,t[3]=0,t[5]=0,t[6]=0,t[7]=0),t[0]=1,t[4]=1,t[8]=1,t}function m(t,n,a){var r=n[0],e=n[1],u=n[2],o=n[3],i=n[4],h=n[5],c=n[6],s=n[7],M=n[8],f=a[0],l=a[1],v=a[2],b=a[3],m=a[4],d=a[5],p=a[6],x=a[7],y=a[8];return t[0]=f*r+l*o+v*c,t[1]=f*e+l*i+v*s,t[2]=f*u+l*h+v*M,t[3]=b*r+m*o+d*c,t[4]=b*e+m*i+d*s,t[5]=b*u+m*h+d*M,t[6]=p*r+x*o+y*c,t[7]=p*e+x*i+y*s,t[8]=p*u+x*h+y*M,t}function d(t,n,a){return t[0]=n[0]-a[0],t[1]=n[1]-a[1],t[2]=n[2]-a[2],t[3]=n[3]-a[3],t[4]=n[4]-a[4],t[5]=n[5]-a[5],t[6]=n[6]-a[6],t[7]=n[7]-a[7],t[8]=n[8]-a[8],t}var p=m,x=d,y=Object.freeze({__proto__:null,create:b,fromMat4:function(t,n){return t[0]=n[0],t[1]=n[1],t[2]=n[2],t[3]=n[4],t[4]=n[5],t[5]=n[6],t[6]=n[8],t[7]=n[9],t[8]=n[10],t},clone:function(t){var a=new n(9);return a[0]=t[0],a[1]=t[1],a[2]=t[2],a[3]=t[3],a[4]=t[4],a[5]=t[5],a[6]=t[6],a[7]=t[7],a[8]=t[8],a},copy:function(t,n){return t[0]=n[0],t[1]=n[1],t[2]=n[2],t[3]=n[3],t[4]=n[4],t[5]=n[5],t[6]=n[6],t[7]=n[7],t[8]=n[8],t},fromValues:function(t,a,r,e,u,o,i,h,c){var s=new n(9);return s[0]=t,s[1]=a,s[2]=r,s[3]=e,s[4]=u,s[5]=o,s[6]=i,s[7]=h,s[8]=c,s},set:function(t,n,a,r,e,u,o,i,h,c){return t[0]=n,t[1]=a,t[2]=r,t[3]=e,t[4]=u,t[5]=o,t[6]=i,t[7]=h,t[8]=c,t},identity:function(t){return t[0]=1,t[1]=0,t[2]=0,t[3]=0,t[4]=1,t[5]=0,t[6]=0,t[7]=0,t[8]=1,t},transpose:function(t,n){if(t===n){var a=n[1],r=n[2],e=n[5];t[1]=n[3],t[2]=n[6],t[3]=a,t[5]=n[7],t[6]=r,t[7]=e}else t[0]=n[0],t[1]=n[3],t[2]=n[6],t[3]=n[1],t[4]=n[4],t[5]=n[7],t[6]=n[2],t[7]=n[5],t[8]=n[8];return t},invert:function(t,n){var a=n[0],r=n[1],e=n[2],u=n[3],o=n[4],i=n[5],h=n[6],c=n[7],s=n[8],M=s*o-i*c,f=-s*u+i*h,l=c*u-o*h,v=a*M+r*f+e*l;return v?(v=1/v,t[0]=M*v,t[1]=(-s*r+e*c)*v,t[2]=(i*r-e*o)*v,t[3]=f*v,t[4]=(s*a-e*h)*v,t[5]=(-i*a+e*u)*v,t[6]=l*v,t[7]=(-c*a+r*h)*v,t[8]=(o*a-r*u)*v,t):null},adjoint:function(t,n){var a=n[0],r=n[1],e=n[2],u=n[3],o=n[4],i=n[5],h=n[6],c=n[7],s=n[8];return t[0]=o*s-i*c,t[1]=e*c-r*s,t[2]=r*i-e*o,t[3]=i*h-u*s,t[4]=a*s-e*h,t[5]=e*u-a*i,t[6]=u*c-o*h,t[7]=r*h-a*c,t[8]=a*o-r*u,t},determinant:function(t){var n=t[0],a=t[1],r=t[2],e=t[3],u=t[4],o=t[5],i=t[6],h=t[7],c=t[8];return n*(c*u-o*h)+a*(-c*e+o*i)+r*(h*e-u*i)},multiply:m,translate:function(t,n,a){var r=n[0],e=n[1],u=n[2],o=n[3],i=n[4],h=n[5],c=n[6],s=n[7],M=n[8],f=a[0],l=a[1];return t[0]=r,t[1]=e,t[2]=u,t[3]=o,t[4]=i,t[5]=h,t[6]=f*r+l*o+c,t[7]=f*e+l*i+s,t[8]=f*u+l*h+M,t},rotate:function(t,n,a){var r=n[0],e=n[1],u=n[2],o=n[3],i=n[4],h=n[5],c=n[6],s=n[7],M=n[8],f=Math.sin(a),l=Math.cos(a);return t[0]=l*r+f*o,t[1]=l*e+f*i,t[2]=l*u+f*h,t[3]=l*o-f*r,t[4]=l*i-f*e,t[5]=l*h-f*u,t[6]=c,t[7]=s,t[8]=M,t},scale:function(t,n,a){var r=a[0],e=a[1];return t[0]=r*n[0],t[1]=r*n[1],t[2]=r*n[2],t[3]=e*n[3],t[4]=e*n[4],t[5]=e*n[5],t[6]=n[6],t[7]=n[7],t[8]=n[8],t},fromTranslation:function(t,n){return t[0]=1,t[1]=0,t[2]=0,t[3]=0,t[4]=1,t[5]=0,t[6]=n[0],t[7]=n[1],t[8]=1,t},fromRotation:function(t,n){var a=Math.sin(n),r=Math.cos(n);return t[0]=r,t[1]=a,t[2]=0,t[3]=-a,t[4]=r,t[5]=0,t[6]=0,t[7]=0,t[8]=1,t},fromScaling:function(t,n){return t[0]=n[0],t[1]=0,t[2]=0,t[3]=0,t[4]=n[1],t[5]=0,t[6]=0,t[7]=0,t[8]=1,t},fromMat2d:function(t,n){return t[0]=n[0],t[1]=n[1],t[2]=0,t[3]=n[2],t[4]=n[3],t[5]=0,t[6]=n[4],t[7]=n[5],t[8]=1,t},fromQuat:function(t,n){var a=n[0],r=n[1],e=n[2],u=n[3],o=a+a,i=r+r,h=e+e,c=a*o,s=r*o,M=r*i,f=e*o,l=e*i,v=e*h,b=u*o,m=u*i,d=u*h;return t[0]=1-M-v,t[3]=s-d,t[6]=f+m,t[1]=s+d,t[4]=1-c-v,t[7]=l-b,t[2]=f-m,t[5]=l+b,t[8]=1-c-M,t},normalFromMat4:function(t,n){var a=n[0],r=n[1],e=n[2],u=n[3],o=n[4],i=n[5],h=n[6],c=n[7],s=n[8],M=n[9],f=n[10],l=n[11],v=n[12],b=n[13],m=n[14],d=n[15],p=a*i-r*o,x=a*h-e*o,y=a*c-u*o,q=r*h-e*i,g=r*c-u*i,_=e*c-u*h,A=s*b-M*v,w=s*m-f*v,R=s*d-l*v,z=M*m-f*b,j=M*d-l*b,P=f*d-l*m,S=p*P-x*j+y*z+q*R-g*w+_*A;return S?(S=1/S,t[0]=(i*P-h*j+c*z)*S,t[1]=(h*R-o*P-c*w)*S,t[2]=(o*j-i*R+c*A)*S,t[3]=(e*j-r*P-u*z)*S,t[4]=(a*P-e*R+u*w)*S,t[5]=(r*R-a*j-u*A)*S,t[6]=(b*_-m*g+d*q)*S,t[7]=(m*y-v*_-d*x)*S,t[8]=(v*g-b*y+d*p)*S,t):null},projection:function(t,n,a){return t[0]=2/n,t[1]=0,t[2]=0,t[3]=0,t[4]=-2/a,t[5]=0,t[6]=-1,t[7]=1,t[8]=1,t},str:function(t){return"mat3("+t[0]+", "+t[1]+", "+t[2]+", "+t[3]+", "+t[4]+", "+t[5]+", "+t[6]+", "+t[7]+", "+t[8]+")"},frob:function(t){return Math.hypot(t[0],t[1],t[2],t[3],t[4],t[5],t[6],t[7],t[8])},add:function(t,n,a){return t[0]=n[0]+a[0],t[1]=n[1]+a[1],t[2]=n[2]+a[2],t[3]=n[3]+a[3],t[4]=n[4]+a[4],t[5]=n[5]+a[5],t[6]=n[6]+a[6],t[7]=n[7]+a[7],t[8]=n[8]+a[8],t},subtract:d,multiplyScalar:function(t,n,a){return t[0]=n[0]*a,t[1]=n[1]*a,t[2]=n[2]*a,t[3]=n[3]*a,t[4]=n[4]*a,t[5]=n[5]*a,t[6]=n[6]*a,t[7]=n[7]*a,t[8]=n[8]*a,t},multiplyScalarAndAdd:function(t,n,a,r){return t[0]=n[0]+a[0]*r,t[1]=n[1]+a[1]*r,t[2]=n[2]+a[2]*r,t[3]=n[3]+a[3]*r,t[4]=n[4]+a[4]*r,t[5]=n[5]+a[5]*r,t[6]=n[6]+a[6]*r,t[7]=n[7]+a[7]*r,t[8]=n[8]+a[8]*r,t},exactEquals:function(t,n){return t[0]===n[0]&&t[1]===n[1]&&t[2]===n[2]&&t[3]===n[3]&&t[4]===n[4]&&t[5]===n[5]&&t[6]===n[6]&&t[7]===n[7]&&t[8]===n[8]},equals:function(t,n){var a=t[0],r=t[1],e=t[2],u=t[3],o=t[4],i=t[5],h=t[6],c=t[7],s=t[8],M=n[0],f=n[1],l=n[2],v=n[3],b=n[4],m=n[5],d=n[6],p=n[7],x=n[8];return Math.abs(a-M)<=1e-6*Math.max(1,Math.abs(a),Math.abs(M))&&Math.abs(r-f)<=1e-6*Math.max(1,Math.abs(r),Math.abs(f))&&Math.abs(e-l)<=1e-6*Math.max(1,Math.abs(e),Math.abs(l))&&Math.abs(u-v)<=1e-6*Math.max(1,Math.abs(u),Math.abs(v))&&Math.abs(o-b)<=1e-6*Math.max(1,Math.abs(o),Math.abs(b))&&Math.abs(i-m)<=1e-6*Math.max(1,Math.abs(i),Math.abs(m))&&Math.abs(h-d)<=1e-6*Math.max(1,Math.abs(h),Math.abs(d))&&Math.abs(c-p)<=1e-6*Math.max(1,Math.abs(c),Math.abs(p))&&Math.abs(s-x)<=1e-6*Math.max(1,Math.abs(s),Math.abs(x))},mul:p,sub:x});function q(t){return t[0]=1,t[1]=0,t[2]=0,t[3]=0,t[4]=0,t[5]=1,t[6]=0,t[7]=0,t[8]=0,t[9]=0,t[10]=1,t[11]=0,t[12]=0,t[13]=0,t[14]=0,t[15]=1,t}function g(t,n,a){var r=n[0],e=n[1],u=n[2],o=n[3],i=n[4],h=n[5],c=n[6],s=n[7],M=n[8],f=n[9],l=n[10],v=n[11],b=n[12],m=n[13],d=n[14],p=n[15],x=a[0],y=a[1],q=a[2],g=a[3];return t[0]=x*r+y*i+q*M+g*b,t[1]=x*e+y*h+q*f+g*m,t[2]=x*u+y*c+q*l+g*d,t[3]=x*o+y*s+q*v+g*p,x=a[4],y=a[5],q=a[6],g=a[7],t[4]=x*r+y*i+q*M+g*b,t[5]=x*e+y*h+q*f+g*m,t[6]=x*u+y*c+q*l+g*d,t[7]=x*o+y*s+q*v+g*p,x=a[8],y=a[9],q=a[10],g=a[11],t[8]=x*r+y*i+q*M+g*b,t[9]=x*e+y*h+q*f+g*m,t[10]=x*u+y*c+q*l+g*d,t[11]=x*o+y*s+q*v+g*p,x=a[12],y=a[13],q=a[14],g=a[15],t[12]=x*r+y*i+q*M+g*b,t[13]=x*e+y*h+q*f+g*m,t[14]=x*u+y*c+q*l+g*d,t[15]=x*o+y*s+q*v+g*p,t}function _(t,n,a){var r=n[0],e=n[1],u=n[2],o=n[3],i=r+r,h=e+e,c=u+u,s=r*i,M=r*h,f=r*c,l=e*h,v=e*c,b=u*c,m=o*i,d=o*h,p=o*c;return t[0]=1-(l+b),t[1]=M+p,t[2]=f-d,t[3]=0,t[4]=M-p,t[5]=1-(s+b),t[6]=v+m,t[7]=0,t[8]=f+d,t[9]=v-m,t[10]=1-(s+l),t[11]=0,t[12]=a[0],t[13]=a[1],t[14]=a[2],t[15]=1,t}function A(t,n){return t[0]=n[12],t[1]=n[13],t[2]=n[14],t}function w(t,n){var a=n[0],r=n[1],e=n[2],u=n[4],o=n[5],i=n[6],h=n[8],c=n[9],s=n[10];return t[0]=Math.hypot(a,r,e),t[1]=Math.hypot(u,o,i),t[2]=Math.hypot(h,c,s),t}function R(t,a){var r=new n(3);w(r,a);var e=1/r[0],u=1/r[1],o=1/r[2],i=a[0]*e,h=a[1]*u,c=a[2]*o,s=a[4]*e,M=a[5]*u,f=a[6]*o,l=a[8]*e,v=a[9]*u,b=a[10]*o,m=i+M+b,d=0;return m>0?(d=2*Math.sqrt(m+1),t[3]=.25*d,t[0]=(f-v)/d,t[1]=(l-c)/d,t[2]=(h-s)/d):i>M&&i>b?(d=2*Math.sqrt(1+i-M-b),t[3]=(f-v)/d,t[0]=.25*d,t[1]=(h+s)/d,t[2]=(l+c)/d):M>b?(d=2*Math.sqrt(1+M-i-b),t[3]=(l-c)/d,t[0]=(h+s)/d,t[1]=.25*d,t[2]=(f+v)/d):(d=2*Math.sqrt(1+b-i-M),t[3]=(h-s)/d,t[0]=(l+c)/d,t[1]=(f+v)/d,t[2]=.25*d),t}function z(t,n,a){return t[0]=n[0]-a[0],t[1]=n[1]-a[1],t[2]=n[2]-a[2],t[3]=n[3]-a[3],t[4]=n[4]-a[4],t[5]=n[5]-a[5],t[6]=n[6]-a[6],t[7]=n[7]-a[7],t[8]=n[8]-a[8],t[9]=n[9]-a[9],t[10]=n[10]-a[10],t[11]=n[11]-a[11],t[12]=n[12]-a[12],t[13]=n[13]-a[13],t[14]=n[14]-a[14],t[15]=n[15]-a[15],t}var j=g,P=z,S=Object.freeze({__proto__:null,create:function(){var t=new n(16);return n!=Float32Array&&(t[1]=0,t[2]=0,t[3]=0,t[4]=0,t[6]=0,t[7]=0,t[8]=0,t[9]=0,t[11]=0,t[12]=0,t[13]=0,t[14]=0),t[0]=1,t[5]=1,t[10]=1,t[15]=1,t},clone:function(t){var a=new n(16);return a[0]=t[0],a[1]=t[1],a[2]=t[2],a[3]=t[3],a[4]=t[4],a[5]=t[5],a[6]=t[6],a[7]=t[7],a[8]=t[8],a[9]=t[9],a[10]=t[10],a[11]=t[11],a[12]=t[12],a[13]=t[13],a[14]=t[14],a[15]=t[15],a},copy:function(t,n){return t[0]=n[0],t[1]=n[1],t[2]=n[2],t[3]=n[3],t[4]=n[4],t[5]=n[5],t[6]=n[6],t[7]=n[7],t[8]=n[8],t[9]=n[9],t[10]=n[10],t[11]=n[11],t[12]=n[12],t[13]=n[13],t[14]=n[14],t[15]=n[15],t},fromValues:function(t,a,r,e,u,o,i,h,c,s,M,f,l,v,b,m){var d=new n(16);return d[0]=t,d[1]=a,d[2]=r,d[3]=e,d[4]=u,d[5]=o,d[6]=i,d[7]=h,d[8]=c,d[9]=s,d[10]=M,d[11]=f,d[12]=l,d[13]=v,d[14]=b,d[15]=m,d},set:function(t,n,a,r,e,u,o,i,h,c,s,M,f,l,v,b,m){return t[0]=n,t[1]=a,t[2]=r,t[3]=e,t[4]=u,t[5]=o,t[6]=i,t[7]=h,t[8]=c,t[9]=s,t[10]=M,t[11]=f,t[12]=l,t[13]=v,t[14]=b,t[15]=m,t},identity:q,transpose:function(t,n){if(t===n){var a=n[1],r=n[2],e=n[3],u=n[6],o=n[7],i=n[11];t[1]=n[4],t[2]=n[8],t[3]=n[12],t[4]=a,t[6]=n[9],t[7]=n[13],t[8]=r,t[9]=u,t[11]=n[14],t[12]=e,t[13]=o,t[14]=i}else t[0]=n[0],t[1]=n[4],t[2]=n[8],t[3]=n[12],t[4]=n[1],t[5]=n[5],t[6]=n[9],t[7]=n[13],t[8]=n[2],t[9]=n[6],t[10]=n[10],t[11]=n[14],t[12]=n[3],t[13]=n[7],t[14]=n[11],t[15]=n[15];return t},invert:function(t,n){var a=n[0],r=n[1],e=n[2],u=n[3],o=n[4],i=n[5],h=n[6],c=n[7],s=n[8],M=n[9],f=n[10],l=n[11],v=n[12],b=n[13],m=n[14],d=n[15],p=a*i-r*o,x=a*h-e*o,y=a*c-u*o,q=r*h-e*i,g=r*c-u*i,_=e*c-u*h,A=s*b-M*v,w=s*m-f*v,R=s*d-l*v,z=M*m-f*b,j=M*d-l*b,P=f*d-l*m,S=p*P-x*j+y*z+q*R-g*w+_*A;return S?(S=1/S,t[0]=(i*P-h*j+c*z)*S,t[1]=(e*j-r*P-u*z)*S,t[2]=(b*_-m*g+d*q)*S,t[3]=(f*g-M*_-l*q)*S,t[4]=(h*R-o*P-c*w)*S,t[5]=(a*P-e*R+u*w)*S,t[6]=(m*y-v*_-d*x)*S,t[7]=(s*_-f*y+l*x)*S,t[8]=(o*j-i*R+c*A)*S,t[9]=(r*R-a*j-u*A)*S,t[10]=(v*g-b*y+d*p)*S,t[11]=(M*y-s*g-l*p)*S,t[12]=(i*w-o*z-h*A)*S,t[13]=(a*z-r*w+e*A)*S,t[14]=(b*x-v*q-m*p)*S,t[15]=(s*q-M*x+f*p)*S,t):null},adjoint:function(t,n){var a=n[0],r=n[1],e=n[2],u=n[3],o=n[4],i=n[5],h=n[6],c=n[7],s=n[8],M=n[9],f=n[10],l=n[11],v=n[12],b=n[13],m=n[14],d=n[15];return t[0]=i*(f*d-l*m)-M*(h*d-c*m)+b*(h*l-c*f),t[1]=-(r*(f*d-l*m)-M*(e*d-u*m)+b*(e*l-u*f)),t[2]=r*(h*d-c*m)-i*(e*d-u*m)+b*(e*c-u*h),t[3]=-(r*(h*l-c*f)-i*(e*l-u*f)+M*(e*c-u*h)),t[4]=-(o*(f*d-l*m)-s*(h*d-c*m)+v*(h*l-c*f)),t[5]=a*(f*d-l*m)-s*(e*d-u*m)+v*(e*l-u*f),t[6]=-(a*(h*d-c*m)-o*(e*d-u*m)+v*(e*c-u*h)),t[7]=a*(h*l-c*f)-o*(e*l-u*f)+s*(e*c-u*h),t[8]=o*(M*d-l*b)-s*(i*d-c*b)+v*(i*l-c*M),t[9]=-(a*(M*d-l*b)-s*(r*d-u*b)+v*(r*l-u*M)),t[10]=a*(i*d-c*b)-o*(r*d-u*b)+v*(r*c-u*i),t[11]=-(a*(i*l-c*M)-o*(r*l-u*M)+s*(r*c-u*i)),t[12]=-(o*(M*m-f*b)-s*(i*m-h*b)+v*(i*f-h*M)),t[13]=a*(M*m-f*b)-s*(r*m-e*b)+v*(r*f-e*M),t[14]=-(a*(i*m-h*b)-o*(r*m-e*b)+v*(r*h-e*i)),t[15]=a*(i*f-h*M)-o*(r*f-e*M)+s*(r*h-e*i),t},determinant:function(t){var n=t[0],a=t[1],r=t[2],e=t[3],u=t[4],o=t[5],i=t[6],h=t[7],c=t[8],s=t[9],M=t[10],f=t[11],l=t[12],v=t[13],b=t[14],m=t[15];return(n*o-a*u)*(M*m-f*b)-(n*i-r*u)*(s*m-f*v)+(n*h-e*u)*(s*b-M*v)+(a*i-r*o)*(c*m-f*l)-(a*h-e*o)*(c*b-M*l)+(r*h-e*i)*(c*v-s*l)},multiply:g,translate:function(t,n,a){var r,e,u,o,i,h,c,s,M,f,l,v,b=a[0],m=a[1],d=a[2];return n===t?(t[12]=n[0]*b+n[4]*m+n[8]*d+n[12],t[13]=n[1]*b+n[5]*m+n[9]*d+n[13],t[14]=n[2]*b+n[6]*m+n[10]*d+n[14],t[15]=n[3]*b+n[7]*m+n[11]*d+n[15]):(r=n[0],e=n[1],u=n[2],o=n[3],i=n[4],h=n[5],c=n[6],s=n[7],M=n[8],f=n[9],l=n[10],v=n[11],t[0]=r,t[1]=e,t[2]=u,t[3]=o,t[4]=i,t[5]=h,t[6]=c,t[7]=s,t[8]=M,t[9]=f,t[10]=l,t[11]=v,t[12]=r*b+i*m+M*d+n[12],t[13]=e*b+h*m+f*d+n[13],t[14]=u*b+c*m+l*d+n[14],t[15]=o*b+s*m+v*d+n[15]),t},scale:function(t,n,a){var r=a[0],e=a[1],u=a[2];return t[0]=n[0]*r,t[1]=n[1]*r,t[2]=n[2]*r,t[3]=n[3]*r,t[4]=n[4]*e,t[5]=n[5]*e,t[6]=n[6]*e,t[7]=n[7]*e,t[8]=n[8]*u,t[9]=n[9]*u,t[10]=n[10]*u,t[11]=n[11]*u,t[12]=n[12],t[13]=n[13],t[14]=n[14],t[15]=n[15],t},rotate:function(t,n,a,r){var e,u,o,i,h,c,s,M,f,l,v,b,m,d,p,x,y,q,g,_,A,w,R,z,j=r[0],P=r[1],S=r[2],E=Math.hypot(j,P,S);return E<1e-6?null:(j*=E=1/E,P*=E,S*=E,e=Math.sin(a),o=1-(u=Math.cos(a)),i=n[0],h=n[1],c=n[2],s=n[3],M=n[4],f=n[5],l=n[6],v=n[7],b=n[8],m=n[9],d=n[10],p=n[11],x=j*j*o+u,y=P*j*o+S*e,q=S*j*o-P*e,g=j*P*o-S*e,_=P*P*o+u,A=S*P*o+j*e,w=j*S*o+P*e,R=P*S*o-j*e,z=S*S*o+u,t[0]=i*x+M*y+b*q,t[1]=h*x+f*y+m*q,t[2]=c*x+l*y+d*q,t[3]=s*x+v*y+p*q,t[4]=i*g+M*_+b*A,t[5]=h*g+f*_+m*A,t[6]=c*g+l*_+d*A,t[7]=s*g+v*_+p*A,t[8]=i*w+M*R+b*z,t[9]=h*w+f*R+m*z,t[10]=c*w+l*R+d*z,t[11]=s*w+v*R+p*z,n!==t&&(t[12]=n[12],t[13]=n[13],t[14]=n[14],t[15]=n[15]),t)},rotateX:function(t,n,a){var r=Math.sin(a),e=Math.cos(a),u=n[4],o=n[5],i=n[6],h=n[7],c=n[8],s=n[9],M=n[10],f=n[11];return n!==t&&(t[0]=n[0],t[1]=n[1],t[2]=n[2],t[3]=n[3],t[12]=n[12],t[13]=n[13],t[14]=n[14],t[15]=n[15]),t[4]=u*e+c*r,t[5]=o*e+s*r,t[6]=i*e+M*r,t[7]=h*e+f*r,t[8]=c*e-u*r,t[9]=s*e-o*r,t[10]=M*e-i*r,t[11]=f*e-h*r,t},rotateY:function(t,n,a){var r=Math.sin(a),e=Math.cos(a),u=n[0],o=n[1],i=n[2],h=n[3],c=n[8],s=n[9],M=n[10],f=n[11];return n!==t&&(t[4]=n[4],t[5]=n[5],t[6]=n[6],t[7]=n[7],t[12]=n[12],t[13]=n[13],t[14]=n[14],t[15]=n[15]),t[0]=u*e-c*r,t[1]=o*e-s*r,t[2]=i*e-M*r,t[3]=h*e-f*r,t[8]=u*r+c*e,t[9]=o*r+s*e,t[10]=i*r+M*e,t[11]=h*r+f*e,t},rotateZ:function(t,n,a){var r=Math.sin(a),e=Math.cos(a),u=n[0],o=n[1],i=n[2],h=n[3],c=n[4],s=n[5],M=n[6],f=n[7];return n!==t&&(t[8]=n[8],t[9]=n[9],t[10]=n[10],t[11]=n[11],t[12]=n[12],t[13]=n[13],t[14]=n[14],t[15]=n[15]),t[0]=u*e+c*r,t[1]=o*e+s*r,t[2]=i*e+M*r,t[3]=h*e+f*r,t[4]=c*e-u*r,t[5]=s*e-o*r,t[6]=M*e-i*r,t[7]=f*e-h*r,t},fromTranslation:function(t,n){return t[0]=1,t[1]=0,t[2]=0,t[3]=0,t[4]=0,t[5]=1,t[6]=0,t[7]=0,t[8]=0,t[9]=0,t[10]=1,t[11]=0,t[12]=n[0],t[13]=n[1],t[14]=n[2],t[15]=1,t},fromScaling:function(t,n){return t[0]=n[0],t[1]=0,t[2]=0,t[3]=0,t[4]=0,t[5]=n[1],t[6]=0,t[7]=0,t[8]=0,t[9]=0,t[10]=n[2],t[11]=0,t[12]=0,t[13]=0,t[14]=0,t[15]=1,t},fromRotation:function(t,n,a){var r,e,u,o=a[0],i=a[1],h=a[2],c=Math.hypot(o,i,h);return c<1e-6?null:(o*=c=1/c,i*=c,h*=c,r=Math.sin(n),u=1-(e=Math.cos(n)),t[0]=o*o*u+e,t[1]=i*o*u+h*r,t[2]=h*o*u-i*r,t[3]=0,t[4]=o*i*u-h*r,t[5]=i*i*u+e,t[6]=h*i*u+o*r,t[7]=0,t[8]=o*h*u+i*r,t[9]=i*h*u-o*r,t[10]=h*h*u+e,t[11]=0,t[12]=0,t[13]=0,t[14]=0,t[15]=1,t)},fromXRotation:function(t,n){var a=Math.sin(n),r=Math.cos(n);return t[0]=1,t[1]=0,t[2]=0,t[3]=0,t[4]=0,t[5]=r,t[6]=a,t[7]=0,t[8]=0,t[9]=-a,t[10]=r,t[11]=0,t[12]=0,t[13]=0,t[14]=0,t[15]=1,t},fromYRotation:function(t,n){var a=Math.sin(n),r=Math.cos(n);return t[0]=r,t[1]=0,t[2]=-a,t[3]=0,t[4]=0,t[5]=1,t[6]=0,t[7]=0,t[8]=a,t[9]=0,t[10]=r,t[11]=0,t[12]=0,t[13]=0,t[14]=0,t[15]=1,t},fromZRotation:function(t,n){var a=Math.sin(n),r=Math.cos(n);return t[0]=r,t[1]=a,t[2]=0,t[3]=0,t[4]=-a,t[5]=r,t[6]=0,t[7]=0,t[8]=0,t[9]=0,t[10]=1,t[11]=0,t[12]=0,t[13]=0,t[14]=0,t[15]=1,t},fromRotationTranslation:_,fromQuat2:function(t,a){var r=new n(3),e=-a[0],u=-a[1],o=-a[2],i=a[3],h=a[4],c=a[5],s=a[6],M=a[7],f=e*e+u*u+o*o+i*i;return f>0?(r[0]=2*(h*i+M*e+c*o-s*u)/f,r[1]=2*(c*i+M*u+s*e-h*o)/f,r[2]=2*(s*i+M*o+h*u-c*e)/f):(r[0]=2*(h*i+M*e+c*o-s*u),r[1]=2*(c*i+M*u+s*e-h*o),r[2]=2*(s*i+M*o+h*u-c*e)),_(t,a,r),t},getTranslation:A,getScaling:w,getRotation:R,fromRotationTranslationScale:function(t,n,a,r){var e=n[0],u=n[1],o=n[2],i=n[3],h=e+e,c=u+u,s=o+o,M=e*h,f=e*c,l=e*s,v=u*c,b=u*s,m=o*s,d=i*h,p=i*c,x=i*s,y=r[0],q=r[1],g=r[2];return t[0]=(1-(v+m))*y,t[1]=(f+x)*y,t[2]=(l-p)*y,t[3]=0,t[4]=(f-x)*q,t[5]=(1-(M+m))*q,t[6]=(b+d)*q,t[7]=0,t[8]=(l+p)*g,t[9]=(b-d)*g,t[10]=(1-(M+v))*g,t[11]=0,t[12]=a[0],t[13]=a[1],t[14]=a[2],t[15]=1,t},fromRotationTranslationScaleOrigin:function(t,n,a,r,e){var u=n[0],o=n[1],i=n[2],h=n[3],c=u+u,s=o+o,M=i+i,f=u*c,l=u*s,v=u*M,b=o*s,m=o*M,d=i*M,p=h*c,x=h*s,y=h*M,q=r[0],g=r[1],_=r[2],A=e[0],w=e[1],R=e[2],z=(1-(b+d))*q,j=(l+y)*q,P=(v-x)*q,S=(l-y)*g,E=(1-(f+d))*g,O=(m+p)*g,T=(v+x)*_,D=(m-p)*_,F=(1-(f+b))*_;return t[0]=z,t[1]=j,t[2]=P,t[3]=0,t[4]=S,t[5]=E,t[6]=O,t[7]=0,t[8]=T,t[9]=D,t[10]=F,t[11]=0,t[12]=a[0]+A-(z*A+S*w+T*R),t[13]=a[1]+w-(j*A+E*w+D*R),t[14]=a[2]+R-(P*A+O*w+F*R),t[15]=1,t},fromQuat:function(t,n){var a=n[0],r=n[1],e=n[2],u=n[3],o=a+a,i=r+r,h=e+e,c=a*o,s=r*o,M=r*i,f=e*o,l=e*i,v=e*h,b=u*o,m=u*i,d=u*h;return t[0]=1-M-v,t[1]=s+d,t[2]=f-m,t[3]=0,t[4]=s-d,t[5]=1-c-v,t[6]=l+b,t[7]=0,t[8]=f+m,t[9]=l-b,t[10]=1-c-M,t[11]=0,t[12]=0,t[13]=0,t[14]=0,t[15]=1,t},frustum:function(t,n,a,r,e,u,o){var i=1/(a-n),h=1/(e-r),c=1/(u-o);return t[0]=2*u*i,t[1]=0,t[2]=0,t[3]=0,t[4]=0,t[5]=2*u*h,t[6]=0,t[7]=0,t[8]=(a+n)*i,t[9]=(e+r)*h,t[10]=(o+u)*c,t[11]=-1,t[12]=0,t[13]=0,t[14]=o*u*2*c,t[15]=0,t},perspective:function(t,n,a,r,e){var u,o=1/Math.tan(n/2);return t[0]=o/a,t[1]=0,t[2]=0,t[3]=0,t[4]=0,t[5]=o,t[6]=0,t[7]=0,t[8]=0,t[9]=0,t[11]=-1,t[12]=0,t[13]=0,t[15]=0,null!=e&&e!==1/0?(u=1/(r-e),t[10]=(e+r)*u,t[14]=2*e*r*u):(t[10]=-1,t[14]=-2*r),t},perspectiveFromFieldOfView:function(t,n,a,r){var e=Math.tan(n.upDegrees*Math.PI/180),u=Math.tan(n.downDegrees*Math.PI/180),o=Math.tan(n.leftDegrees*Math.PI/180),i=Math.tan(n.rightDegrees*Math.PI/180),h=2/(o+i),c=2/(e+u);return t[0]=h,t[1]=0,t[2]=0,t[3]=0,t[4]=0,t[5]=c,t[6]=0,t[7]=0,t[8]=-(o-i)*h*.5,t[9]=(e-u)*c*.5,t[10]=r/(a-r),t[11]=-1,t[12]=0,t[13]=0,t[14]=r*a/(a-r),t[15]=0,t},ortho:function(t,n,a,r,e,u,o){var i=1/(n-a),h=1/(r-e),c=1/(u-o);return t[0]=-2*i,t[1]=0,t[2]=0,t[3]=0,t[4]=0,t[5]=-2*h,t[6]=0,t[7]=0,t[8]=0,t[9]=0,t[10]=2*c,t[11]=0,t[12]=(n+a)*i,t[13]=(e+r)*h,t[14]=(o+u)*c,t[15]=1,t},lookAt:function(t,n,a,r){var e,u,o,i,h,c,s,M,f,l,v=n[0],b=n[1],m=n[2],d=r[0],p=r[1],x=r[2],y=a[0],g=a[1],_=a[2];return Math.abs(v-y)<1e-6&&Math.abs(b-g)<1e-6&&Math.abs(m-_)<1e-6?q(t):(s=v-y,M=b-g,f=m-_,e=p*(f*=l=1/Math.hypot(s,M,f))-x*(M*=l),u=x*(s*=l)-d*f,o=d*M-p*s,(l=Math.hypot(e,u,o))?(e*=l=1/l,u*=l,o*=l):(e=0,u=0,o=0),i=M*o-f*u,h=f*e-s*o,c=s*u-M*e,(l=Math.hypot(i,h,c))?(i*=l=1/l,h*=l,c*=l):(i=0,h=0,c=0),t[0]=e,t[1]=i,t[2]=s,t[3]=0,t[4]=u,t[5]=h,t[6]=M,t[7]=0,t[8]=o,t[9]=c,t[10]=f,t[11]=0,t[12]=-(e*v+u*b+o*m),t[13]=-(i*v+h*b+c*m),t[14]=-(s*v+M*b+f*m),t[15]=1,t)},targetTo:function(t,n,a,r){var e=n[0],u=n[1],o=n[2],i=r[0],h=r[1],c=r[2],s=e-a[0],M=u-a[1],f=o-a[2],l=s*s+M*M+f*f;l>0&&(s*=l=1/Math.sqrt(l),M*=l,f*=l);var v=h*f-c*M,b=c*s-i*f,m=i*M-h*s;return(l=v*v+b*b+m*m)>0&&(v*=l=1/Math.sqrt(l),b*=l,m*=l),t[0]=v,t[1]=b,t[2]=m,t[3]=0,t[4]=M*m-f*b,t[5]=f*v-s*m,t[6]=s*b-M*v,t[7]=0,t[8]=s,t[9]=M,t[10]=f,t[11]=0,t[12]=e,t[13]=u,t[14]=o,t[15]=1,t},str:function(t){return"mat4("+t[0]+", "+t[1]+", "+t[2]+", "+t[3]+", "+t[4]+", "+t[5]+", "+t[6]+", "+t[7]+", "+t[8]+", "+t[9]+", "+t[10]+", "+t[11]+", "+t[12]+", "+t[13]+", "+t[14]+", "+t[15]+")"},frob:function(t){return Math.hypot(t[0],t[1],t[2],t[3],t[4],t[5],t[6],t[7],t[8],t[9],t[10],t[11],t[12],t[13],t[14],t[15])},add:function(t,n,a){return t[0]=n[0]+a[0],t[1]=n[1]+a[1],t[2]=n[2]+a[2],t[3]=n[3]+a[3],t[4]=n[4]+a[4],t[5]=n[5]+a[5],t[6]=n[6]+a[6],t[7]=n[7]+a[7],t[8]=n[8]+a[8],t[9]=n[9]+a[9],t[10]=n[10]+a[10],t[11]=n[11]+a[11],t[12]=n[12]+a[12],t[13]=n[13]+a[13],t[14]=n[14]+a[14],t[15]=n[15]+a[15],t},subtract:z,multiplyScalar:function(t,n,a){return t[0]=n[0]*a,t[1]=n[1]*a,t[2]=n[2]*a,t[3]=n[3]*a,t[4]=n[4]*a,t[5]=n[5]*a,t[6]=n[6]*a,t[7]=n[7]*a,t[8]=n[8]*a,t[9]=n[9]*a,t[10]=n[10]*a,t[11]=n[11]*a,t[12]=n[12]*a,t[13]=n[13]*a,t[14]=n[14]*a,t[15]=n[15]*a,t},multiplyScalarAndAdd:function(t,n,a,r){return t[0]=n[0]+a[0]*r,t[1]=n[1]+a[1]*r,t[2]=n[2]+a[2]*r,t[3]=n[3]+a[3]*r,t[4]=n[4]+a[4]*r,t[5]=n[5]+a[5]*r,t[6]=n[6]+a[6]*r,t[7]=n[7]+a[7]*r,t[8]=n[8]+a[8]*r,t[9]=n[9]+a[9]*r,t[10]=n[10]+a[10]*r,t[11]=n[11]+a[11]*r,t[12]=n[12]+a[12]*r,t[13]=n[13]+a[13]*r,t[14]=n[14]+a[14]*r,t[15]=n[15]+a[15]*r,t},exactEquals:function(t,n){return t[0]===n[0]&&t[1]===n[1]&&t[2]===n[2]&&t[3]===n[3]&&t[4]===n[4]&&t[5]===n[5]&&t[6]===n[6]&&t[7]===n[7]&&t[8]===n[8]&&t[9]===n[9]&&t[10]===n[10]&&t[11]===n[11]&&t[12]===n[12]&&t[13]===n[13]&&t[14]===n[14]&&t[15]===n[15]},equals:function(t,n){var a=t[0],r=t[1],e=t[2],u=t[3],o=t[4],i=t[5],h=t[6],c=t[7],s=t[8],M=t[9],f=t[10],l=t[11],v=t[12],b=t[13],m=t[14],d=t[15],p=n[0],x=n[1],y=n[2],q=n[3],g=n[4],_=n[5],A=n[6],w=n[7],R=n[8],z=n[9],j=n[10],P=n[11],S=n[12],E=n[13],O=n[14],T=n[15];return Math.abs(a-p)<=1e-6*Math.max(1,Math.abs(a),Math.abs(p))&&Math.abs(r-x)<=1e-6*Math.max(1,Math.abs(r),Math.abs(x))&&Math.abs(e-y)<=1e-6*Math.max(1,Math.abs(e),Math.abs(y))&&Math.abs(u-q)<=1e-6*Math.max(1,Math.abs(u),Math.abs(q))&&Math.abs(o-g)<=1e-6*Math.max(1,Math.abs(o),Math.abs(g))&&Math.abs(i-_)<=1e-6*Math.max(1,Math.abs(i),Math.abs(_))&&Math.abs(h-A)<=1e-6*Math.max(1,Math.abs(h),Math.abs(A))&&Math.abs(c-w)<=1e-6*Math.max(1,Math.abs(c),Math.abs(w))&&Math.abs(s-R)<=1e-6*Math.max(1,Math.abs(s),Math.abs(R))&&Math.abs(M-z)<=1e-6*Math.max(1,Math.abs(M),Math.abs(z))&&Math.abs(f-j)<=1e-6*Math.max(1,Math.abs(f),Math.abs(j))&&Math.abs(l-P)<=1e-6*Math.max(1,Math.abs(l),Math.abs(P))&&Math.abs(v-S)<=1e-6*Math.max(1,Math.abs(v),Math.abs(S))&&Math.abs(b-E)<=1e-6*Math.max(1,Math.abs(b),Math.abs(E))&&Math.abs(m-O)<=1e-6*Math.max(1,Math.abs(m),Math.abs(O))&&Math.abs(d-T)<=1e-6*Math.max(1,Math.abs(d),Math.abs(T))},mul:j,sub:P});function E(){var t=new n(3);return n!=Float32Array&&(t[0]=0,t[1]=0,t[2]=0),t}function O(t){var n=t[0],a=t[1],r=t[2];return Math.hypot(n,a,r)}function T(t,a,r){var e=new n(3);return e[0]=t,e[1]=a,e[2]=r,e}function D(t,n,a){return t[0]=n[0]-a[0],t[1]=n[1]-a[1],t[2]=n[2]-a[2],t}function F(t,n,a){return t[0]=n[0]*a[0],t[1]=n[1]*a[1],t[2]=n[2]*a[2],t}function I(t,n,a){return t[0]=n[0]/a[0],t[1]=n[1]/a[1],t[2]=n[2]/a[2],t}function L(t,n){var a=n[0]-t[0],r=n[1]-t[1],e=n[2]-t[2];return Math.hypot(a,r,e)}function V(t,n){var a=n[0]-t[0],r=n[1]-t[1],e=n[2]-t[2];return a*a+r*r+e*e}function Q(t){var n=t[0],a=t[1],r=t[2];return n*n+a*a+r*r}function Y(t,n){var a=n[0],r=n[1],e=n[2],u=a*a+r*r+e*e;return u>0&&(u=1/Math.sqrt(u)),t[0]=n[0]*u,t[1]=n[1]*u,t[2]=n[2]*u,t}function X(t,n){return t[0]*n[0]+t[1]*n[1]+t[2]*n[2]}function Z(t,n,a){var r=n[0],e=n[1],u=n[2],o=a[0],i=a[1],h=a[2];return t[0]=e*h-u*i,t[1]=u*o-r*h,t[2]=r*i-e*o,t}var B,N=D,k=F,U=I,W=L,C=V,G=O,H=Q,J=(B=E(),function(t,n,a,r,e,u){var o,i;for(n||(n=3),a||(a=0),i=r?Math.min(r*n+a,t.length):t.length,o=a;o<i;o+=n)B[0]=t[o],B[1]=t[o+1],B[2]=t[o+2],e(B,B,u),t[o]=B[0],t[o+1]=B[1],t[o+2]=B[2];return t}),K=Object.freeze({__proto__:null,create:E,clone:function(t){var a=new n(3);return a[0]=t[0],a[1]=t[1],a[2]=t[2],a},length:O,fromValues:T,copy:function(t,n){return t[0]=n[0],t[1]=n[1],t[2]=n[2],t},set:function(t,n,a,r){return t[0]=n,t[1]=a,t[2]=r,t},add:function(t,n,a){return t[0]=n[0]+a[0],t[1]=n[1]+a[1],t[2]=n[2]+a[2],t},subtract:D,multiply:F,divide:I,ceil:function(t,n){return t[0]=Math.ceil(n[0]),t[1]=Math.ceil(n[1]),t[2]=Math.ceil(n[2]),t},floor:function(t,n){return t[0]=Math.floor(n[0]),t[1]=Math.floor(n[1]),t[2]=Math.floor(n[2]),t},min:function(t,n,a){return t[0]=Math.min(n[0],a[0]),t[1]=Math.min(n[1],a[1]),t[2]=Math.min(n[2],a[2]),t},max:function(t,n,a){return t[0]=Math.max(n[0],a[0]),t[1]=Math.max(n[1],a[1]),t[2]=Math.max(n[2],a[2]),t},round:function(t,n){return t[0]=Math.round(n[0]),t[1]=Math.round(n[1]),t[2]=Math.round(n[2]),t},scale:function(t,n,a){return t[0]=n[0]*a,t[1]=n[1]*a,t[2]=n[2]*a,t},scaleAndAdd:function(t,n,a,r){return t[0]=n[0]+a[0]*r,t[1]=n[1]+a[1]*r,t[2]=n[2]+a[2]*r,t},distance:L,squaredDistance:V,squaredLength:Q,negate:function(t,n){return t[0]=-n[0],t[1]=-n[1],t[2]=-n[2],t},inverse:function(t,n){return t[0]=1/n[0],t[1]=1/n[1],t[2]=1/n[2],t},normalize:Y,dot:X,cross:Z,lerp:function(t,n,a,r){var e=n[0],u=n[1],o=n[2];return t[0]=e+r*(a[0]-e),t[1]=u+r*(a[1]-u),t[2]=o+r*(a[2]-o),t},hermite:function(t,n,a,r,e,u){var o=u*u,i=o*(2*u-3)+1,h=o*(u-2)+u,c=o*(u-1),s=o*(3-2*u);return t[0]=n[0]*i+a[0]*h+r[0]*c+e[0]*s,t[1]=n[1]*i+a[1]*h+r[1]*c+e[1]*s,t[2]=n[2]*i+a[2]*h+r[2]*c+e[2]*s,t},bezier:function(t,n,a,r,e,u){var o=1-u,i=o*o,h=u*u,c=i*o,s=3*u*i,M=3*h*o,f=h*u;return t[0]=n[0]*c+a[0]*s+r[0]*M+e[0]*f,t[1]=n[1]*c+a[1]*s+r[1]*M+e[1]*f,t[2]=n[2]*c+a[2]*s+r[2]*M+e[2]*f,t},random:function(t,n){n=n||1;var r=2*a()*Math.PI,e=2*a()-1,u=Math.sqrt(1-e*e)*n;return t[0]=Math.cos(r)*u,t[1]=Math.sin(r)*u,t[2]=e*n,t},transformMat4:function(t,n,a){var r=n[0],e=n[1],u=n[2],o=a[3]*r+a[7]*e+a[11]*u+a[15];return o=o||1,t[0]=(a[0]*r+a[4]*e+a[8]*u+a[12])/o,t[1]=(a[1]*r+a[5]*e+a[9]*u+a[13])/o,t[2]=(a[2]*r+a[6]*e+a[10]*u+a[14])/o,t},transformMat3:function(t,n,a){var r=n[0],e=n[1],u=n[2];return t[0]=r*a[0]+e*a[3]+u*a[6],t[1]=r*a[1]+e*a[4]+u*a[7],t[2]=r*a[2]+e*a[5]+u*a[8],t},transformQuat:function(t,n,a){var r=a[0],e=a[1],u=a[2],o=a[3],i=n[0],h=n[1],c=n[2],s=e*c-u*h,M=u*i-r*c,f=r*h-e*i,l=e*f-u*M,v=u*s-r*f,b=r*M-e*s,m=2*o;return s*=m,M*=m,f*=m,l*=2,v*=2,b*=2,t[0]=i+s+l,t[1]=h+M+v,t[2]=c+f+b,t},rotateX:function(t,n,a,r){var e=[],u=[];return e[0]=n[0]-a[0],e[1]=n[1]-a[1],e[2]=n[2]-a[2],u[0]=e[0],u[1]=e[1]*Math.cos(r)-e[2]*Math.sin(r),u[2]=e[1]*Math.sin(r)+e[2]*Math.cos(r),t[0]=u[0]+a[0],t[1]=u[1]+a[1],t[2]=u[2]+a[2],t},rotateY:function(t,n,a,r){var e=[],u=[];return e[0]=n[0]-a[0],e[1]=n[1]-a[1],e[2]=n[2]-a[2],u[0]=e[2]*Math.sin(r)+e[0]*Math.cos(r),u[1]=e[1],u[2]=e[2]*Math.cos(r)-e[0]*Math.sin(r),t[0]=u[0]+a[0],t[1]=u[1]+a[1],t[2]=u[2]+a[2],t},rotateZ:function(t,n,a,r){var e=[],u=[];return e[0]=n[0]-a[0],e[1]=n[1]-a[1],e[2]=n[2]-a[2],u[0]=e[0]*Math.cos(r)-e[1]*Math.sin(r),u[1]=e[0]*Math.sin(r)+e[1]*Math.cos(r),u[2]=e[2],t[0]=u[0]+a[0],t[1]=u[1]+a[1],t[2]=u[2]+a[2],t},angle:function(t,n){var a=t[0],r=t[1],e=t[2],u=n[0],o=n[1],i=n[2],h=Math.sqrt(a*a+r*r+e*e)*Math.sqrt(u*u+o*o+i*i),c=h&&X(t,n)/h;return Math.acos(Math.min(Math.max(c,-1),1))},zero:function(t){return t[0]=0,t[1]=0,t[2]=0,t},str:function(t){return"vec3("+t[0]+", "+t[1]+", "+t[2]+")"},exactEquals:function(t,n){return t[0]===n[0]&&t[1]===n[1]&&t[2]===n[2]},equals:function(t,n){var a=t[0],r=t[1],e=t[2],u=n[0],o=n[1],i=n[2];return Math.abs(a-u)<=1e-6*Math.max(1,Math.abs(a),Math.abs(u))&&Math.abs(r-o)<=1e-6*Math.max(1,Math.abs(r),Math.abs(o))&&Math.abs(e-i)<=1e-6*Math.max(1,Math.abs(e),Math.abs(i))},sub:N,mul:k,div:U,dist:W,sqrDist:C,len:G,sqrLen:H,forEach:J});function $(){var t=new n(4);return n!=Float32Array&&(t[0]=0,t[1]=0,t[2]=0,t[3]=0),t}function tt(t){var a=new n(4);return a[0]=t[0],a[1]=t[1],a[2]=t[2],a[3]=t[3],a}function nt(t,a,r,e){var u=new n(4);return u[0]=t,u[1]=a,u[2]=r,u[3]=e,u}function at(t,n){return t[0]=n[0],t[1]=n[1],t[2]=n[2],t[3]=n[3],t}function rt(t,n,a,r,e){return t[0]=n,t[1]=a,t[2]=r,t[3]=e,t}function et(t,n,a){return t[0]=n[0]+a[0],t[1]=n[1]+a[1],t[2]=n[2]+a[2],t[3]=n[3]+a[3],t}function ut(t,n,a){return t[0]=n[0]-a[0],t[1]=n[1]-a[1],t[2]=n[2]-a[2],t[3]=n[3]-a[3],t}function ot(t,n,a){return t[0]=n[0]*a[0],t[1]=n[1]*a[1],t[2]=n[2]*a[2],t[3]=n[3]*a[3],t}function it(t,n,a){return t[0]=n[0]/a[0],t[1]=n[1]/a[1],t[2]=n[2]/a[2],t[3]=n[3]/a[3],t}function ht(t,n,a){return t[0]=n[0]*a,t[1]=n[1]*a,t[2]=n[2]*a,t[3]=n[3]*a,t}function ct(t,n){var a=n[0]-t[0],r=n[1]-t[1],e=n[2]-t[2],u=n[3]-t[3];return Math.hypot(a,r,e,u)}function st(t,n){var a=n[0]-t[0],r=n[1]-t[1],e=n[2]-t[2],u=n[3]-t[3];return a*a+r*r+e*e+u*u}function Mt(t){var n=t[0],a=t[1],r=t[2],e=t[3];return Math.hypot(n,a,r,e)}function ft(t){var n=t[0],a=t[1],r=t[2],e=t[3];return n*n+a*a+r*r+e*e}function lt(t,n){var a=n[0],r=n[1],e=n[2],u=n[3],o=a*a+r*r+e*e+u*u;return o>0&&(o=1/Math.sqrt(o)),t[0]=a*o,t[1]=r*o,t[2]=e*o,t[3]=u*o,t}function vt(t,n){return t[0]*n[0]+t[1]*n[1]+t[2]*n[2]+t[3]*n[3]}function bt(t,n,a,r){var e=n[0],u=n[1],o=n[2],i=n[3];return t[0]=e+r*(a[0]-e),t[1]=u+r*(a[1]-u),t[2]=o+r*(a[2]-o),t[3]=i+r*(a[3]-i),t}function mt(t,n){return t[0]===n[0]&&t[1]===n[1]&&t[2]===n[2]&&t[3]===n[3]}function dt(t,n){var a=t[0],r=t[1],e=t[2],u=t[3],o=n[0],i=n[1],h=n[2],c=n[3];return Math.abs(a-o)<=1e-6*Math.max(1,Math.abs(a),Math.abs(o))&&Math.abs(r-i)<=1e-6*Math.max(1,Math.abs(r),Math.abs(i))&&Math.abs(e-h)<=1e-6*Math.max(1,Math.abs(e),Math.abs(h))&&Math.abs(u-c)<=1e-6*Math.max(1,Math.abs(u),Math.abs(c))}var pt=ut,xt=ot,yt=it,qt=ct,gt=st,_t=Mt,At=ft,wt=function(){var t=$();return function(n,a,r,e,u,o){var i,h;for(a||(a=4),r||(r=0),h=e?Math.min(e*a+r,n.length):n.length,i=r;i<h;i+=a)t[0]=n[i],t[1]=n[i+1],t[2]=n[i+2],t[3]=n[i+3],u(t,t,o),n[i]=t[0],n[i+1]=t[1],n[i+2]=t[2],n[i+3]=t[3];return n}}(),Rt=Object.freeze({__proto__:null,create:$,clone:tt,fromValues:nt,copy:at,set:rt,add:et,subtract:ut,multiply:ot,divide:it,ceil:function(t,n){return t[0]=Math.ceil(n[0]),t[1]=Math.ceil(n[1]),t[2]=Math.ceil(n[2]),t[3]=Math.ceil(n[3]),t},floor:function(t,n){return t[0]=Math.floor(n[0]),t[1]=Math.floor(n[1]),t[2]=Math.floor(n[2]),t[3]=Math.floor(n[3]),t},min:function(t,n,a){return t[0]=Math.min(n[0],a[0]),t[1]=Math.min(n[1],a[1]),t[2]=Math.min(n[2],a[2]),t[3]=Math.min(n[3],a[3]),t},max:function(t,n,a){return t[0]=Math.max(n[0],a[0]),t[1]=Math.max(n[1],a[1]),t[2]=Math.max(n[2],a[2]),t[3]=Math.max(n[3],a[3]),t},round:function(t,n){return t[0]=Math.round(n[0]),t[1]=Math.round(n[1]),t[2]=Math.round(n[2]),t[3]=Math.round(n[3]),t},scale:ht,scaleAndAdd:function(t,n,a,r){return t[0]=n[0]+a[0]*r,t[1]=n[1]+a[1]*r,t[2]=n[2]+a[2]*r,t[3]=n[3]+a[3]*r,t},distance:ct,squaredDistance:st,length:Mt,squaredLength:ft,negate:function(t,n){return t[0]=-n[0],t[1]=-n[1],t[2]=-n[2],t[3]=-n[3],t},inverse:function(t,n){return t[0]=1/n[0],t[1]=1/n[1],t[2]=1/n[2],t[3]=1/n[3],t},normalize:lt,dot:vt,cross:function(t,n,a,r){var e=a[0]*r[1]-a[1]*r[0],u=a[0]*r[2]-a[2]*r[0],o=a[0]*r[3]-a[3]*r[0],i=a[1]*r[2]-a[2]*r[1],h=a[1]*r[3]-a[3]*r[1],c=a[2]*r[3]-a[3]*r[2],s=n[0],M=n[1],f=n[2],l=n[3];return t[0]=M*c-f*h+l*i,t[1]=-s*c+f*o-l*u,t[2]=s*h-M*o+l*e,t[3]=-s*i+M*u-f*e,t},lerp:bt,random:function(t,n){var r,e,u,o,i,h;n=n||1;do{i=(r=2*a()-1)*r+(e=2*a()-1)*e}while(i>=1);do{h=(u=2*a()-1)*u+(o=2*a()-1)*o}while(h>=1);var c=Math.sqrt((1-i)/h);return t[0]=n*r,t[1]=n*e,t[2]=n*u*c,t[3]=n*o*c,t},transformMat4:function(t,n,a){var r=n[0],e=n[1],u=n[2],o=n[3];return t[0]=a[0]*r+a[4]*e+a[8]*u+a[12]*o,t[1]=a[1]*r+a[5]*e+a[9]*u+a[13]*o,t[2]=a[2]*r+a[6]*e+a[10]*u+a[14]*o,t[3]=a[3]*r+a[7]*e+a[11]*u+a[15]*o,t},transformQuat:function(t,n,a){var r=n[0],e=n[1],u=n[2],o=a[0],i=a[1],h=a[2],c=a[3],s=c*r+i*u-h*e,M=c*e+h*r-o*u,f=c*u+o*e-i*r,l=-o*r-i*e-h*u;return t[0]=s*c+l*-o+M*-h-f*-i,t[1]=M*c+l*-i+f*-o-s*-h,t[2]=f*c+l*-h+s*-i-M*-o,t[3]=n[3],t},zero:function(t){return t[0]=0,t[1]=0,t[2]=0,t[3]=0,t},str:function(t){return"vec4("+t[0]+", "+t[1]+", "+t[2]+", "+t[3]+")"},exactEquals:mt,equals:dt,sub:pt,mul:xt,div:yt,dist:qt,sqrDist:gt,len:_t,sqrLen:At,forEach:wt});function zt(){var t=new n(4);return n!=Float32Array&&(t[0]=0,t[1]=0,t[2]=0),t[3]=1,t}function jt(t,n,a){a*=.5;var r=Math.sin(a);return t[0]=r*n[0],t[1]=r*n[1],t[2]=r*n[2],t[3]=Math.cos(a),t}function Pt(t,n,a){var r=n[0],e=n[1],u=n[2],o=n[3],i=a[0],h=a[1],c=a[2],s=a[3];return t[0]=r*s+o*i+e*c-u*h,t[1]=e*s+o*h+u*i-r*c,t[2]=u*s+o*c+r*h-e*i,t[3]=o*s-r*i-e*h-u*c,t}function St(t,n,a){a*=.5;var r=n[0],e=n[1],u=n[2],o=n[3],i=Math.sin(a),h=Math.cos(a);return t[0]=r*h+o*i,t[1]=e*h+u*i,t[2]=u*h-e*i,t[3]=o*h-r*i,t}function Et(t,n,a){a*=.5;var r=n[0],e=n[1],u=n[2],o=n[3],i=Math.sin(a),h=Math.cos(a);return t[0]=r*h-u*i,t[1]=e*h+o*i,t[2]=u*h+r*i,t[3]=o*h-e*i,t}function Ot(t,n,a){a*=.5;var r=n[0],e=n[1],u=n[2],o=n[3],i=Math.sin(a),h=Math.cos(a);return t[0]=r*h+e*i,t[1]=e*h-r*i,t[2]=u*h+o*i,t[3]=o*h-u*i,t}function Tt(t,n){var a=n[0],r=n[1],e=n[2],u=n[3],o=Math.sqrt(a*a+r*r+e*e),i=Math.exp(u),h=o>0?i*Math.sin(o)/o:0;return t[0]=a*h,t[1]=r*h,t[2]=e*h,t[3]=i*Math.cos(o),t}function Dt(t,n){var a=n[0],r=n[1],e=n[2],u=n[3],o=Math.sqrt(a*a+r*r+e*e),i=o>0?Math.atan2(o,u)/o:0;return t[0]=a*i,t[1]=r*i,t[2]=e*i,t[3]=.5*Math.log(a*a+r*r+e*e+u*u),t}function Ft(t,n,a,r){var e,u,o,i,h,c=n[0],s=n[1],M=n[2],f=n[3],l=a[0],v=a[1],b=a[2],m=a[3];return(u=c*l+s*v+M*b+f*m)<0&&(u=-u,l=-l,v=-v,b=-b,m=-m),1-u>1e-6?(e=Math.acos(u),o=Math.sin(e),i=Math.sin((1-r)*e)/o,h=Math.sin(r*e)/o):(i=1-r,h=r),t[0]=i*c+h*l,t[1]=i*s+h*v,t[2]=i*M+h*b,t[3]=i*f+h*m,t}function It(t,n){var a,r=n[0]+n[4]+n[8];if(r>0)a=Math.sqrt(r+1),t[3]=.5*a,a=.5/a,t[0]=(n[5]-n[7])*a,t[1]=(n[6]-n[2])*a,t[2]=(n[1]-n[3])*a;else{var e=0;n[4]>n[0]&&(e=1),n[8]>n[3*e+e]&&(e=2);var u=(e+1)%3,o=(e+2)%3;a=Math.sqrt(n[3*e+e]-n[3*u+u]-n[3*o+o]+1),t[e]=.5*a,a=.5/a,t[3]=(n[3*u+o]-n[3*o+u])*a,t[u]=(n[3*u+e]+n[3*e+u])*a,t[o]=(n[3*o+e]+n[3*e+o])*a}return t}var Lt,Vt,Qt,Yt,Xt,Zt,Bt=tt,Nt=nt,kt=at,Ut=rt,Wt=et,Ct=Pt,Gt=ht,Ht=vt,Jt=bt,Kt=Mt,$t=Kt,tn=ft,nn=tn,an=lt,rn=mt,en=dt,un=(Lt=E(),Vt=T(1,0,0),Qt=T(0,1,0),function(t,n,a){var r=X(n,a);return r<-.999999?(Z(Lt,Vt,n),G(Lt)<1e-6&&Z(Lt,Qt,n),Y(Lt,Lt),jt(t,Lt,Math.PI),t):r>.999999?(t[0]=0,t[1]=0,t[2]=0,t[3]=1,t):(Z(Lt,n,a),t[0]=Lt[0],t[1]=Lt[1],t[2]=Lt[2],t[3]=1+r,an(t,t))}),on=(Yt=zt(),Xt=zt(),function(t,n,a,r,e,u){return Ft(Yt,n,e,u),Ft(Xt,a,r,u),Ft(t,Yt,Xt,2*u*(1-u)),t}),hn=(Zt=b(),function(t,n,a,r){return Zt[0]=a[0],Zt[3]=a[1],Zt[6]=a[2],Zt[1]=r[0],Zt[4]=r[1],Zt[7]=r[2],Zt[2]=-n[0],Zt[5]=-n[1],Zt[8]=-n[2],an(t,It(t,Zt))}),cn=Object.freeze({__proto__:null,create:zt,identity:function(t){return t[0]=0,t[1]=0,t[2]=0,t[3]=1,t},setAxisAngle:jt,getAxisAngle:function(t,n){var a=2*Math.acos(n[3]),r=Math.sin(a/2);return r>1e-6?(t[0]=n[0]/r,t[1]=n[1]/r,t[2]=n[2]/r):(t[0]=1,t[1]=0,t[2]=0),a},getAngle:function(t,n){var a=Ht(t,n);return Math.acos(2*a*a-1)},multiply:Pt,rotateX:St,rotateY:Et,rotateZ:Ot,calculateW:function(t,n){var a=n[0],r=n[1],e=n[2];return t[0]=a,t[1]=r,t[2]=e,t[3]=Math.sqrt(Math.abs(1-a*a-r*r-e*e)),t},exp:Tt,ln:Dt,pow:function(t,n,a){return Dt(t,n),Gt(t,t,a),Tt(t,t),t},slerp:Ft,random:function(t){var n=a(),r=a(),e=a(),u=Math.sqrt(1-n),o=Math.sqrt(n);return t[0]=u*Math.sin(2*Math.PI*r),t[1]=u*Math.cos(2*Math.PI*r),t[2]=o*Math.sin(2*Math.PI*e),t[3]=o*Math.cos(2*Math.PI*e),t},invert:function(t,n){var a=n[0],r=n[1],e=n[2],u=n[3],o=a*a+r*r+e*e+u*u,i=o?1/o:0;return t[0]=-a*i,t[1]=-r*i,t[2]=-e*i,t[3]=u*i,t},conjugate:function(t,n){return t[0]=-n[0],t[1]=-n[1],t[2]=-n[2],t[3]=n[3],t},fromMat3:It,fromEuler:function(t,n,a,r){var e=.5*Math.PI/180;n*=e,a*=e,r*=e;var u=Math.sin(n),o=Math.cos(n),i=Math.sin(a),h=Math.cos(a),c=Math.sin(r),s=Math.cos(r);return t[0]=u*h*s-o*i*c,t[1]=o*i*s+u*h*c,t[2]=o*h*c-u*i*s,t[3]=o*h*s+u*i*c,t},str:function(t){return"quat("+t[0]+", "+t[1]+", "+t[2]+", "+t[3]+")"},clone:Bt,fromValues:Nt,copy:kt,set:Ut,add:Wt,mul:Ct,scale:Gt,dot:Ht,lerp:Jt,length:Kt,len:$t,squaredLength:tn,sqrLen:nn,normalize:an,exactEquals:rn,equals:en,rotationTo:un,sqlerp:on,setAxes:hn});function sn(t,n,a){var r=.5*a[0],e=.5*a[1],u=.5*a[2],o=n[0],i=n[1],h=n[2],c=n[3];return t[0]=o,t[1]=i,t[2]=h,t[3]=c,t[4]=r*c+e*h-u*i,t[5]=e*c+u*o-r*h,t[6]=u*c+r*i-e*o,t[7]=-r*o-e*i-u*h,t}function Mn(t,n){return t[0]=n[0],t[1]=n[1],t[2]=n[2],t[3]=n[3],t[4]=n[4],t[5]=n[5],t[6]=n[6],t[7]=n[7],t}var fn=kt;var ln=kt;function vn(t,n,a){var r=n[0],e=n[1],u=n[2],o=n[3],i=a[4],h=a[5],c=a[6],s=a[7],M=n[4],f=n[5],l=n[6],v=n[7],b=a[0],m=a[1],d=a[2],p=a[3];return t[0]=r*p+o*b+e*d-u*m,t[1]=e*p+o*m+u*b-r*d,t[2]=u*p+o*d+r*m-e*b,t[3]=o*p-r*b-e*m-u*d,t[4]=r*s+o*i+e*c-u*h+M*p+v*b+f*d-l*m,t[5]=e*s+o*h+u*i-r*c+f*p+v*m+l*b-M*d,t[6]=u*s+o*c+r*h-e*i+l*p+v*d+M*m-f*b,t[7]=o*s-r*i-e*h-u*c+v*p-M*b-f*m-l*d,t}var bn=vn;var mn=Ht;var dn=Kt,pn=dn,xn=tn,yn=xn;var qn=Object.freeze({__proto__:null,create:function(){var t=new n(8);return n!=Float32Array&&(t[0]=0,t[1]=0,t[2]=0,t[4]=0,t[5]=0,t[6]=0,t[7]=0),t[3]=1,t},clone:function(t){var a=new n(8);return a[0]=t[0],a[1]=t[1],a[2]=t[2],a[3]=t[3],a[4]=t[4],a[5]=t[5],a[6]=t[6],a[7]=t[7],a},fromValues:function(t,a,r,e,u,o,i,h){var c=new n(8);return c[0]=t,c[1]=a,c[2]=r,c[3]=e,c[4]=u,c[5]=o,c[6]=i,c[7]=h,c},fromRotationTranslationValues:function(t,a,r,e,u,o,i){var h=new n(8);h[0]=t,h[1]=a,h[2]=r,h[3]=e;var c=.5*u,s=.5*o,M=.5*i;return h[4]=c*e+s*r-M*a,h[5]=s*e+M*t-c*r,h[6]=M*e+c*a-s*t,h[7]=-c*t-s*a-M*r,h},fromRotationTranslation:sn,fromTranslation:function(t,n){return t[0]=0,t[1]=0,t[2]=0,t[3]=1,t[4]=.5*n[0],t[5]=.5*n[1],t[6]=.5*n[2],t[7]=0,t},fromRotation:function(t,n){return t[0]=n[0],t[1]=n[1],t[2]=n[2],t[3]=n[3],t[4]=0,t[5]=0,t[6]=0,t[7]=0,t},fromMat4:function(t,a){var r=zt();R(r,a);var e=new n(3);return A(e,a),sn(t,r,e),t},copy:Mn,identity:function(t){return t[0]=0,t[1]=0,t[2]=0,t[3]=1,t[4]=0,t[5]=0,t[6]=0,t[7]=0,t},set:function(t,n,a,r,e,u,o,i,h){return t[0]=n,t[1]=a,t[2]=r,t[3]=e,t[4]=u,t[5]=o,t[6]=i,t[7]=h,t},getReal:fn,getDual:function(t,n){return t[0]=n[4],t[1]=n[5],t[2]=n[6],t[3]=n[7],t},setReal:ln,setDual:function(t,n){return t[4]=n[0],t[5]=n[1],t[6]=n[2],t[7]=n[3],t},getTranslation:function(t,n){var a=n[4],r=n[5],e=n[6],u=n[7],o=-n[0],i=-n[1],h=-n[2],c=n[3];return t[0]=2*(a*c+u*o+r*h-e*i),t[1]=2*(r*c+u*i+e*o-a*h),t[2]=2*(e*c+u*h+a*i-r*o),t},translate:function(t,n,a){var r=n[0],e=n[1],u=n[2],o=n[3],i=.5*a[0],h=.5*a[1],c=.5*a[2],s=n[4],M=n[5],f=n[6],l=n[7];return t[0]=r,t[1]=e,t[2]=u,t[3]=o,t[4]=o*i+e*c-u*h+s,t[5]=o*h+u*i-r*c+M,t[6]=o*c+r*h-e*i+f,t[7]=-r*i-e*h-u*c+l,t},rotateX:function(t,n,a){var r=-n[0],e=-n[1],u=-n[2],o=n[3],i=n[4],h=n[5],c=n[6],s=n[7],M=i*o+s*r+h*u-c*e,f=h*o+s*e+c*r-i*u,l=c*o+s*u+i*e-h*r,v=s*o-i*r-h*e-c*u;return St(t,n,a),r=t[0],e=t[1],u=t[2],o=t[3],t[4]=M*o+v*r+f*u-l*e,t[5]=f*o+v*e+l*r-M*u,t[6]=l*o+v*u+M*e-f*r,t[7]=v*o-M*r-f*e-l*u,t},rotateY:function(t,n,a){var r=-n[0],e=-n[1],u=-n[2],o=n[3],i=n[4],h=n[5],c=n[6],s=n[7],M=i*o+s*r+h*u-c*e,f=h*o+s*e+c*r-i*u,l=c*o+s*u+i*e-h*r,v=s*o-i*r-h*e-c*u;return Et(t,n,a),r=t[0],e=t[1],u=t[2],o=t[3],t[4]=M*o+v*r+f*u-l*e,t[5]=f*o+v*e+l*r-M*u,t[6]=l*o+v*u+M*e-f*r,t[7]=v*o-M*r-f*e-l*u,t},rotateZ:function(t,n,a){var r=-n[0],e=-n[1],u=-n[2],o=n[3],i=n[4],h=n[5],c=n[6],s=n[7],M=i*o+s*r+h*u-c*e,f=h*o+s*e+c*r-i*u,l=c*o+s*u+i*e-h*r,v=s*o-i*r-h*e-c*u;return Ot(t,n,a),r=t[0],e=t[1],u=t[2],o=t[3],t[4]=M*o+v*r+f*u-l*e,t[5]=f*o+v*e+l*r-M*u,t[6]=l*o+v*u+M*e-f*r,t[7]=v*o-M*r-f*e-l*u,t},rotateByQuatAppend:function(t,n,a){var r=a[0],e=a[1],u=a[2],o=a[3],i=n[0],h=n[1],c=n[2],s=n[3];return t[0]=i*o+s*r+h*u-c*e,t[1]=h*o+s*e+c*r-i*u,t[2]=c*o+s*u+i*e-h*r,t[3]=s*o-i*r-h*e-c*u,i=n[4],h=n[5],c=n[6],s=n[7],t[4]=i*o+s*r+h*u-c*e,t[5]=h*o+s*e+c*r-i*u,t[6]=c*o+s*u+i*e-h*r,t[7]=s*o-i*r-h*e-c*u,t},rotateByQuatPrepend:function(t,n,a){var r=n[0],e=n[1],u=n[2],o=n[3],i=a[0],h=a[1],c=a[2],s=a[3];return t[0]=r*s+o*i+e*c-u*h,t[1]=e*s+o*h+u*i-r*c,t[2]=u*s+o*c+r*h-e*i,t[3]=o*s-r*i-e*h-u*c,i=a[4],h=a[5],c=a[6],s=a[7],t[4]=r*s+o*i+e*c-u*h,t[5]=e*s+o*h+u*i-r*c,t[6]=u*s+o*c+r*h-e*i,t[7]=o*s-r*i-e*h-u*c,t},rotateAroundAxis:function(t,n,a,r){if(Math.abs(r)<1e-6)return Mn(t,n);var e=Math.hypot(a[0],a[1],a[2]);r*=.5;var u=Math.sin(r),o=u*a[0]/e,i=u*a[1]/e,h=u*a[2]/e,c=Math.cos(r),s=n[0],M=n[1],f=n[2],l=n[3];t[0]=s*c+l*o+M*h-f*i,t[1]=M*c+l*i+f*o-s*h,t[2]=f*c+l*h+s*i-M*o,t[3]=l*c-s*o-M*i-f*h;var v=n[4],b=n[5],m=n[6],d=n[7];return t[4]=v*c+d*o+b*h-m*i,t[5]=b*c+d*i+m*o-v*h,t[6]=m*c+d*h+v*i-b*o,t[7]=d*c-v*o-b*i-m*h,t},add:function(t,n,a){return t[0]=n[0]+a[0],t[1]=n[1]+a[1],t[2]=n[2]+a[2],t[3]=n[3]+a[3],t[4]=n[4]+a[4],t[5]=n[5]+a[5],t[6]=n[6]+a[6],t[7]=n[7]+a[7],t},multiply:vn,mul:bn,scale:function(t,n,a){return t[0]=n[0]*a,t[1]=n[1]*a,t[2]=n[2]*a,t[3]=n[3]*a,t[4]=n[4]*a,t[5]=n[5]*a,t[6]=n[6]*a,t[7]=n[7]*a,t},dot:mn,lerp:function(t,n,a,r){var e=1-r;return mn(n,a)<0&&(r=-r),t[0]=n[0]*e+a[0]*r,t[1]=n[1]*e+a[1]*r,t[2]=n[2]*e+a[2]*r,t[3]=n[3]*e+a[3]*r,t[4]=n[4]*e+a[4]*r,t[5]=n[5]*e+a[5]*r,t[6]=n[6]*e+a[6]*r,t[7]=n[7]*e+a[7]*r,t},invert:function(t,n){var a=xn(n);return t[0]=-n[0]/a,t[1]=-n[1]/a,t[2]=-n[2]/a,t[3]=n[3]/a,t[4]=-n[4]/a,t[5]=-n[5]/a,t[6]=-n[6]/a,t[7]=n[7]/a,t},conjugate:function(t,n){return t[0]=-n[0],t[1]=-n[1],t[2]=-n[2],t[3]=n[3],t[4]=-n[4],t[5]=-n[5],t[6]=-n[6],t[7]=n[7],t},length:dn,len:pn,squaredLength:xn,sqrLen:yn,normalize:function(t,n){var a=xn(n);if(a>0){a=Math.sqrt(a);var r=n[0]/a,e=n[1]/a,u=n[2]/a,o=n[3]/a,i=n[4],h=n[5],c=n[6],s=n[7],M=r*i+e*h+u*c+o*s;t[0]=r,t[1]=e,t[2]=u,t[3]=o,t[4]=(i-r*M)/a,t[5]=(h-e*M)/a,t[6]=(c-u*M)/a,t[7]=(s-o*M)/a}return t},str:function(t){return"quat2("+t[0]+", "+t[1]+", "+t[2]+", "+t[3]+", "+t[4]+", "+t[5]+", "+t[6]+", "+t[7]+")"},exactEquals:function(t,n){return t[0]===n[0]&&t[1]===n[1]&&t[2]===n[2]&&t[3]===n[3]&&t[4]===n[4]&&t[5]===n[5]&&t[6]===n[6]&&t[7]===n[7]},equals:function(t,n){var a=t[0],r=t[1],e=t[2],u=t[3],o=t[4],i=t[5],h=t[6],c=t[7],s=n[0],M=n[1],f=n[2],l=n[3],v=n[4],b=n[5],m=n[6],d=n[7];return Math.abs(a-s)<=1e-6*Math.max(1,Math.abs(a),Math.abs(s))&&Math.abs(r-M)<=1e-6*Math.max(1,Math.abs(r),Math.abs(M))&&Math.abs(e-f)<=1e-6*Math.max(1,Math.abs(e),Math.abs(f))&&Math.abs(u-l)<=1e-6*Math.max(1,Math.abs(u),Math.abs(l))&&Math.abs(o-v)<=1e-6*Math.max(1,Math.abs(o),Math.abs(v))&&Math.abs(i-b)<=1e-6*Math.max(1,Math.abs(i),Math.abs(b))&&Math.abs(h-m)<=1e-6*Math.max(1,Math.abs(h),Math.abs(m))&&Math.abs(c-d)<=1e-6*Math.max(1,Math.abs(c),Math.abs(d))}});function gn(){var t=new n(2);return n!=Float32Array&&(t[0]=0,t[1]=0),t}function _n(t,n,a){return t[0]=n[0]-a[0],t[1]=n[1]-a[1],t}function An(t,n,a){return t[0]=n[0]*a[0],t[1]=n[1]*a[1],t}function wn(t,n,a){return t[0]=n[0]/a[0],t[1]=n[1]/a[1],t}function Rn(t,n){var a=n[0]-t[0],r=n[1]-t[1];return Math.hypot(a,r)}function zn(t,n){var a=n[0]-t[0],r=n[1]-t[1];return a*a+r*r}function jn(t){var n=t[0],a=t[1];return Math.hypot(n,a)}function Pn(t){var n=t[0],a=t[1];return n*n+a*a}var Sn=jn,En=_n,On=An,Tn=wn,Dn=Rn,Fn=zn,In=Pn,Ln=function(){var t=gn();return function(n,a,r,e,u,o){var i,h;for(a||(a=2),r||(r=0),h=e?Math.min(e*a+r,n.length):n.length,i=r;i<h;i+=a)t[0]=n[i],t[1]=n[i+1],u(t,t,o),n[i]=t[0],n[i+1]=t[1];return n}}(),Vn=Object.freeze({__proto__:null,create:gn,clone:function(t){var a=new n(2);return a[0]=t[0],a[1]=t[1],a},fromValues:function(t,a){var r=new n(2);return r[0]=t,r[1]=a,r},copy:function(t,n){return t[0]=n[0],t[1]=n[1],t},set:function(t,n,a){return t[0]=n,t[1]=a,t},add:function(t,n,a){return t[0]=n[0]+a[0],t[1]=n[1]+a[1],t},subtract:_n,multiply:An,divide:wn,ceil:function(t,n){return t[0]=Math.ceil(n[0]),t[1]=Math.ceil(n[1]),t},floor:function(t,n){return t[0]=Math.floor(n[0]),t[1]=Math.floor(n[1]),t},min:function(t,n,a){return t[0]=Math.min(n[0],a[0]),t[1]=Math.min(n[1],a[1]),t},max:function(t,n,a){return t[0]=Math.max(n[0],a[0]),t[1]=Math.max(n[1],a[1]),t},round:function(t,n){return t[0]=Math.round(n[0]),t[1]=Math.round(n[1]),t},scale:function(t,n,a){return t[0]=n[0]*a,t[1]=n[1]*a,t},scaleAndAdd:function(t,n,a,r){return t[0]=n[0]+a[0]*r,t[1]=n[1]+a[1]*r,t},distance:Rn,squaredDistance:zn,length:jn,squaredLength:Pn,negate:function(t,n){return t[0]=-n[0],t[1]=-n[1],t},inverse:function(t,n){return t[0]=1/n[0],t[1]=1/n[1],t},normalize:function(t,n){var a=n[0],r=n[1],e=a*a+r*r;return e>0&&(e=1/Math.sqrt(e)),t[0]=n[0]*e,t[1]=n[1]*e,t},dot:function(t,n){return t[0]*n[0]+t[1]*n[1]},cross:function(t,n,a){var r=n[0]*a[1]-n[1]*a[0];return t[0]=t[1]=0,t[2]=r,t},lerp:function(t,n,a,r){var e=n[0],u=n[1];return t[0]=e+r*(a[0]-e),t[1]=u+r*(a[1]-u),t},random:function(t,n){n=n||1;var r=2*a()*Math.PI;return t[0]=Math.cos(r)*n,t[1]=Math.sin(r)*n,t},transformMat2:function(t,n,a){var r=n[0],e=n[1];return t[0]=a[0]*r+a[2]*e,t[1]=a[1]*r+a[3]*e,t},transformMat2d:function(t,n,a){var r=n[0],e=n[1];return t[0]=a[0]*r+a[2]*e+a[4],t[1]=a[1]*r+a[3]*e+a[5],t},transformMat3:function(t,n,a){var r=n[0],e=n[1];return t[0]=a[0]*r+a[3]*e+a[6],t[1]=a[1]*r+a[4]*e+a[7],t},transformMat4:function(t,n,a){var r=n[0],e=n[1];return t[0]=a[0]*r+a[4]*e+a[12],t[1]=a[1]*r+a[5]*e+a[13],t},rotate:function(t,n,a,r){var e=n[0]-a[0],u=n[1]-a[1],o=Math.sin(r),i=Math.cos(r);return t[0]=e*i-u*o+a[0],t[1]=e*o+u*i+a[1],t},angle:function(t,n){var a=t[0],r=t[1],e=n[0],u=n[1],o=Math.sqrt(a*a+r*r)*Math.sqrt(e*e+u*u),i=o&&(a*e+r*u)/o;return Math.acos(Math.min(Math.max(i,-1),1))},zero:function(t){return t[0]=0,t[1]=0,t},str:function(t){return"vec2("+t[0]+", "+t[1]+")"},exactEquals:function(t,n){return t[0]===n[0]&&t[1]===n[1]},equals:function(t,n){var a=t[0],r=t[1],e=n[0],u=n[1];return Math.abs(a-e)<=1e-6*Math.max(1,Math.abs(a),Math.abs(e))&&Math.abs(r-u)<=1e-6*Math.max(1,Math.abs(r),Math.abs(u))},len:Sn,sub:En,mul:On,div:Tn,dist:Dn,sqrDist:Fn,sqrLen:In,forEach:Ln});t.glMatrix=e,t.mat2=c,t.mat2d=v,t.mat3=y,t.mat4=S,t.quat=cn,t.quat2=qn,t.vec2=Vn,t.vec3=K,t.vec4=Rt,Object.defineProperty(t,"__esModule",{value:!0})}));
 
-    </script>
+</script>
     <script>
-        // Disable Web Workers for local file protocol
-        var zip = {};
-        zip.useWebWorkers = false;
-    </script>
+/*
+ Copyright (c) 2013 Gildas Lormeau. All rights reserved.
+
+ Redistribution and use in source and binary forms, with or without
+ modification, are permitted provided that the following conditions are met:
+
+ 1. Redistributions of source code must retain the above copyright notice,
+ this list of conditions and the following disclaimer.
+
+ 2. Redistributions in binary form must reproduce the above copyright
+ notice, this list of conditions and the following disclaimer in
+ the documentation and/or other materials provided with the distribution.
+
+ 3. The names of the authors may not be used to endorse or promote products
+ derived from this software without specific prior written permission.
+
+ THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED WARRANTIES,
+ INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
+ FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL JCRAFT,
+ INC. OR ANY CONTRIBUTORS TO THIS SOFTWARE BE LIABLE FOR ANY DIRECT, INDIRECT,
+ INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA,
+ OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+ LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+ NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+ EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+
+(function(obj) {
+	"use strict";
+
+	var ERR_BAD_FORMAT = "File format is not recognized.";
+	var ERR_CRC = "CRC failed.";
+	var ERR_ENCRYPTED = "File contains encrypted entry.";
+	var ERR_ZIP64 = "File is using Zip64 (4gb+ file size).";
+	var ERR_READ = "Error while reading zip file.";
+	var ERR_WRITE = "Error while writing zip file.";
+	var ERR_WRITE_DATA = "Error while writing file data.";
+	var ERR_READ_DATA = "Error while reading file data.";
+	var ERR_DUPLICATED_NAME = "File already exists.";
+	var CHUNK_SIZE = 512 * 1024;
+	
+	var TEXT_PLAIN = "text/plain";
+
+	var appendABViewSupported;
+	try {
+		appendABViewSupported = new Blob([ new DataView(new ArrayBuffer(0)) ]).size === 0;
+	} catch (e) {
+	}
+
+	function Crc32() {
+		this.crc = -1;
+	}
+	Crc32.prototype.append = function append(data) {
+		var crc = this.crc | 0, table = this.table;
+		for (var offset = 0, len = data.length | 0; offset < len; offset++)
+			crc = (crc >>> 8) ^ table[(crc ^ data[offset]) & 0xFF];
+		this.crc = crc;
+	};
+	Crc32.prototype.get = function get() {
+		return ~this.crc;
+	};
+	Crc32.prototype.table = (function() {
+		var i, j, t, table = []; // Uint32Array is actually slower than []
+		for (i = 0; i < 256; i++) {
+			t = i;
+			for (j = 0; j < 8; j++)
+				if (t & 1)
+					t = (t >>> 1) ^ 0xEDB88320;
+				else
+					t = t >>> 1;
+			table[i] = t;
+		}
+		return table;
+	})();
+	
+	// "no-op" codec
+	function NOOP() {}
+	NOOP.prototype.append = function append(bytes, onprogress) {
+		return bytes;
+	};
+	NOOP.prototype.flush = function flush() {};
+
+	function blobSlice(blob, index, length) {
+		if (index < 0 || length < 0 || index + length > blob.size)
+			throw new RangeError('offset:' + index + ', length:' + length + ', size:' + blob.size);
+		if (blob.slice)
+			return blob.slice(index, index + length);
+		else if (blob.webkitSlice)
+			return blob.webkitSlice(index, index + length);
+		else if (blob.mozSlice)
+			return blob.mozSlice(index, index + length);
+		else if (blob.msSlice)
+			return blob.msSlice(index, index + length);
+	}
+
+	function getDataHelper(byteLength, bytes) {
+		var dataBuffer, dataArray;
+		dataBuffer = new ArrayBuffer(byteLength);
+		dataArray = new Uint8Array(dataBuffer);
+		if (bytes)
+			dataArray.set(bytes, 0);
+		return {
+			buffer : dataBuffer,
+			array : dataArray,
+			view : new DataView(dataBuffer)
+		};
+	}
+
+	// Readers
+	function Reader() {
+	}
+
+	function TextReader(text) {
+		var that = this, blobReader;
+
+		function init(callback, onerror) {
+			var blob = new Blob([ text ], {
+				type : TEXT_PLAIN
+			});
+			blobReader = new BlobReader(blob);
+			blobReader.init(function() {
+				that.size = blobReader.size;
+				callback();
+			}, onerror);
+		}
+
+		function readUint8Array(index, length, callback, onerror) {
+			blobReader.readUint8Array(index, length, callback, onerror);
+		}
+
+		that.size = 0;
+		that.init = init;
+		that.readUint8Array = readUint8Array;
+	}
+	TextReader.prototype = new Reader();
+	TextReader.prototype.constructor = TextReader;
+
+	function Data64URIReader(dataURI) {
+		var that = this, dataStart;
+
+		function init(callback) {
+			var dataEnd = dataURI.length;
+			while (dataURI.charAt(dataEnd - 1) == "=")
+				dataEnd--;
+			dataStart = dataURI.indexOf(",") + 1;
+			that.size = Math.floor((dataEnd - dataStart) * 0.75);
+			callback();
+		}
+
+		function readUint8Array(index, length, callback) {
+			var i, data = getDataHelper(length);
+			var start = Math.floor(index / 3) * 4;
+			var end = Math.ceil((index + length) / 3) * 4;
+			var bytes = obj.atob(dataURI.substring(start + dataStart, end + dataStart));
+			var delta = index - Math.floor(start / 4) * 3;
+			for (i = delta; i < delta + length; i++)
+				data.array[i - delta] = bytes.charCodeAt(i);
+			callback(data.array);
+		}
+
+		that.size = 0;
+		that.init = init;
+		that.readUint8Array = readUint8Array;
+	}
+	Data64URIReader.prototype = new Reader();
+	Data64URIReader.prototype.constructor = Data64URIReader;
+
+	function BlobReader(blob) {
+		var that = this;
+
+		function init(callback) {
+			that.size = blob.size;
+			callback();
+		}
+
+		function readUint8Array(index, length, callback, onerror) {
+			var reader = new FileReader();
+			reader.onload = function(e) {
+				callback(new Uint8Array(e.target.result));
+			};
+			reader.onerror = onerror;
+			try {
+				reader.readAsArrayBuffer(blobSlice(blob, index, length));
+			} catch (e) {
+				onerror(e);
+			}
+		}
+
+		that.size = 0;
+		that.init = init;
+		that.readUint8Array = readUint8Array;
+	}
+	BlobReader.prototype = new Reader();
+	BlobReader.prototype.constructor = BlobReader;
+
+	// Writers
+
+	function Writer() {
+	}
+	Writer.prototype.getData = function(callback) {
+		callback(this.data);
+	};
+
+	function TextWriter(encoding) {
+		var that = this, blob;
+
+		function init(callback) {
+			blob = new Blob([], {
+				type : TEXT_PLAIN
+			});
+			callback();
+		}
+
+		function writeUint8Array(array, callback) {
+			blob = new Blob([ blob, appendABViewSupported ? array : array.buffer ], {
+				type : TEXT_PLAIN
+			});
+			callback();
+		}
+
+		function getData(callback, onerror) {
+			var reader = new FileReader();
+			reader.onload = function(e) {
+				callback(e.target.result);
+			};
+			reader.onerror = onerror;
+			reader.readAsText(blob, encoding);
+		}
+
+		that.init = init;
+		that.writeUint8Array = writeUint8Array;
+		that.getData = getData;
+	}
+	TextWriter.prototype = new Writer();
+	TextWriter.prototype.constructor = TextWriter;
+
+	function Data64URIWriter(contentType) {
+		var that = this, data = "", pending = "";
+
+		function init(callback) {
+			data += "data:" + (contentType || "") + ";base64,";
+			callback();
+		}
+
+		function writeUint8Array(array, callback) {
+			var i, delta = pending.length, dataString = pending;
+			pending = "";
+			for (i = 0; i < (Math.floor((delta + array.length) / 3) * 3) - delta; i++)
+				dataString += String.fromCharCode(array[i]);
+			for (; i < array.length; i++)
+				pending += String.fromCharCode(array[i]);
+			if (dataString.length > 2)
+				data += obj.btoa(dataString);
+			else
+				pending = dataString;
+			callback();
+		}
+
+		function getData(callback) {
+			callback(data + obj.btoa(pending));
+		}
+
+		that.init = init;
+		that.writeUint8Array = writeUint8Array;
+		that.getData = getData;
+	}
+	Data64URIWriter.prototype = new Writer();
+	Data64URIWriter.prototype.constructor = Data64URIWriter;
+
+	function BlobWriter(contentType) {
+		var blob, that = this;
+
+		function init(callback) {
+			blob = new Blob([], {
+				type : contentType
+			});
+			callback();
+		}
+
+		function writeUint8Array(array, callback) {
+			blob = new Blob([ blob, appendABViewSupported ? array : array.buffer ], {
+				type : contentType
+			});
+			callback();
+		}
+
+		function getData(callback) {
+			callback(blob);
+		}
+
+		that.init = init;
+		that.writeUint8Array = writeUint8Array;
+		that.getData = getData;
+	}
+	BlobWriter.prototype = new Writer();
+	BlobWriter.prototype.constructor = BlobWriter;
+
+	/** 
+	 * inflate/deflate core functions
+	 * @param worker {Worker} web worker for the task.
+	 * @param initialMessage {Object} initial message to be sent to the worker. should contain
+	 *   sn(serial number for distinguishing multiple tasks sent to the worker), and codecClass.
+	 *   This function may add more properties before sending.
+	 */
+	function launchWorkerProcess(worker, initialMessage, reader, writer, offset, size, onprogress, onend, onreaderror, onwriteerror) {
+		var chunkIndex = 0, index, outputSize, sn = initialMessage.sn, crc;
+
+		function onflush() {
+			worker.removeEventListener('message', onmessage, false);
+			onend(outputSize, crc);
+		}
+
+		function onmessage(event) {
+			var message = event.data, data = message.data, err = message.error;
+			if (err) {
+				err.toString = function () { return 'Error: ' + this.message; };
+				onreaderror(err);
+				return;
+			}
+			if (message.sn !== sn)
+				return;
+			if (typeof message.codecTime === 'number')
+				worker.codecTime += message.codecTime; // should be before onflush()
+			if (typeof message.crcTime === 'number')
+				worker.crcTime += message.crcTime;
+
+			switch (message.type) {
+				case 'append':
+					if (data) {
+						outputSize += data.length;
+						writer.writeUint8Array(data, function() {
+							step();
+						}, onwriteerror);
+					} else
+						step();
+					break;
+				case 'flush':
+					crc = message.crc;
+					if (data) {
+						outputSize += data.length;
+						writer.writeUint8Array(data, function() {
+							onflush();
+						}, onwriteerror);
+					} else
+						onflush();
+					break;
+				case 'progress':
+					if (onprogress)
+						onprogress(index + message.loaded, size);
+					break;
+				case 'importScripts': //no need to handle here
+				case 'newTask':
+				case 'echo':
+					break;
+				default:
+					console.warn('zip.js:launchWorkerProcess: unknown message: ', message);
+			}
+		}
+
+		function step() {
+			index = chunkIndex * CHUNK_SIZE;
+			// use `<=` instead of `<`, because `size` may be 0.
+			if (index <= size) {
+				reader.readUint8Array(offset + index, Math.min(CHUNK_SIZE, size - index), function(array) {
+					if (onprogress)
+						onprogress(index, size);
+					var msg = index === 0 ? initialMessage : {sn : sn};
+					msg.type = 'append';
+					msg.data = array;
+					
+					// posting a message with transferables will fail on IE10
+					try {
+						worker.postMessage(msg, [array.buffer]);
+					} catch(ex) {
+						worker.postMessage(msg); // retry without transferables
+					}
+					chunkIndex++;
+				}, onreaderror);
+			} else {
+				worker.postMessage({
+					sn: sn,
+					type: 'flush'
+				});
+			}
+		}
+
+		outputSize = 0;
+		worker.addEventListener('message', onmessage, false);
+		step();
+	}
+
+	function launchProcess(process, reader, writer, offset, size, crcType, onprogress, onend, onreaderror, onwriteerror) {
+		var chunkIndex = 0, index, outputSize = 0,
+			crcInput = crcType === 'input',
+			crcOutput = crcType === 'output',
+			crc = new Crc32();
+		function step() {
+			var outputData;
+			index = chunkIndex * CHUNK_SIZE;
+			if (index < size)
+				reader.readUint8Array(offset + index, Math.min(CHUNK_SIZE, size - index), function(inputData) {
+					var outputData;
+					try {
+						outputData = process.append(inputData, function(loaded) {
+							if (onprogress)
+								onprogress(index + loaded, size);
+						});
+					} catch (e) {
+						onreaderror(e);
+						return;
+					}
+					if (outputData) {
+						outputSize += outputData.length;
+						writer.writeUint8Array(outputData, function() {
+							chunkIndex++;
+							setTimeout(step, 1);
+						}, onwriteerror);
+						if (crcOutput)
+							crc.append(outputData);
+					} else {
+						chunkIndex++;
+						setTimeout(step, 1);
+					}
+					if (crcInput)
+						crc.append(inputData);
+					if (onprogress)
+						onprogress(index, size);
+				}, onreaderror);
+			else {
+				try {
+					outputData = process.flush();
+				} catch (e) {
+					onreaderror(e);
+					return;
+				}
+				if (outputData) {
+					if (crcOutput)
+						crc.append(outputData);
+					outputSize += outputData.length;
+					writer.writeUint8Array(outputData, function() {
+						onend(outputSize, crc.get());
+					}, onwriteerror);
+				} else
+					onend(outputSize, crc.get());
+			}
+		}
+
+		step();
+	}
+
+	function inflate(worker, sn, reader, writer, offset, size, computeCrc32, onend, onprogress, onreaderror, onwriteerror) {
+		var crcType = computeCrc32 ? 'output' : 'none';
+		if (obj.zip.useWebWorkers) {
+			var initialMessage = {
+				sn: sn,
+				codecClass: 'Inflater',
+				crcType: crcType,
+			};
+			launchWorkerProcess(worker, initialMessage, reader, writer, offset, size, onprogress, onend, onreaderror, onwriteerror);
+		} else
+			launchProcess(new obj.zip.Inflater(), reader, writer, offset, size, crcType, onprogress, onend, onreaderror, onwriteerror);
+	}
+
+	function deflate(worker, sn, reader, writer, level, onend, onprogress, onreaderror, onwriteerror) {
+		var crcType = 'input';
+		if (obj.zip.useWebWorkers) {
+			var initialMessage = {
+				sn: sn,
+				options: {level: level},
+				codecClass: 'Deflater',
+				crcType: crcType,
+			};
+			launchWorkerProcess(worker, initialMessage, reader, writer, 0, reader.size, onprogress, onend, onreaderror, onwriteerror);
+		} else
+			launchProcess(new obj.zip.Deflater(), reader, writer, 0, reader.size, crcType, onprogress, onend, onreaderror, onwriteerror);
+	}
+
+	function copy(worker, sn, reader, writer, offset, size, computeCrc32, onend, onprogress, onreaderror, onwriteerror) {
+		var crcType = 'input';
+		if (obj.zip.useWebWorkers && computeCrc32) {
+			var initialMessage = {
+				sn: sn,
+				codecClass: 'NOOP',
+				crcType: crcType,
+			};
+			launchWorkerProcess(worker, initialMessage, reader, writer, offset, size, onprogress, onend, onreaderror, onwriteerror);
+		} else
+			launchProcess(new NOOP(), reader, writer, offset, size, crcType, onprogress, onend, onreaderror, onwriteerror);
+	}
+
+	// ZipReader
+
+	function decodeASCII(str) {
+		var i, out = "", charCode, extendedASCII = [ '\u00C7', '\u00FC', '\u00E9', '\u00E2', '\u00E4', '\u00E0', '\u00E5', '\u00E7', '\u00EA', '\u00EB',
+				'\u00E8', '\u00EF', '\u00EE', '\u00EC', '\u00C4', '\u00C5', '\u00C9', '\u00E6', '\u00C6', '\u00F4', '\u00F6', '\u00F2', '\u00FB', '\u00F9',
+				'\u00FF', '\u00D6', '\u00DC', '\u00F8', '\u00A3', '\u00D8', '\u00D7', '\u0192', '\u00E1', '\u00ED', '\u00F3', '\u00FA', '\u00F1', '\u00D1',
+				'\u00AA', '\u00BA', '\u00BF', '\u00AE', '\u00AC', '\u00BD', '\u00BC', '\u00A1', '\u00AB', '\u00BB', '_', '_', '_', '\u00A6', '\u00A6',
+				'\u00C1', '\u00C2', '\u00C0', '\u00A9', '\u00A6', '\u00A6', '+', '+', '\u00A2', '\u00A5', '+', '+', '-', '-', '+', '-', '+', '\u00E3',
+				'\u00C3', '+', '+', '-', '-', '\u00A6', '-', '+', '\u00A4', '\u00F0', '\u00D0', '\u00CA', '\u00CB', '\u00C8', 'i', '\u00CD', '\u00CE',
+				'\u00CF', '+', '+', '_', '_', '\u00A6', '\u00CC', '_', '\u00D3', '\u00DF', '\u00D4', '\u00D2', '\u00F5', '\u00D5', '\u00B5', '\u00FE',
+				'\u00DE', '\u00DA', '\u00DB', '\u00D9', '\u00FD', '\u00DD', '\u00AF', '\u00B4', '\u00AD', '\u00B1', '_', '\u00BE', '\u00B6', '\u00A7',
+				'\u00F7', '\u00B8', '\u00B0', '\u00A8', '\u00B7', '\u00B9', '\u00B3', '\u00B2', '_', ' ' ];
+		for (i = 0; i < str.length; i++) {
+			charCode = str.charCodeAt(i) & 0xFF;
+			if (charCode > 127)
+				out += extendedASCII[charCode - 128];
+			else
+				out += String.fromCharCode(charCode);
+		}
+		return out;
+	}
+
+	function decodeUTF8(string) {
+		return decodeURIComponent(escape(string));
+	}
+
+	function getString(bytes) {
+		var i, str = "";
+		for (i = 0; i < bytes.length; i++)
+			str += String.fromCharCode(bytes[i]);
+		return str;
+	}
+
+	function getDate(timeRaw) {
+		var date = (timeRaw & 0xffff0000) >> 16, time = timeRaw & 0x0000ffff;
+		try {
+			return new Date(1980 + ((date & 0xFE00) >> 9), ((date & 0x01E0) >> 5) - 1, date & 0x001F, (time & 0xF800) >> 11, (time & 0x07E0) >> 5,
+					(time & 0x001F) * 2, 0);
+		} catch (e) {
+		}
+	}
+
+	function readCommonHeader(entry, data, index, centralDirectory, onerror) {
+		entry.version = data.view.getUint16(index, true);
+		entry.bitFlag = data.view.getUint16(index + 2, true);
+		entry.compressionMethod = data.view.getUint16(index + 4, true);
+		entry.lastModDateRaw = data.view.getUint32(index + 6, true);
+		entry.lastModDate = getDate(entry.lastModDateRaw);
+		if ((entry.bitFlag & 0x01) === 0x01) {
+			onerror(ERR_ENCRYPTED);
+			return;
+		}
+		if (centralDirectory || (entry.bitFlag & 0x0008) != 0x0008) {
+			entry.crc32 = data.view.getUint32(index + 10, true);
+			entry.compressedSize = data.view.getUint32(index + 14, true);
+			entry.uncompressedSize = data.view.getUint32(index + 18, true);
+		}
+		if (entry.compressedSize === 0xFFFFFFFF || entry.uncompressedSize === 0xFFFFFFFF) {
+			onerror(ERR_ZIP64);
+			return;
+		}
+		entry.filenameLength = data.view.getUint16(index + 22, true);
+		entry.extraFieldLength = data.view.getUint16(index + 24, true);
+	}
+
+	function createZipReader(reader, callback, onerror) {
+		var inflateSN = 0;
+
+		function Entry() {
+		}
+
+		Entry.prototype.getData = function(writer, onend, onprogress, checkCrc32) {
+			var that = this;
+
+			function testCrc32(crc32) {
+				var dataCrc32 = getDataHelper(4);
+				dataCrc32.view.setUint32(0, crc32);
+				return that.crc32 == dataCrc32.view.getUint32(0);
+			}
+
+			function getWriterData(uncompressedSize, crc32) {
+				if (checkCrc32 && !testCrc32(crc32))
+					onerror(ERR_CRC);
+				else
+					writer.getData(function(data) {
+						onend(data);
+					});
+			}
+
+			function onreaderror(err) {
+				onerror(err || ERR_READ_DATA);
+			}
+
+			function onwriteerror(err) {
+				onerror(err || ERR_WRITE_DATA);
+			}
+
+			reader.readUint8Array(that.offset, 30, function(bytes) {
+				var data = getDataHelper(bytes.length, bytes), dataOffset;
+				if (data.view.getUint32(0) != 0x504b0304) {
+					onerror(ERR_BAD_FORMAT);
+					return;
+				}
+				readCommonHeader(that, data, 4, false, onerror);
+				dataOffset = that.offset + 30 + that.filenameLength + that.extraFieldLength;
+				writer.init(function() {
+					if (that.compressionMethod === 0)
+						copy(that._worker, inflateSN++, reader, writer, dataOffset, that.compressedSize, checkCrc32, getWriterData, onprogress, onreaderror, onwriteerror);
+					else
+						inflate(that._worker, inflateSN++, reader, writer, dataOffset, that.compressedSize, checkCrc32, getWriterData, onprogress, onreaderror, onwriteerror);
+				}, onwriteerror);
+			}, onreaderror);
+		};
+
+		function seekEOCDR(eocdrCallback) {
+			// "End of central directory record" is the last part of a zip archive, and is at least 22 bytes long.
+			// Zip file comment is the last part of EOCDR and has max length of 64KB,
+			// so we only have to search the last 64K + 22 bytes of a archive for EOCDR signature (0x06054b50).
+			var EOCDR_MIN = 22;
+			if (reader.size < EOCDR_MIN) {
+				onerror(ERR_BAD_FORMAT);
+				return;
+			}
+			var ZIP_COMMENT_MAX = 256 * 256, EOCDR_MAX = EOCDR_MIN + ZIP_COMMENT_MAX;
+
+			// In most cases, the EOCDR is EOCDR_MIN bytes long
+			doSeek(EOCDR_MIN, function() {
+				// If not found, try within EOCDR_MAX bytes
+				doSeek(Math.min(EOCDR_MAX, reader.size), function() {
+					onerror(ERR_BAD_FORMAT);
+				});
+			});
+
+			// seek last length bytes of file for EOCDR
+			function doSeek(length, eocdrNotFoundCallback) {
+				reader.readUint8Array(reader.size - length, length, function(bytes) {
+					for (var i = bytes.length - EOCDR_MIN; i >= 0; i--) {
+						if (bytes[i] === 0x50 && bytes[i + 1] === 0x4b && bytes[i + 2] === 0x05 && bytes[i + 3] === 0x06) {
+							eocdrCallback(new DataView(bytes.buffer, i, EOCDR_MIN));
+							return;
+						}
+					}
+					eocdrNotFoundCallback();
+				}, function() {
+					onerror(ERR_READ);
+				});
+			}
+		}
+
+		var zipReader = {
+			getEntries : function(callback) {
+				var worker = this._worker;
+				// look for End of central directory record
+				seekEOCDR(function(dataView) {
+					var datalength, fileslength;
+					datalength = dataView.getUint32(16, true);
+					fileslength = dataView.getUint16(8, true);
+					if (datalength < 0 || datalength >= reader.size) {
+						onerror(ERR_BAD_FORMAT);
+						return;
+					}
+					reader.readUint8Array(datalength, reader.size - datalength, function(bytes) {
+						var i, index = 0, entries = [], entry, filename, comment, data = getDataHelper(bytes.length, bytes);
+						for (i = 0; i < fileslength; i++) {
+							entry = new Entry();
+							entry._worker = worker;
+							if (data.view.getUint32(index) != 0x504b0102) {
+								onerror(ERR_BAD_FORMAT);
+								return;
+							}
+							readCommonHeader(entry, data, index + 6, true, onerror);
+							entry.commentLength = data.view.getUint16(index + 32, true);
+							entry.directory = ((data.view.getUint8(index + 38) & 0x10) == 0x10);
+							entry.offset = data.view.getUint32(index + 42, true);
+							filename = getString(data.array.subarray(index + 46, index + 46 + entry.filenameLength));
+							entry.filename = ((entry.bitFlag & 0x0800) === 0x0800) ? decodeUTF8(filename) : decodeASCII(filename);
+							if (!entry.directory && entry.filename.charAt(entry.filename.length - 1) == "/")
+								entry.directory = true;
+							comment = getString(data.array.subarray(index + 46 + entry.filenameLength + entry.extraFieldLength, index + 46
+									+ entry.filenameLength + entry.extraFieldLength + entry.commentLength));
+							entry.comment = ((entry.bitFlag & 0x0800) === 0x0800) ? decodeUTF8(comment) : decodeASCII(comment);
+							entries.push(entry);
+							index += 46 + entry.filenameLength + entry.extraFieldLength + entry.commentLength;
+						}
+						callback(entries);
+					}, function() {
+						onerror(ERR_READ);
+					});
+				});
+			},
+			close : function(callback) {
+				if (this._worker) {
+					this._worker.terminate();
+					this._worker = null;
+				}
+				if (callback)
+					callback();
+			},
+			_worker: null
+		};
+
+		if (!obj.zip.useWebWorkers)
+			callback(zipReader);
+		else {
+			createWorker('inflater',
+				function(worker) {
+					zipReader._worker = worker;
+					callback(zipReader);
+				},
+				function(err) {
+					onerror(err);
+				}
+			);
+		}
+	}
+
+	// ZipWriter
+
+	function encodeUTF8(string) {
+		return unescape(encodeURIComponent(string));
+	}
+
+	function getBytes(str) {
+		var i, array = [];
+		for (i = 0; i < str.length; i++)
+			array.push(str.charCodeAt(i));
+		return array;
+	}
+
+	function createZipWriter(writer, callback, onerror, dontDeflate) {
+		var files = {}, filenames = [], datalength = 0;
+		var deflateSN = 0;
+
+		function onwriteerror(err) {
+			onerror(err || ERR_WRITE);
+		}
+
+		function onreaderror(err) {
+			onerror(err || ERR_READ_DATA);
+		}
+
+		var zipWriter = {
+			add : function(name, reader, onend, onprogress, options) {
+				var header, filename, date;
+				var worker = this._worker;
+
+				function writeHeader(callback) {
+					var data;
+					date = options.lastModDate || new Date();
+					header = getDataHelper(26);
+					files[name] = {
+						headerArray : header.array,
+						directory : options.directory,
+						filename : filename,
+						offset : datalength,
+						comment : getBytes(encodeUTF8(options.comment || ""))
+					};
+					header.view.setUint32(0, 0x14000808);
+					if (options.version)
+						header.view.setUint8(0, options.version);
+					if (!dontDeflate && options.level !== 0 && !options.directory)
+						header.view.setUint16(4, 0x0800);
+					header.view.setUint16(6, (((date.getHours() << 6) | date.getMinutes()) << 5) | date.getSeconds() / 2, true);
+					header.view.setUint16(8, ((((date.getFullYear() - 1980) << 4) | (date.getMonth() + 1)) << 5) | date.getDate(), true);
+					header.view.setUint16(22, filename.length, true);
+					data = getDataHelper(30 + filename.length);
+					data.view.setUint32(0, 0x504b0304);
+					data.array.set(header.array, 4);
+					data.array.set(filename, 30);
+					datalength += data.array.length;
+					writer.writeUint8Array(data.array, callback, onwriteerror);
+				}
+
+				function writeFooter(compressedLength, crc32) {
+					var footer = getDataHelper(16);
+					datalength += compressedLength || 0;
+					footer.view.setUint32(0, 0x504b0708);
+					if (typeof crc32 != "undefined") {
+						header.view.setUint32(10, crc32, true);
+						footer.view.setUint32(4, crc32, true);
+					}
+					if (reader) {
+						footer.view.setUint32(8, compressedLength, true);
+						header.view.setUint32(14, compressedLength, true);
+						footer.view.setUint32(12, reader.size, true);
+						header.view.setUint32(18, reader.size, true);
+					}
+					writer.writeUint8Array(footer.array, function() {
+						datalength += 16;
+						onend();
+					}, onwriteerror);
+				}
+
+				function writeFile() {
+					options = options || {};
+					name = name.trim();
+					if (options.directory && name.charAt(name.length - 1) != "/")
+						name += "/";
+					if (files.hasOwnProperty(name)) {
+						onerror(ERR_DUPLICATED_NAME);
+						return;
+					}
+					filename = getBytes(encodeUTF8(name));
+					filenames.push(name);
+					writeHeader(function() {
+						if (reader)
+							if (dontDeflate || options.level === 0)
+								copy(worker, deflateSN++, reader, writer, 0, reader.size, true, writeFooter, onprogress, onreaderror, onwriteerror);
+							else
+								deflate(worker, deflateSN++, reader, writer, options.level, writeFooter, onprogress, onreaderror, onwriteerror);
+						else
+							writeFooter();
+					}, onwriteerror);
+				}
+
+				if (reader)
+					reader.init(writeFile, onreaderror);
+				else
+					writeFile();
+			},
+			close : function(callback) {
+				if (this._worker) {
+					this._worker.terminate();
+					this._worker = null;
+				}
+
+				var data, length = 0, index = 0, indexFilename, file;
+				for (indexFilename = 0; indexFilename < filenames.length; indexFilename++) {
+					file = files[filenames[indexFilename]];
+					length += 46 + file.filename.length + file.comment.length;
+				}
+				data = getDataHelper(length + 22);
+				for (indexFilename = 0; indexFilename < filenames.length; indexFilename++) {
+					file = files[filenames[indexFilename]];
+					data.view.setUint32(index, 0x504b0102);
+					data.view.setUint16(index + 4, 0x1400);
+					data.array.set(file.headerArray, index + 6);
+					data.view.setUint16(index + 32, file.comment.length, true);
+					if (file.directory)
+						data.view.setUint8(index + 38, 0x10);
+					data.view.setUint32(index + 42, file.offset, true);
+					data.array.set(file.filename, index + 46);
+					data.array.set(file.comment, index + 46 + file.filename.length);
+					index += 46 + file.filename.length + file.comment.length;
+				}
+				data.view.setUint32(index, 0x504b0506);
+				data.view.setUint16(index + 8, filenames.length, true);
+				data.view.setUint16(index + 10, filenames.length, true);
+				data.view.setUint32(index + 12, length, true);
+				data.view.setUint32(index + 16, datalength, true);
+				writer.writeUint8Array(data.array, function() {
+					writer.getData(callback);
+				}, onwriteerror);
+			},
+			_worker: null
+		};
+
+		if (!obj.zip.useWebWorkers)
+			callback(zipWriter);
+		else {
+			createWorker('deflater',
+				function(worker) {
+					zipWriter._worker = worker;
+					callback(zipWriter);
+				},
+				function(err) {
+					onerror(err);
+				}
+			);
+		}
+	}
+
+	function resolveURLs(urls) {
+		var a = document.createElement('a');
+		return urls.map(function(url) {
+			a.href = url;
+			return a.href;
+		});
+	}
+
+	var DEFAULT_WORKER_SCRIPTS = {
+		deflater: ['z-worker.js', 'deflate.js'],
+		inflater: ['z-worker.js', 'inflate.js']
+	};
+	function createWorker(type, callback, onerror) {
+		if (obj.zip.workerScripts !== null && obj.zip.workerScriptsPath !== null) {
+			onerror(new Error('Either zip.workerScripts or zip.workerScriptsPath may be set, not both.'));
+			return;
+		}
+		var scripts;
+		if (obj.zip.workerScripts) {
+			scripts = obj.zip.workerScripts[type];
+			if (!Array.isArray(scripts)) {
+				onerror(new Error('zip.workerScripts.' + type + ' is not an array!'));
+				return;
+			}
+			scripts = resolveURLs(scripts);
+		} else {
+			scripts = DEFAULT_WORKER_SCRIPTS[type].slice(0);
+			scripts[0] = (obj.zip.workerScriptsPath || '') + scripts[0];
+		}
+		var worker = new Worker(scripts[0]);
+		// record total consumed time by inflater/deflater/crc32 in this worker
+		worker.codecTime = worker.crcTime = 0;
+		worker.postMessage({ type: 'importScripts', scripts: scripts.slice(1) });
+		worker.addEventListener('message', onmessage);
+		function onmessage(ev) {
+			var msg = ev.data;
+			if (msg.error) {
+				worker.terminate(); // should before onerror(), because onerror() may throw.
+				onerror(msg.error);
+				return;
+			}
+			if (msg.type === 'importScripts') {
+				worker.removeEventListener('message', onmessage);
+				worker.removeEventListener('error', errorHandler);
+				callback(worker);
+			}
+		}
+		// catch entry script loading error and other unhandled errors
+		worker.addEventListener('error', errorHandler);
+		function errorHandler(err) {
+			worker.terminate();
+			onerror(err);
+		}
+	}
+
+	function onerror_default(error) {
+		console.error(error);
+	}
+	obj.zip = {
+		Reader : Reader,
+		Writer : Writer,
+		BlobReader : BlobReader,
+		Data64URIReader : Data64URIReader,
+		TextReader : TextReader,
+		BlobWriter : BlobWriter,
+		Data64URIWriter : Data64URIWriter,
+		TextWriter : TextWriter,
+		createReader : function(reader, callback, onerror) {
+			onerror = onerror || onerror_default;
+
+			reader.init(function() {
+				createZipReader(reader, callback, onerror);
+			}, onerror);
+		},
+		createWriter : function(writer, callback, onerror, dontDeflate) {
+			onerror = onerror || onerror_default;
+			dontDeflate = !!dontDeflate;
+
+			writer.init(function() {
+				createZipWriter(writer, callback, onerror, dontDeflate);
+			}, onerror);
+		},
+		useWebWorkers : true,
+		/**
+		 * Directory containing the default worker scripts (z-worker.js, deflate.js, and inflate.js), relative to current base url.
+		 * E.g.: zip.workerScripts = './';
+		 */
+		workerScriptsPath : null,
+		/**
+		 * Advanced option to control which scripts are loaded in the Web worker. If this option is specified, then workerScriptsPath must not be set.
+		 * workerScripts.deflater/workerScripts.inflater should be arrays of urls to scripts for deflater/inflater, respectively.
+		 * Scripts in the array are executed in order, and the first one should be z-worker.js, which is used to start the worker.
+		 * All urls are relative to current base url.
+		 * E.g.:
+		 * zip.workerScripts = {
+		 *   deflater: ['z-worker.js', 'deflate.js'],
+		 *   inflater: ['z-worker.js', 'inflate.js']
+		 * };
+		 */
+		workerScripts : null,
+	};
+
+})(this);
+
+</script>
+    <script>
+// 禁用 Web Workers 以支持本地文件协议
+zip.useWebWorkers = false;
+// deflate.js 内容 (不使用 Web Workers)
+/*
+ Copyright (c) 2013 Gildas Lormeau. All rights reserved.
+
+ Redistribution and use in source and binary forms, with or without
+ modification, are permitted provided that the following conditions are met:
+
+ 1. Redistributions of source code must retain the above copyright notice,
+ this list of conditions and the following disclaimer.
+
+ 2. Redistributions in binary form must reproduce the above copyright 
+ notice, this list of conditions and the following disclaimer in 
+ the documentation and/or other materials provided with the distribution.
+
+ 3. The names of the authors may not be used to endorse or promote products
+ derived from this software without specific prior written permission.
+
+ THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED WARRANTIES,
+ INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
+ FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL JCRAFT,
+ INC. OR ANY CONTRIBUTORS TO THIS SOFTWARE BE LIABLE FOR ANY DIRECT, INDIRECT,
+ INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA,
+ OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+ LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+ NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+ EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+
+/*
+ * This program is based on JZlib 1.0.2 ymnk, JCraft,Inc.
+ * JZlib is based on zlib-1.1.3, so all credit should go authors
+ * Jean-loup Gailly(jloup@gzip.org) and Mark Adler(madler@alumni.caltech.edu)
+ * and contributors of zlib.
+ */
+
+(function(global) {
+	"use strict";
+
+	// Global
+
+	var MAX_BITS = 15;
+	var D_CODES = 30;
+	var BL_CODES = 19;
+
+	var LENGTH_CODES = 29;
+	var LITERALS = 256;
+	var L_CODES = (LITERALS + 1 + LENGTH_CODES);
+	var HEAP_SIZE = (2 * L_CODES + 1);
+
+	var END_BLOCK = 256;
+
+	// Bit length codes must not exceed MAX_BL_BITS bits
+	var MAX_BL_BITS = 7;
+
+	// repeat previous bit length 3-6 times (2 bits of repeat count)
+	var REP_3_6 = 16;
+
+	// repeat a zero length 3-10 times (3 bits of repeat count)
+	var REPZ_3_10 = 17;
+
+	// repeat a zero length 11-138 times (7 bits of repeat count)
+	var REPZ_11_138 = 18;
+
+	// The lengths of the bit length codes are sent in order of decreasing
+	// probability, to avoid transmitting the lengths for unused bit
+	// length codes.
+
+	var Buf_size = 8 * 2;
+
+	// JZlib version : "1.0.2"
+	var Z_DEFAULT_COMPRESSION = -1;
+
+	// compression strategy
+	var Z_FILTERED = 1;
+	var Z_HUFFMAN_ONLY = 2;
+	var Z_DEFAULT_STRATEGY = 0;
+
+	var Z_NO_FLUSH = 0;
+	var Z_PARTIAL_FLUSH = 1;
+	var Z_FULL_FLUSH = 3;
+	var Z_FINISH = 4;
+
+	var Z_OK = 0;
+	var Z_STREAM_END = 1;
+	var Z_NEED_DICT = 2;
+	var Z_STREAM_ERROR = -2;
+	var Z_DATA_ERROR = -3;
+	var Z_BUF_ERROR = -5;
+
+	// Tree
+
+	// see definition of array dist_code below
+	var _dist_code = [ 0, 1, 2, 3, 4, 4, 5, 5, 6, 6, 6, 6, 7, 7, 7, 7, 8, 8, 8, 8, 8, 8, 8, 8, 9, 9, 9, 9, 9, 9, 9, 9, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10,
+			10, 10, 10, 10, 10, 10, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12,
+			12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13,
+			13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14,
+			14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14,
+			14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15,
+			15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 0, 0, 16, 17, 18, 18, 19, 19,
+			20, 20, 20, 20, 21, 21, 21, 21, 22, 22, 22, 22, 22, 22, 22, 22, 23, 23, 23, 23, 23, 23, 23, 23, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24,
+			24, 24, 24, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26,
+			26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27,
+			27, 27, 27, 27, 27, 27, 27, 27, 27, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28,
+			28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 29,
+			29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29,
+			29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29 ];
+
+	function Tree() {
+		var that = this;
+
+		// dyn_tree; // the dynamic tree
+		// max_code; // largest code with non zero frequency
+		// stat_desc; // the corresponding static tree
+
+		// Compute the optimal bit lengths for a tree and update the total bit
+		// length
+		// for the current block.
+		// IN assertion: the fields freq and dad are set, heap[heap_max] and
+		// above are the tree nodes sorted by increasing frequency.
+		// OUT assertions: the field len is set to the optimal bit length, the
+		// array bl_count contains the frequencies for each bit length.
+		// The length opt_len is updated; static_len is also updated if stree is
+		// not null.
+		function gen_bitlen(s) {
+			var tree = that.dyn_tree;
+			var stree = that.stat_desc.static_tree;
+			var extra = that.stat_desc.extra_bits;
+			var base = that.stat_desc.extra_base;
+			var max_length = that.stat_desc.max_length;
+			var h; // heap index
+			var n, m; // iterate over the tree elements
+			var bits; // bit length
+			var xbits; // extra bits
+			var f; // frequency
+			var overflow = 0; // number of elements with bit length too large
+
+			for (bits = 0; bits <= MAX_BITS; bits++)
+				s.bl_count[bits] = 0;
+
+			// In a first pass, compute the optimal bit lengths (which may
+			// overflow in the case of the bit length tree).
+			tree[s.heap[s.heap_max] * 2 + 1] = 0; // root of the heap
+
+			for (h = s.heap_max + 1; h < HEAP_SIZE; h++) {
+				n = s.heap[h];
+				bits = tree[tree[n * 2 + 1] * 2 + 1] + 1;
+				if (bits > max_length) {
+					bits = max_length;
+					overflow++;
+				}
+				tree[n * 2 + 1] = bits;
+				// We overwrite tree[n*2+1] which is no longer needed
+
+				if (n > that.max_code)
+					continue; // not a leaf node
+
+				s.bl_count[bits]++;
+				xbits = 0;
+				if (n >= base)
+					xbits = extra[n - base];
+				f = tree[n * 2];
+				s.opt_len += f * (bits + xbits);
+				if (stree)
+					s.static_len += f * (stree[n * 2 + 1] + xbits);
+			}
+			if (overflow === 0)
+				return;
+
+			// This happens for example on obj2 and pic of the Calgary corpus
+			// Find the first bit length which could increase:
+			do {
+				bits = max_length - 1;
+				while (s.bl_count[bits] === 0)
+					bits--;
+				s.bl_count[bits]--; // move one leaf down the tree
+				s.bl_count[bits + 1] += 2; // move one overflow item as its brother
+				s.bl_count[max_length]--;
+				// The brother of the overflow item also moves one step up,
+				// but this does not affect bl_count[max_length]
+				overflow -= 2;
+			} while (overflow > 0);
+
+			for (bits = max_length; bits !== 0; bits--) {
+				n = s.bl_count[bits];
+				while (n !== 0) {
+					m = s.heap[--h];
+					if (m > that.max_code)
+						continue;
+					if (tree[m * 2 + 1] != bits) {
+						s.opt_len += (bits - tree[m * 2 + 1]) * tree[m * 2];
+						tree[m * 2 + 1] = bits;
+					}
+					n--;
+				}
+			}
+		}
+
+		// Reverse the first len bits of a code, using straightforward code (a
+		// faster
+		// method would use a table)
+		// IN assertion: 1 <= len <= 15
+		function bi_reverse(code, // the value to invert
+		len // its bit length
+		) {
+			var res = 0;
+			do {
+				res |= code & 1;
+				code >>>= 1;
+				res <<= 1;
+			} while (--len > 0);
+			return res >>> 1;
+		}
+
+		// Generate the codes for a given tree and bit counts (which need not be
+		// optimal).
+		// IN assertion: the array bl_count contains the bit length statistics for
+		// the given tree and the field len is set for all tree elements.
+		// OUT assertion: the field code is set for all tree elements of non
+		// zero code length.
+		function gen_codes(tree, // the tree to decorate
+		max_code, // largest code with non zero frequency
+		bl_count // number of codes at each bit length
+		) {
+			var next_code = []; // next code value for each
+			// bit length
+			var code = 0; // running code value
+			var bits; // bit index
+			var n; // code index
+			var len;
+
+			// The distribution counts are first used to generate the code values
+			// without bit reversal.
+			for (bits = 1; bits <= MAX_BITS; bits++) {
+				next_code[bits] = code = ((code + bl_count[bits - 1]) << 1);
+			}
+
+			// Check that the bit counts in bl_count are consistent. The last code
+			// must be all ones.
+			// Assert (code + bl_count[MAX_BITS]-1 == (1<<MAX_BITS)-1,
+			// "inconsistent bit counts");
+			// Tracev((stderr,"\ngen_codes: max_code %d ", max_code));
+
+			for (n = 0; n <= max_code; n++) {
+				len = tree[n * 2 + 1];
+				if (len === 0)
+					continue;
+				// Now reverse the bits
+				tree[n * 2] = bi_reverse(next_code[len]++, len);
+			}
+		}
+
+		// Construct one Huffman tree and assigns the code bit strings and lengths.
+		// Update the total bit length for the current block.
+		// IN assertion: the field freq is set for all tree elements.
+		// OUT assertions: the fields len and code are set to the optimal bit length
+		// and corresponding code. The length opt_len is updated; static_len is
+		// also updated if stree is not null. The field max_code is set.
+		that.build_tree = function(s) {
+			var tree = that.dyn_tree;
+			var stree = that.stat_desc.static_tree;
+			var elems = that.stat_desc.elems;
+			var n, m; // iterate over heap elements
+			var max_code = -1; // largest code with non zero frequency
+			var node; // new node being created
+
+			// Construct the initial heap, with least frequent element in
+			// heap[1]. The sons of heap[n] are heap[2*n] and heap[2*n+1].
+			// heap[0] is not used.
+			s.heap_len = 0;
+			s.heap_max = HEAP_SIZE;
+
+			for (n = 0; n < elems; n++) {
+				if (tree[n * 2] !== 0) {
+					s.heap[++s.heap_len] = max_code = n;
+					s.depth[n] = 0;
+				} else {
+					tree[n * 2 + 1] = 0;
+				}
+			}
+
+			// The pkzip format requires that at least one distance code exists,
+			// and that at least one bit should be sent even if there is only one
+			// possible code. So to avoid special checks later on we force at least
+			// two codes of non zero frequency.
+			while (s.heap_len < 2) {
+				node = s.heap[++s.heap_len] = max_code < 2 ? ++max_code : 0;
+				tree[node * 2] = 1;
+				s.depth[node] = 0;
+				s.opt_len--;
+				if (stree)
+					s.static_len -= stree[node * 2 + 1];
+				// node is 0 or 1 so it does not have extra bits
+			}
+			that.max_code = max_code;
+
+			// The elements heap[heap_len/2+1 .. heap_len] are leaves of the tree,
+			// establish sub-heaps of increasing lengths:
+
+			for (n = Math.floor(s.heap_len / 2); n >= 1; n--)
+				s.pqdownheap(tree, n);
+
+			// Construct the Huffman tree by repeatedly combining the least two
+			// frequent nodes.
+
+			node = elems; // next internal node of the tree
+			do {
+				// n = node of least frequency
+				n = s.heap[1];
+				s.heap[1] = s.heap[s.heap_len--];
+				s.pqdownheap(tree, 1);
+				m = s.heap[1]; // m = node of next least frequency
+
+				s.heap[--s.heap_max] = n; // keep the nodes sorted by frequency
+				s.heap[--s.heap_max] = m;
+
+				// Create a new node father of n and m
+				tree[node * 2] = (tree[n * 2] + tree[m * 2]);
+				s.depth[node] = Math.max(s.depth[n], s.depth[m]) + 1;
+				tree[n * 2 + 1] = tree[m * 2 + 1] = node;
+
+				// and insert the new node in the heap
+				s.heap[1] = node++;
+				s.pqdownheap(tree, 1);
+			} while (s.heap_len >= 2);
+
+			s.heap[--s.heap_max] = s.heap[1];
+
+			// At this point, the fields freq and dad are set. We can now
+			// generate the bit lengths.
+
+			gen_bitlen(s);
+
+			// The field len is now set, we can generate the bit codes
+			gen_codes(tree, that.max_code, s.bl_count);
+		};
+
+	}
+
+	Tree._length_code = [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 8, 9, 9, 10, 10, 11, 11, 12, 12, 12, 12, 13, 13, 13, 13, 14, 14, 14, 14, 15, 15, 15, 15, 16, 16, 16, 16,
+			16, 16, 16, 16, 17, 17, 17, 17, 17, 17, 17, 17, 18, 18, 18, 18, 18, 18, 18, 18, 19, 19, 19, 19, 19, 19, 19, 19, 20, 20, 20, 20, 20, 20, 20, 20, 20,
+			20, 20, 20, 20, 20, 20, 20, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22,
+			22, 22, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24,
+			24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25,
+			25, 25, 25, 25, 25, 25, 25, 25, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26,
+			26, 26, 26, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 28 ];
+
+	Tree.base_length = [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 10, 12, 14, 16, 20, 24, 28, 32, 40, 48, 56, 64, 80, 96, 112, 128, 160, 192, 224, 0 ];
+
+	Tree.base_dist = [ 0, 1, 2, 3, 4, 6, 8, 12, 16, 24, 32, 48, 64, 96, 128, 192, 256, 384, 512, 768, 1024, 1536, 2048, 3072, 4096, 6144, 8192, 12288, 16384,
+			24576 ];
+
+	// Mapping from a distance to a distance code. dist is the distance - 1 and
+	// must not have side effects. _dist_code[256] and _dist_code[257] are never
+	// used.
+	Tree.d_code = function(dist) {
+		return ((dist) < 256 ? _dist_code[dist] : _dist_code[256 + ((dist) >>> 7)]);
+	};
+
+	// extra bits for each length code
+	Tree.extra_lbits = [ 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5, 0 ];
+
+	// extra bits for each distance code
+	Tree.extra_dbits = [ 0, 0, 0, 0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8, 9, 9, 10, 10, 11, 11, 12, 12, 13, 13 ];
+
+	// extra bits for each bit length code
+	Tree.extra_blbits = [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 3, 7 ];
+
+	Tree.bl_order = [ 16, 17, 18, 0, 8, 7, 9, 6, 10, 5, 11, 4, 12, 3, 13, 2, 14, 1, 15 ];
+
+	// StaticTree
+
+	function StaticTree(static_tree, extra_bits, extra_base, elems, max_length) {
+		var that = this;
+		that.static_tree = static_tree;
+		that.extra_bits = extra_bits;
+		that.extra_base = extra_base;
+		that.elems = elems;
+		that.max_length = max_length;
+	}
+
+	StaticTree.static_ltree = [ 12, 8, 140, 8, 76, 8, 204, 8, 44, 8, 172, 8, 108, 8, 236, 8, 28, 8, 156, 8, 92, 8, 220, 8, 60, 8, 188, 8, 124, 8, 252, 8, 2, 8,
+			130, 8, 66, 8, 194, 8, 34, 8, 162, 8, 98, 8, 226, 8, 18, 8, 146, 8, 82, 8, 210, 8, 50, 8, 178, 8, 114, 8, 242, 8, 10, 8, 138, 8, 74, 8, 202, 8, 42,
+			8, 170, 8, 106, 8, 234, 8, 26, 8, 154, 8, 90, 8, 218, 8, 58, 8, 186, 8, 122, 8, 250, 8, 6, 8, 134, 8, 70, 8, 198, 8, 38, 8, 166, 8, 102, 8, 230, 8,
+			22, 8, 150, 8, 86, 8, 214, 8, 54, 8, 182, 8, 118, 8, 246, 8, 14, 8, 142, 8, 78, 8, 206, 8, 46, 8, 174, 8, 110, 8, 238, 8, 30, 8, 158, 8, 94, 8,
+			222, 8, 62, 8, 190, 8, 126, 8, 254, 8, 1, 8, 129, 8, 65, 8, 193, 8, 33, 8, 161, 8, 97, 8, 225, 8, 17, 8, 145, 8, 81, 8, 209, 8, 49, 8, 177, 8, 113,
+			8, 241, 8, 9, 8, 137, 8, 73, 8, 201, 8, 41, 8, 169, 8, 105, 8, 233, 8, 25, 8, 153, 8, 89, 8, 217, 8, 57, 8, 185, 8, 121, 8, 249, 8, 5, 8, 133, 8,
+			69, 8, 197, 8, 37, 8, 165, 8, 101, 8, 229, 8, 21, 8, 149, 8, 85, 8, 213, 8, 53, 8, 181, 8, 117, 8, 245, 8, 13, 8, 141, 8, 77, 8, 205, 8, 45, 8,
+			173, 8, 109, 8, 237, 8, 29, 8, 157, 8, 93, 8, 221, 8, 61, 8, 189, 8, 125, 8, 253, 8, 19, 9, 275, 9, 147, 9, 403, 9, 83, 9, 339, 9, 211, 9, 467, 9,
+			51, 9, 307, 9, 179, 9, 435, 9, 115, 9, 371, 9, 243, 9, 499, 9, 11, 9, 267, 9, 139, 9, 395, 9, 75, 9, 331, 9, 203, 9, 459, 9, 43, 9, 299, 9, 171, 9,
+			427, 9, 107, 9, 363, 9, 235, 9, 491, 9, 27, 9, 283, 9, 155, 9, 411, 9, 91, 9, 347, 9, 219, 9, 475, 9, 59, 9, 315, 9, 187, 9, 443, 9, 123, 9, 379,
+			9, 251, 9, 507, 9, 7, 9, 263, 9, 135, 9, 391, 9, 71, 9, 327, 9, 199, 9, 455, 9, 39, 9, 295, 9, 167, 9, 423, 9, 103, 9, 359, 9, 231, 9, 487, 9, 23,
+			9, 279, 9, 151, 9, 407, 9, 87, 9, 343, 9, 215, 9, 471, 9, 55, 9, 311, 9, 183, 9, 439, 9, 119, 9, 375, 9, 247, 9, 503, 9, 15, 9, 271, 9, 143, 9,
+			399, 9, 79, 9, 335, 9, 207, 9, 463, 9, 47, 9, 303, 9, 175, 9, 431, 9, 111, 9, 367, 9, 239, 9, 495, 9, 31, 9, 287, 9, 159, 9, 415, 9, 95, 9, 351, 9,
+			223, 9, 479, 9, 63, 9, 319, 9, 191, 9, 447, 9, 127, 9, 383, 9, 255, 9, 511, 9, 0, 7, 64, 7, 32, 7, 96, 7, 16, 7, 80, 7, 48, 7, 112, 7, 8, 7, 72, 7,
+			40, 7, 104, 7, 24, 7, 88, 7, 56, 7, 120, 7, 4, 7, 68, 7, 36, 7, 100, 7, 20, 7, 84, 7, 52, 7, 116, 7, 3, 8, 131, 8, 67, 8, 195, 8, 35, 8, 163, 8,
+			99, 8, 227, 8 ];
+
+	StaticTree.static_dtree = [ 0, 5, 16, 5, 8, 5, 24, 5, 4, 5, 20, 5, 12, 5, 28, 5, 2, 5, 18, 5, 10, 5, 26, 5, 6, 5, 22, 5, 14, 5, 30, 5, 1, 5, 17, 5, 9, 5,
+			25, 5, 5, 5, 21, 5, 13, 5, 29, 5, 3, 5, 19, 5, 11, 5, 27, 5, 7, 5, 23, 5 ];
+
+	StaticTree.static_l_desc = new StaticTree(StaticTree.static_ltree, Tree.extra_lbits, LITERALS + 1, L_CODES, MAX_BITS);
+
+	StaticTree.static_d_desc = new StaticTree(StaticTree.static_dtree, Tree.extra_dbits, 0, D_CODES, MAX_BITS);
+
+	StaticTree.static_bl_desc = new StaticTree(null, Tree.extra_blbits, 0, BL_CODES, MAX_BL_BITS);
+
+	// Deflate
+
+	var MAX_MEM_LEVEL = 9;
+	var DEF_MEM_LEVEL = 8;
+
+	function Config(good_length, max_lazy, nice_length, max_chain, func) {
+		var that = this;
+		that.good_length = good_length;
+		that.max_lazy = max_lazy;
+		that.nice_length = nice_length;
+		that.max_chain = max_chain;
+		that.func = func;
+	}
+
+	var STORED = 0;
+	var FAST = 1;
+	var SLOW = 2;
+	var config_table = [ new Config(0, 0, 0, 0, STORED), new Config(4, 4, 8, 4, FAST), new Config(4, 5, 16, 8, FAST), new Config(4, 6, 32, 32, FAST),
+			new Config(4, 4, 16, 16, SLOW), new Config(8, 16, 32, 32, SLOW), new Config(8, 16, 128, 128, SLOW), new Config(8, 32, 128, 256, SLOW),
+			new Config(32, 128, 258, 1024, SLOW), new Config(32, 258, 258, 4096, SLOW) ];
+
+	var z_errmsg = [ "need dictionary", // Z_NEED_DICT
+	// 2
+	"stream end", // Z_STREAM_END 1
+	"", // Z_OK 0
+	"", // Z_ERRNO (-1)
+	"stream error", // Z_STREAM_ERROR (-2)
+	"data error", // Z_DATA_ERROR (-3)
+	"", // Z_MEM_ERROR (-4)
+	"buffer error", // Z_BUF_ERROR (-5)
+	"",// Z_VERSION_ERROR (-6)
+	"" ];
+
+	// block not completed, need more input or more output
+	var NeedMore = 0;
+
+	// block flush performed
+	var BlockDone = 1;
+
+	// finish started, need only more output at next deflate
+	var FinishStarted = 2;
+
+	// finish done, accept no more input or output
+	var FinishDone = 3;
+
+	// preset dictionary flag in zlib header
+	var PRESET_DICT = 0x20;
+
+	var INIT_STATE = 42;
+	var BUSY_STATE = 113;
+	var FINISH_STATE = 666;
+
+	// The deflate compression method
+	var Z_DEFLATED = 8;
+
+	var STORED_BLOCK = 0;
+	var STATIC_TREES = 1;
+	var DYN_TREES = 2;
+
+	var MIN_MATCH = 3;
+	var MAX_MATCH = 258;
+	var MIN_LOOKAHEAD = (MAX_MATCH + MIN_MATCH + 1);
+
+	function smaller(tree, n, m, depth) {
+		var tn2 = tree[n * 2];
+		var tm2 = tree[m * 2];
+		return (tn2 < tm2 || (tn2 == tm2 && depth[n] <= depth[m]));
+	}
+
+	function Deflate() {
+
+		var that = this;
+		var strm; // pointer back to this zlib stream
+		var status; // as the name implies
+		// pending_buf; // output still pending
+		var pending_buf_size; // size of pending_buf
+		// pending_out; // next pending byte to output to the stream
+		// pending; // nb of bytes in the pending buffer
+		var method; // STORED (for zip only) or DEFLATED
+		var last_flush; // value of flush param for previous deflate call
+
+		var w_size; // LZ77 window size (32K by default)
+		var w_bits; // log2(w_size) (8..16)
+		var w_mask; // w_size - 1
+
+		var window;
+		// Sliding window. Input bytes are read into the second half of the window,
+		// and move to the first half later to keep a dictionary of at least wSize
+		// bytes. With this organization, matches are limited to a distance of
+		// wSize-MAX_MATCH bytes, but this ensures that IO is always
+		// performed with a length multiple of the block size. Also, it limits
+		// the window size to 64K, which is quite useful on MSDOS.
+		// To do: use the user input buffer as sliding window.
+
+		var window_size;
+		// Actual size of window: 2*wSize, except when the user input buffer
+		// is directly used as sliding window.
+
+		var prev;
+		// Link to older string with same hash index. To limit the size of this
+		// array to 64K, this link is maintained only for the last 32K strings.
+		// An index in this array is thus a window index modulo 32K.
+
+		var head; // Heads of the hash chains or NIL.
+
+		var ins_h; // hash index of string to be inserted
+		var hash_size; // number of elements in hash table
+		var hash_bits; // log2(hash_size)
+		var hash_mask; // hash_size-1
+
+		// Number of bits by which ins_h must be shifted at each input
+		// step. It must be such that after MIN_MATCH steps, the oldest
+		// byte no longer takes part in the hash key, that is:
+		// hash_shift * MIN_MATCH >= hash_bits
+		var hash_shift;
+
+		// Window position at the beginning of the current output block. Gets
+		// negative when the window is moved backwards.
+
+		var block_start;
+
+		var match_length; // length of best match
+		var prev_match; // previous match
+		var match_available; // set if previous match exists
+		var strstart; // start of string to insert
+		var match_start; // start of matching string
+		var lookahead; // number of valid bytes ahead in window
+
+		// Length of the best match at previous step. Matches not greater than this
+		// are discarded. This is used in the lazy match evaluation.
+		var prev_length;
+
+		// To speed up deflation, hash chains are never searched beyond this
+		// length. A higher limit improves compression ratio but degrades the speed.
+		var max_chain_length;
+
+		// Attempt to find a better match only when the current match is strictly
+		// smaller than this value. This mechanism is used only for compression
+		// levels >= 4.
+		var max_lazy_match;
+
+		// Insert new strings in the hash table only if the match length is not
+		// greater than this length. This saves time but degrades compression.
+		// max_insert_length is used only for compression levels <= 3.
+
+		var level; // compression level (1..9)
+		var strategy; // favor or force Huffman coding
+
+		// Use a faster search when the previous match is longer than this
+		var good_match;
+
+		// Stop searching when current match exceeds this
+		var nice_match;
+
+		var dyn_ltree; // literal and length tree
+		var dyn_dtree; // distance tree
+		var bl_tree; // Huffman tree for bit lengths
+
+		var l_desc = new Tree(); // desc for literal tree
+		var d_desc = new Tree(); // desc for distance tree
+		var bl_desc = new Tree(); // desc for bit length tree
+
+		// that.heap_len; // number of elements in the heap
+		// that.heap_max; // element of largest frequency
+		// The sons of heap[n] are heap[2*n] and heap[2*n+1]. heap[0] is not used.
+		// The same heap array is used to build all trees.
+
+		// Depth of each subtree used as tie breaker for trees of equal frequency
+		that.depth = [];
+
+		var l_buf; // index for literals or lengths */
+
+		// Size of match buffer for literals/lengths. There are 4 reasons for
+		// limiting lit_bufsize to 64K:
+		// - frequencies can be kept in 16 bit counters
+		// - if compression is not successful for the first block, all input
+		// data is still in the window so we can still emit a stored block even
+		// when input comes from standard input. (This can also be done for
+		// all blocks if lit_bufsize is not greater than 32K.)
+		// - if compression is not successful for a file smaller than 64K, we can
+		// even emit a stored file instead of a stored block (saving 5 bytes).
+		// This is applicable only for zip (not gzip or zlib).
+		// - creating new Huffman trees less frequently may not provide fast
+		// adaptation to changes in the input data statistics. (Take for
+		// example a binary file with poorly compressible code followed by
+		// a highly compressible string table.) Smaller buffer sizes give
+		// fast adaptation but have of course the overhead of transmitting
+		// trees more frequently.
+		// - I can't count above 4
+		var lit_bufsize;
+
+		var last_lit; // running index in l_buf
+
+		// Buffer for distances. To simplify the code, d_buf and l_buf have
+		// the same number of elements. To use different lengths, an extra flag
+		// array would be necessary.
+
+		var d_buf; // index of pendig_buf
+
+		// that.opt_len; // bit length of current block with optimal trees
+		// that.static_len; // bit length of current block with static trees
+		var matches; // number of string matches in current block
+		var last_eob_len; // bit length of EOB code for last block
+
+		// Output buffer. bits are inserted starting at the bottom (least
+		// significant bits).
+		var bi_buf;
+
+		// Number of valid bits in bi_buf. All bits above the last valid bit
+		// are always zero.
+		var bi_valid;
+
+		// number of codes at each bit length for an optimal tree
+		that.bl_count = [];
+
+		// heap used to build the Huffman trees
+		that.heap = [];
+
+		dyn_ltree = [];
+		dyn_dtree = [];
+		bl_tree = [];
+
+		function lm_init() {
+			var i;
+			window_size = 2 * w_size;
+
+			head[hash_size - 1] = 0;
+			for (i = 0; i < hash_size - 1; i++) {
+				head[i] = 0;
+			}
+
+			// Set the default configuration parameters:
+			max_lazy_match = config_table[level].max_lazy;
+			good_match = config_table[level].good_length;
+			nice_match = config_table[level].nice_length;
+			max_chain_length = config_table[level].max_chain;
+
+			strstart = 0;
+			block_start = 0;
+			lookahead = 0;
+			match_length = prev_length = MIN_MATCH - 1;
+			match_available = 0;
+			ins_h = 0;
+		}
+
+		function init_block() {
+			var i;
+			// Initialize the trees.
+			for (i = 0; i < L_CODES; i++)
+				dyn_ltree[i * 2] = 0;
+			for (i = 0; i < D_CODES; i++)
+				dyn_dtree[i * 2] = 0;
+			for (i = 0; i < BL_CODES; i++)
+				bl_tree[i * 2] = 0;
+
+			dyn_ltree[END_BLOCK * 2] = 1;
+			that.opt_len = that.static_len = 0;
+			last_lit = matches = 0;
+		}
+
+		// Initialize the tree data structures for a new zlib stream.
+		function tr_init() {
+
+			l_desc.dyn_tree = dyn_ltree;
+			l_desc.stat_desc = StaticTree.static_l_desc;
+
+			d_desc.dyn_tree = dyn_dtree;
+			d_desc.stat_desc = StaticTree.static_d_desc;
+
+			bl_desc.dyn_tree = bl_tree;
+			bl_desc.stat_desc = StaticTree.static_bl_desc;
+
+			bi_buf = 0;
+			bi_valid = 0;
+			last_eob_len = 8; // enough lookahead for inflate
+
+			// Initialize the first block of the first file:
+			init_block();
+		}
+
+		// Restore the heap property by moving down the tree starting at node k,
+		// exchanging a node with the smallest of its two sons if necessary,
+		// stopping
+		// when the heap property is re-established (each father smaller than its
+		// two sons).
+		that.pqdownheap = function(tree, // the tree to restore
+		k // node to move down
+		) {
+			var heap = that.heap;
+			var v = heap[k];
+			var j = k << 1; // left son of k
+			while (j <= that.heap_len) {
+				// Set j to the smallest of the two sons:
+				if (j < that.heap_len && smaller(tree, heap[j + 1], heap[j], that.depth)) {
+					j++;
+				}
+				// Exit if v is smaller than both sons
+				if (smaller(tree, v, heap[j], that.depth))
+					break;
+
+				// Exchange v with the smallest son
+				heap[k] = heap[j];
+				k = j;
+				// And continue down the tree, setting j to the left son of k
+				j <<= 1;
+			}
+			heap[k] = v;
+		};
+
+		// Scan a literal or distance tree to determine the frequencies of the codes
+		// in the bit length tree.
+		function scan_tree(tree,// the tree to be scanned
+		max_code // and its largest code of non zero frequency
+		) {
+			var n; // iterates over all tree elements
+			var prevlen = -1; // last emitted length
+			var curlen; // length of current code
+			var nextlen = tree[0 * 2 + 1]; // length of next code
+			var count = 0; // repeat count of the current code
+			var max_count = 7; // max repeat count
+			var min_count = 4; // min repeat count
+
+			if (nextlen === 0) {
+				max_count = 138;
+				min_count = 3;
+			}
+			tree[(max_code + 1) * 2 + 1] = 0xffff; // guard
+
+			for (n = 0; n <= max_code; n++) {
+				curlen = nextlen;
+				nextlen = tree[(n + 1) * 2 + 1];
+				if (++count < max_count && curlen == nextlen) {
+					continue;
+				} else if (count < min_count) {
+					bl_tree[curlen * 2] += count;
+				} else if (curlen !== 0) {
+					if (curlen != prevlen)
+						bl_tree[curlen * 2]++;
+					bl_tree[REP_3_6 * 2]++;
+				} else if (count <= 10) {
+					bl_tree[REPZ_3_10 * 2]++;
+				} else {
+					bl_tree[REPZ_11_138 * 2]++;
+				}
+				count = 0;
+				prevlen = curlen;
+				if (nextlen === 0) {
+					max_count = 138;
+					min_count = 3;
+				} else if (curlen == nextlen) {
+					max_count = 6;
+					min_count = 3;
+				} else {
+					max_count = 7;
+					min_count = 4;
+				}
+			}
+		}
+
+		// Construct the Huffman tree for the bit lengths and return the index in
+		// bl_order of the last bit length code to send.
+		function build_bl_tree() {
+			var max_blindex; // index of last bit length code of non zero freq
+
+			// Determine the bit length frequencies for literal and distance trees
+			scan_tree(dyn_ltree, l_desc.max_code);
+			scan_tree(dyn_dtree, d_desc.max_code);
+
+			// Build the bit length tree:
+			bl_desc.build_tree(that);
+			// opt_len now includes the length of the tree representations, except
+			// the lengths of the bit lengths codes and the 5+5+4 bits for the
+			// counts.
+
+			// Determine the number of bit length codes to send. The pkzip format
+			// requires that at least 4 bit length codes be sent. (appnote.txt says
+			// 3 but the actual value used is 4.)
+			for (max_blindex = BL_CODES - 1; max_blindex >= 3; max_blindex--) {
+				if (bl_tree[Tree.bl_order[max_blindex] * 2 + 1] !== 0)
+					break;
+			}
+			// Update opt_len to include the bit length tree and counts
+			that.opt_len += 3 * (max_blindex + 1) + 5 + 5 + 4;
+
+			return max_blindex;
+		}
+
+		// Output a byte on the stream.
+		// IN assertion: there is enough room in pending_buf.
+		function put_byte(p) {
+			that.pending_buf[that.pending++] = p;
+		}
+
+		function put_short(w) {
+			put_byte(w & 0xff);
+			put_byte((w >>> 8) & 0xff);
+		}
+
+		function putShortMSB(b) {
+			put_byte((b >> 8) & 0xff);
+			put_byte((b & 0xff) & 0xff);
+		}
+
+		function send_bits(value, length) {
+			var val, len = length;
+			if (bi_valid > Buf_size - len) {
+				val = value;
+				// bi_buf |= (val << bi_valid);
+				bi_buf |= ((val << bi_valid) & 0xffff);
+				put_short(bi_buf);
+				bi_buf = val >>> (Buf_size - bi_valid);
+				bi_valid += len - Buf_size;
+			} else {
+				// bi_buf |= (value) << bi_valid;
+				bi_buf |= (((value) << bi_valid) & 0xffff);
+				bi_valid += len;
+			}
+		}
+
+		function send_code(c, tree) {
+			var c2 = c * 2;
+			send_bits(tree[c2] & 0xffff, tree[c2 + 1] & 0xffff);
+		}
+
+		// Send a literal or distance tree in compressed form, using the codes in
+		// bl_tree.
+		function send_tree(tree,// the tree to be sent
+		max_code // and its largest code of non zero frequency
+		) {
+			var n; // iterates over all tree elements
+			var prevlen = -1; // last emitted length
+			var curlen; // length of current code
+			var nextlen = tree[0 * 2 + 1]; // length of next code
+			var count = 0; // repeat count of the current code
+			var max_count = 7; // max repeat count
+			var min_count = 4; // min repeat count
+
+			if (nextlen === 0) {
+				max_count = 138;
+				min_count = 3;
+			}
+
+			for (n = 0; n <= max_code; n++) {
+				curlen = nextlen;
+				nextlen = tree[(n + 1) * 2 + 1];
+				if (++count < max_count && curlen == nextlen) {
+					continue;
+				} else if (count < min_count) {
+					do {
+						send_code(curlen, bl_tree);
+					} while (--count !== 0);
+				} else if (curlen !== 0) {
+					if (curlen != prevlen) {
+						send_code(curlen, bl_tree);
+						count--;
+					}
+					send_code(REP_3_6, bl_tree);
+					send_bits(count - 3, 2);
+				} else if (count <= 10) {
+					send_code(REPZ_3_10, bl_tree);
+					send_bits(count - 3, 3);
+				} else {
+					send_code(REPZ_11_138, bl_tree);
+					send_bits(count - 11, 7);
+				}
+				count = 0;
+				prevlen = curlen;
+				if (nextlen === 0) {
+					max_count = 138;
+					min_count = 3;
+				} else if (curlen == nextlen) {
+					max_count = 6;
+					min_count = 3;
+				} else {
+					max_count = 7;
+					min_count = 4;
+				}
+			}
+		}
+
+		// Send the header for a block using dynamic Huffman trees: the counts, the
+		// lengths of the bit length codes, the literal tree and the distance tree.
+		// IN assertion: lcodes >= 257, dcodes >= 1, blcodes >= 4.
+		function send_all_trees(lcodes, dcodes, blcodes) {
+			var rank; // index in bl_order
+
+			send_bits(lcodes - 257, 5); // not +255 as stated in appnote.txt
+			send_bits(dcodes - 1, 5);
+			send_bits(blcodes - 4, 4); // not -3 as stated in appnote.txt
+			for (rank = 0; rank < blcodes; rank++) {
+				send_bits(bl_tree[Tree.bl_order[rank] * 2 + 1], 3);
+			}
+			send_tree(dyn_ltree, lcodes - 1); // literal tree
+			send_tree(dyn_dtree, dcodes - 1); // distance tree
+		}
+
+		// Flush the bit buffer, keeping at most 7 bits in it.
+		function bi_flush() {
+			if (bi_valid == 16) {
+				put_short(bi_buf);
+				bi_buf = 0;
+				bi_valid = 0;
+			} else if (bi_valid >= 8) {
+				put_byte(bi_buf & 0xff);
+				bi_buf >>>= 8;
+				bi_valid -= 8;
+			}
+		}
+
+		// Send one empty static block to give enough lookahead for inflate.
+		// This takes 10 bits, of which 7 may remain in the bit buffer.
+		// The current inflate code requires 9 bits of lookahead. If the
+		// last two codes for the previous block (real code plus EOB) were coded
+		// on 5 bits or less, inflate may have only 5+3 bits of lookahead to decode
+		// the last real code. In this case we send two empty static blocks instead
+		// of one. (There are no problems if the previous block is stored or fixed.)
+		// To simplify the code, we assume the worst case of last real code encoded
+		// on one bit only.
+		function _tr_align() {
+			send_bits(STATIC_TREES << 1, 3);
+			send_code(END_BLOCK, StaticTree.static_ltree);
+
+			bi_flush();
+
+			// Of the 10 bits for the empty block, we have already sent
+			// (10 - bi_valid) bits. The lookahead for the last real code (before
+			// the EOB of the previous block) was thus at least one plus the length
+			// of the EOB plus what we have just sent of the empty static block.
+			if (1 + last_eob_len + 10 - bi_valid < 9) {
+				send_bits(STATIC_TREES << 1, 3);
+				send_code(END_BLOCK, StaticTree.static_ltree);
+				bi_flush();
+			}
+			last_eob_len = 7;
+		}
+
+		// Save the match info and tally the frequency counts. Return true if
+		// the current block must be flushed.
+		function _tr_tally(dist, // distance of matched string
+		lc // match length-MIN_MATCH or unmatched char (if dist==0)
+		) {
+			var out_length, in_length, dcode;
+			that.pending_buf[d_buf + last_lit * 2] = (dist >>> 8) & 0xff;
+			that.pending_buf[d_buf + last_lit * 2 + 1] = dist & 0xff;
+
+			that.pending_buf[l_buf + last_lit] = lc & 0xff;
+			last_lit++;
+
+			if (dist === 0) {
+				// lc is the unmatched char
+				dyn_ltree[lc * 2]++;
+			} else {
+				matches++;
+				// Here, lc is the match length - MIN_MATCH
+				dist--; // dist = match distance - 1
+				dyn_ltree[(Tree._length_code[lc] + LITERALS + 1) * 2]++;
+				dyn_dtree[Tree.d_code(dist) * 2]++;
+			}
+
+			if ((last_lit & 0x1fff) === 0 && level > 2) {
+				// Compute an upper bound for the compressed length
+				out_length = last_lit * 8;
+				in_length = strstart - block_start;
+				for (dcode = 0; dcode < D_CODES; dcode++) {
+					out_length += dyn_dtree[dcode * 2] * (5 + Tree.extra_dbits[dcode]);
+				}
+				out_length >>>= 3;
+				if ((matches < Math.floor(last_lit / 2)) && out_length < Math.floor(in_length / 2))
+					return true;
+			}
+
+			return (last_lit == lit_bufsize - 1);
+			// We avoid equality with lit_bufsize because of wraparound at 64K
+			// on 16 bit machines and because stored blocks are restricted to
+			// 64K-1 bytes.
+		}
+
+		// Send the block data compressed using the given Huffman trees
+		function compress_block(ltree, dtree) {
+			var dist; // distance of matched string
+			var lc; // match length or unmatched char (if dist === 0)
+			var lx = 0; // running index in l_buf
+			var code; // the code to send
+			var extra; // number of extra bits to send
+
+			if (last_lit !== 0) {
+				do {
+					dist = ((that.pending_buf[d_buf + lx * 2] << 8) & 0xff00) | (that.pending_buf[d_buf + lx * 2 + 1] & 0xff);
+					lc = (that.pending_buf[l_buf + lx]) & 0xff;
+					lx++;
+
+					if (dist === 0) {
+						send_code(lc, ltree); // send a literal byte
+					} else {
+						// Here, lc is the match length - MIN_MATCH
+						code = Tree._length_code[lc];
+
+						send_code(code + LITERALS + 1, ltree); // send the length
+						// code
+						extra = Tree.extra_lbits[code];
+						if (extra !== 0) {
+							lc -= Tree.base_length[code];
+							send_bits(lc, extra); // send the extra length bits
+						}
+						dist--; // dist is now the match distance - 1
+						code = Tree.d_code(dist);
+
+						send_code(code, dtree); // send the distance code
+						extra = Tree.extra_dbits[code];
+						if (extra !== 0) {
+							dist -= Tree.base_dist[code];
+							send_bits(dist, extra); // send the extra distance bits
+						}
+					} // literal or match pair ?
+
+					// Check that the overlay between pending_buf and d_buf+l_buf is
+					// ok:
+				} while (lx < last_lit);
+			}
+
+			send_code(END_BLOCK, ltree);
+			last_eob_len = ltree[END_BLOCK * 2 + 1];
+		}
+
+		// Flush the bit buffer and align the output on a byte boundary
+		function bi_windup() {
+			if (bi_valid > 8) {
+				put_short(bi_buf);
+			} else if (bi_valid > 0) {
+				put_byte(bi_buf & 0xff);
+			}
+			bi_buf = 0;
+			bi_valid = 0;
+		}
+
+		// Copy a stored block, storing first the length and its
+		// one's complement if requested.
+		function copy_block(buf, // the input data
+		len, // its length
+		header // true if block header must be written
+		) {
+			bi_windup(); // align on byte boundary
+			last_eob_len = 8; // enough lookahead for inflate
+
+			if (header) {
+				put_short(len);
+				put_short(~len);
+			}
+
+			that.pending_buf.set(window.subarray(buf, buf + len), that.pending);
+			that.pending += len;
+		}
+
+		// Send a stored block
+		function _tr_stored_block(buf, // input block
+		stored_len, // length of input block
+		eof // true if this is the last block for a file
+		) {
+			send_bits((STORED_BLOCK << 1) + (eof ? 1 : 0), 3); // send block type
+			copy_block(buf, stored_len, true); // with header
+		}
+
+		// Determine the best encoding for the current block: dynamic trees, static
+		// trees or store, and output the encoded block to the zip file.
+		function _tr_flush_block(buf, // input block, or NULL if too old
+		stored_len, // length of input block
+		eof // true if this is the last block for a file
+		) {
+			var opt_lenb, static_lenb;// opt_len and static_len in bytes
+			var max_blindex = 0; // index of last bit length code of non zero freq
+
+			// Build the Huffman trees unless a stored block is forced
+			if (level > 0) {
+				// Construct the literal and distance trees
+				l_desc.build_tree(that);
+
+				d_desc.build_tree(that);
+
+				// At this point, opt_len and static_len are the total bit lengths
+				// of
+				// the compressed block data, excluding the tree representations.
+
+				// Build the bit length tree for the above two trees, and get the
+				// index
+				// in bl_order of the last bit length code to send.
+				max_blindex = build_bl_tree();
+
+				// Determine the best encoding. Compute first the block length in
+				// bytes
+				opt_lenb = (that.opt_len + 3 + 7) >>> 3;
+				static_lenb = (that.static_len + 3 + 7) >>> 3;
+
+				if (static_lenb <= opt_lenb)
+					opt_lenb = static_lenb;
+			} else {
+				opt_lenb = static_lenb = stored_len + 5; // force a stored block
+			}
+
+			if ((stored_len + 4 <= opt_lenb) && buf != -1) {
+				// 4: two words for the lengths
+				// The test buf != NULL is only necessary if LIT_BUFSIZE > WSIZE.
+				// Otherwise we can't have processed more than WSIZE input bytes
+				// since
+				// the last block flush, because compression would have been
+				// successful. If LIT_BUFSIZE <= WSIZE, it is never too late to
+				// transform a block into a stored block.
+				_tr_stored_block(buf, stored_len, eof);
+			} else if (static_lenb == opt_lenb) {
+				send_bits((STATIC_TREES << 1) + (eof ? 1 : 0), 3);
+				compress_block(StaticTree.static_ltree, StaticTree.static_dtree);
+			} else {
+				send_bits((DYN_TREES << 1) + (eof ? 1 : 0), 3);
+				send_all_trees(l_desc.max_code + 1, d_desc.max_code + 1, max_blindex + 1);
+				compress_block(dyn_ltree, dyn_dtree);
+			}
+
+			// The above check is made mod 2^32, for files larger than 512 MB
+			// and uLong implemented on 32 bits.
+
+			init_block();
+
+			if (eof) {
+				bi_windup();
+			}
+		}
+
+		function flush_block_only(eof) {
+			_tr_flush_block(block_start >= 0 ? block_start : -1, strstart - block_start, eof);
+			block_start = strstart;
+			strm.flush_pending();
+		}
+
+		// Fill the window when the lookahead becomes insufficient.
+		// Updates strstart and lookahead.
+		//
+		// IN assertion: lookahead < MIN_LOOKAHEAD
+		// OUT assertions: strstart <= window_size-MIN_LOOKAHEAD
+		// At least one byte has been read, or avail_in === 0; reads are
+		// performed for at least two bytes (required for the zip translate_eol
+		// option -- not supported here).
+		function fill_window() {
+			var n, m;
+			var p;
+			var more; // Amount of free space at the end of the window.
+
+			do {
+				more = (window_size - lookahead - strstart);
+
+				// Deal with !@#$% 64K limit:
+				if (more === 0 && strstart === 0 && lookahead === 0) {
+					more = w_size;
+				} else if (more == -1) {
+					// Very unlikely, but possible on 16 bit machine if strstart ==
+					// 0
+					// and lookahead == 1 (input done one byte at time)
+					more--;
+
+					// If the window is almost full and there is insufficient
+					// lookahead,
+					// move the upper half to the lower one to make room in the
+					// upper half.
+				} else if (strstart >= w_size + w_size - MIN_LOOKAHEAD) {
+					window.set(window.subarray(w_size, w_size + w_size), 0);
+
+					match_start -= w_size;
+					strstart -= w_size; // we now have strstart >= MAX_DIST
+					block_start -= w_size;
+
+					// Slide the hash table (could be avoided with 32 bit values
+					// at the expense of memory usage). We slide even when level ==
+					// 0
+					// to keep the hash table consistent if we switch back to level
+					// > 0
+					// later. (Using level 0 permanently is not an optimal usage of
+					// zlib, so we don't care about this pathological case.)
+
+					n = hash_size;
+					p = n;
+					do {
+						m = (head[--p] & 0xffff);
+						head[p] = (m >= w_size ? m - w_size : 0);
+					} while (--n !== 0);
+
+					n = w_size;
+					p = n;
+					do {
+						m = (prev[--p] & 0xffff);
+						prev[p] = (m >= w_size ? m - w_size : 0);
+						// If n is not on any hash chain, prev[n] is garbage but
+						// its value will never be used.
+					} while (--n !== 0);
+					more += w_size;
+				}
+
+				if (strm.avail_in === 0)
+					return;
+
+				// If there was no sliding:
+				// strstart <= WSIZE+MAX_DIST-1 && lookahead <= MIN_LOOKAHEAD - 1 &&
+				// more == window_size - lookahead - strstart
+				// => more >= window_size - (MIN_LOOKAHEAD-1 + WSIZE + MAX_DIST-1)
+				// => more >= window_size - 2*WSIZE + 2
+				// In the BIG_MEM or MMAP case (not yet supported),
+				// window_size == input_size + MIN_LOOKAHEAD &&
+				// strstart + s->lookahead <= input_size => more >= MIN_LOOKAHEAD.
+				// Otherwise, window_size == 2*WSIZE so more >= 2.
+				// If there was sliding, more >= WSIZE. So in all cases, more >= 2.
+
+				n = strm.read_buf(window, strstart + lookahead, more);
+				lookahead += n;
+
+				// Initialize the hash value now that we have some input:
+				if (lookahead >= MIN_MATCH) {
+					ins_h = window[strstart] & 0xff;
+					ins_h = (((ins_h) << hash_shift) ^ (window[strstart + 1] & 0xff)) & hash_mask;
+				}
+				// If the whole input has less than MIN_MATCH bytes, ins_h is
+				// garbage,
+				// but this is not important since only literal bytes will be
+				// emitted.
+			} while (lookahead < MIN_LOOKAHEAD && strm.avail_in !== 0);
+		}
+
+		// Copy without compression as much as possible from the input stream,
+		// return
+		// the current block state.
+		// This function does not insert new strings in the dictionary since
+		// uncompressible data is probably not useful. This function is used
+		// only for the level=0 compression option.
+		// NOTE: this function should be optimized to avoid extra copying from
+		// window to pending_buf.
+		function deflate_stored(flush) {
+			// Stored blocks are limited to 0xffff bytes, pending_buf is limited
+			// to pending_buf_size, and each stored block has a 5 byte header:
+
+			var max_block_size = 0xffff;
+			var max_start;
+
+			if (max_block_size > pending_buf_size - 5) {
+				max_block_size = pending_buf_size - 5;
+			}
+
+			// Copy as much as possible from input to output:
+			while (true) {
+				// Fill the window as much as possible:
+				if (lookahead <= 1) {
+					fill_window();
+					if (lookahead === 0 && flush == Z_NO_FLUSH)
+						return NeedMore;
+					if (lookahead === 0)
+						break; // flush the current block
+				}
+
+				strstart += lookahead;
+				lookahead = 0;
+
+				// Emit a stored block if pending_buf will be full:
+				max_start = block_start + max_block_size;
+				if (strstart === 0 || strstart >= max_start) {
+					// strstart === 0 is possible when wraparound on 16-bit machine
+					lookahead = (strstart - max_start);
+					strstart = max_start;
+
+					flush_block_only(false);
+					if (strm.avail_out === 0)
+						return NeedMore;
+
+				}
+
+				// Flush if we may have to slide, otherwise block_start may become
+				// negative and the data will be gone:
+				if (strstart - block_start >= w_size - MIN_LOOKAHEAD) {
+					flush_block_only(false);
+					if (strm.avail_out === 0)
+						return NeedMore;
+				}
+			}
+
+			flush_block_only(flush == Z_FINISH);
+			if (strm.avail_out === 0)
+				return (flush == Z_FINISH) ? FinishStarted : NeedMore;
+
+			return flush == Z_FINISH ? FinishDone : BlockDone;
+		}
+
+		function longest_match(cur_match) {
+			var chain_length = max_chain_length; // max hash chain length
+			var scan = strstart; // current string
+			var match; // matched string
+			var len; // length of current match
+			var best_len = prev_length; // best match length so far
+			var limit = strstart > (w_size - MIN_LOOKAHEAD) ? strstart - (w_size - MIN_LOOKAHEAD) : 0;
+			var _nice_match = nice_match;
+
+			// Stop when cur_match becomes <= limit. To simplify the code,
+			// we prevent matches with the string of window index 0.
+
+			var wmask = w_mask;
+
+			var strend = strstart + MAX_MATCH;
+			var scan_end1 = window[scan + best_len - 1];
+			var scan_end = window[scan + best_len];
+
+			// The code is optimized for HASH_BITS >= 8 and MAX_MATCH-2 multiple of
+			// 16.
+			// It is easy to get rid of this optimization if necessary.
+
+			// Do not waste too much time if we already have a good match:
+			if (prev_length >= good_match) {
+				chain_length >>= 2;
+			}
+
+			// Do not look for matches beyond the end of the input. This is
+			// necessary
+			// to make deflate deterministic.
+			if (_nice_match > lookahead)
+				_nice_match = lookahead;
+
+			do {
+				match = cur_match;
+
+				// Skip to next match if the match length cannot increase
+				// or if the match length is less than 2:
+				if (window[match + best_len] != scan_end || window[match + best_len - 1] != scan_end1 || window[match] != window[scan]
+						|| window[++match] != window[scan + 1])
+					continue;
+
+				// The check at best_len-1 can be removed because it will be made
+				// again later. (This heuristic is not always a win.)
+				// It is not necessary to compare scan[2] and match[2] since they
+				// are always equal when the other bytes match, given that
+				// the hash keys are equal and that HASH_BITS >= 8.
+				scan += 2;
+				match++;
+
+				// We check for insufficient lookahead only every 8th comparison;
+				// the 256th check will be made at strstart+258.
+				do {
+				} while (window[++scan] == window[++match] && window[++scan] == window[++match] && window[++scan] == window[++match]
+						&& window[++scan] == window[++match] && window[++scan] == window[++match] && window[++scan] == window[++match]
+						&& window[++scan] == window[++match] && window[++scan] == window[++match] && scan < strend);
+
+				len = MAX_MATCH - (strend - scan);
+				scan = strend - MAX_MATCH;
+
+				if (len > best_len) {
+					match_start = cur_match;
+					best_len = len;
+					if (len >= _nice_match)
+						break;
+					scan_end1 = window[scan + best_len - 1];
+					scan_end = window[scan + best_len];
+				}
+
+			} while ((cur_match = (prev[cur_match & wmask] & 0xffff)) > limit && --chain_length !== 0);
+
+			if (best_len <= lookahead)
+				return best_len;
+			return lookahead;
+		}
+
+		// Compress as much as possible from the input stream, return the current
+		// block state.
+		// This function does not perform lazy evaluation of matches and inserts
+		// new strings in the dictionary only for unmatched strings or for short
+		// matches. It is used only for the fast compression options.
+		function deflate_fast(flush) {
+			// short hash_head = 0; // head of the hash chain
+			var hash_head = 0; // head of the hash chain
+			var bflush; // set if current block must be flushed
+
+			while (true) {
+				// Make sure that we always have enough lookahead, except
+				// at the end of the input file. We need MAX_MATCH bytes
+				// for the next match, plus MIN_MATCH bytes to insert the
+				// string following the next match.
+				if (lookahead < MIN_LOOKAHEAD) {
+					fill_window();
+					if (lookahead < MIN_LOOKAHEAD && flush == Z_NO_FLUSH) {
+						return NeedMore;
+					}
+					if (lookahead === 0)
+						break; // flush the current block
+				}
+
+				// Insert the string window[strstart .. strstart+2] in the
+				// dictionary, and set hash_head to the head of the hash chain:
+				if (lookahead >= MIN_MATCH) {
+					ins_h = (((ins_h) << hash_shift) ^ (window[(strstart) + (MIN_MATCH - 1)] & 0xff)) & hash_mask;
+
+					// prev[strstart&w_mask]=hash_head=head[ins_h];
+					hash_head = (head[ins_h] & 0xffff);
+					prev[strstart & w_mask] = head[ins_h];
+					head[ins_h] = strstart;
+				}
+
+				// Find the longest match, discarding those <= prev_length.
+				// At this point we have always match_length < MIN_MATCH
+
+				if (hash_head !== 0 && ((strstart - hash_head) & 0xffff) <= w_size - MIN_LOOKAHEAD) {
+					// To simplify the code, we prevent matches with the string
+					// of window index 0 (in particular we have to avoid a match
+					// of the string with itself at the start of the input file).
+					if (strategy != Z_HUFFMAN_ONLY) {
+						match_length = longest_match(hash_head);
+					}
+					// longest_match() sets match_start
+				}
+				if (match_length >= MIN_MATCH) {
+					// check_match(strstart, match_start, match_length);
+
+					bflush = _tr_tally(strstart - match_start, match_length - MIN_MATCH);
+
+					lookahead -= match_length;
+
+					// Insert new strings in the hash table only if the match length
+					// is not too large. This saves time but degrades compression.
+					if (match_length <= max_lazy_match && lookahead >= MIN_MATCH) {
+						match_length--; // string at strstart already in hash table
+						do {
+							strstart++;
+
+							ins_h = ((ins_h << hash_shift) ^ (window[(strstart) + (MIN_MATCH - 1)] & 0xff)) & hash_mask;
+							// prev[strstart&w_mask]=hash_head=head[ins_h];
+							hash_head = (head[ins_h] & 0xffff);
+							prev[strstart & w_mask] = head[ins_h];
+							head[ins_h] = strstart;
+
+							// strstart never exceeds WSIZE-MAX_MATCH, so there are
+							// always MIN_MATCH bytes ahead.
+						} while (--match_length !== 0);
+						strstart++;
+					} else {
+						strstart += match_length;
+						match_length = 0;
+						ins_h = window[strstart] & 0xff;
+
+						ins_h = (((ins_h) << hash_shift) ^ (window[strstart + 1] & 0xff)) & hash_mask;
+						// If lookahead < MIN_MATCH, ins_h is garbage, but it does
+						// not
+						// matter since it will be recomputed at next deflate call.
+					}
+				} else {
+					// No match, output a literal byte
+
+					bflush = _tr_tally(0, window[strstart] & 0xff);
+					lookahead--;
+					strstart++;
+				}
+				if (bflush) {
+
+					flush_block_only(false);
+					if (strm.avail_out === 0)
+						return NeedMore;
+				}
+			}
+
+			flush_block_only(flush == Z_FINISH);
+			if (strm.avail_out === 0) {
+				if (flush == Z_FINISH)
+					return FinishStarted;
+				else
+					return NeedMore;
+			}
+			return flush == Z_FINISH ? FinishDone : BlockDone;
+		}
+
+		// Same as above, but achieves better compression. We use a lazy
+		// evaluation for matches: a match is finally adopted only if there is
+		// no better match at the next window position.
+		function deflate_slow(flush) {
+			// short hash_head = 0; // head of hash chain
+			var hash_head = 0; // head of hash chain
+			var bflush; // set if current block must be flushed
+			var max_insert;
+
+			// Process the input block.
+			while (true) {
+				// Make sure that we always have enough lookahead, except
+				// at the end of the input file. We need MAX_MATCH bytes
+				// for the next match, plus MIN_MATCH bytes to insert the
+				// string following the next match.
+
+				if (lookahead < MIN_LOOKAHEAD) {
+					fill_window();
+					if (lookahead < MIN_LOOKAHEAD && flush == Z_NO_FLUSH) {
+						return NeedMore;
+					}
+					if (lookahead === 0)
+						break; // flush the current block
+				}
+
+				// Insert the string window[strstart .. strstart+2] in the
+				// dictionary, and set hash_head to the head of the hash chain:
+
+				if (lookahead >= MIN_MATCH) {
+					ins_h = (((ins_h) << hash_shift) ^ (window[(strstart) + (MIN_MATCH - 1)] & 0xff)) & hash_mask;
+					// prev[strstart&w_mask]=hash_head=head[ins_h];
+					hash_head = (head[ins_h] & 0xffff);
+					prev[strstart & w_mask] = head[ins_h];
+					head[ins_h] = strstart;
+				}
+
+				// Find the longest match, discarding those <= prev_length.
+				prev_length = match_length;
+				prev_match = match_start;
+				match_length = MIN_MATCH - 1;
+
+				if (hash_head !== 0 && prev_length < max_lazy_match && ((strstart - hash_head) & 0xffff) <= w_size - MIN_LOOKAHEAD) {
+					// To simplify the code, we prevent matches with the string
+					// of window index 0 (in particular we have to avoid a match
+					// of the string with itself at the start of the input file).
+
+					if (strategy != Z_HUFFMAN_ONLY) {
+						match_length = longest_match(hash_head);
+					}
+					// longest_match() sets match_start
+
+					if (match_length <= 5 && (strategy == Z_FILTERED || (match_length == MIN_MATCH && strstart - match_start > 4096))) {
+
+						// If prev_match is also MIN_MATCH, match_start is garbage
+						// but we will ignore the current match anyway.
+						match_length = MIN_MATCH - 1;
+					}
+				}
+
+				// If there was a match at the previous step and the current
+				// match is not better, output the previous match:
+				if (prev_length >= MIN_MATCH && match_length <= prev_length) {
+					max_insert = strstart + lookahead - MIN_MATCH;
+					// Do not insert strings in hash table beyond this.
+
+					// check_match(strstart-1, prev_match, prev_length);
+
+					bflush = _tr_tally(strstart - 1 - prev_match, prev_length - MIN_MATCH);
+
+					// Insert in hash table all strings up to the end of the match.
+					// strstart-1 and strstart are already inserted. If there is not
+					// enough lookahead, the last two strings are not inserted in
+					// the hash table.
+					lookahead -= prev_length - 1;
+					prev_length -= 2;
+					do {
+						if (++strstart <= max_insert) {
+							ins_h = (((ins_h) << hash_shift) ^ (window[(strstart) + (MIN_MATCH - 1)] & 0xff)) & hash_mask;
+							// prev[strstart&w_mask]=hash_head=head[ins_h];
+							hash_head = (head[ins_h] & 0xffff);
+							prev[strstart & w_mask] = head[ins_h];
+							head[ins_h] = strstart;
+						}
+					} while (--prev_length !== 0);
+					match_available = 0;
+					match_length = MIN_MATCH - 1;
+					strstart++;
+
+					if (bflush) {
+						flush_block_only(false);
+						if (strm.avail_out === 0)
+							return NeedMore;
+					}
+				} else if (match_available !== 0) {
+
+					// If there was no match at the previous position, output a
+					// single literal. If there was a match but the current match
+					// is longer, truncate the previous match to a single literal.
+
+					bflush = _tr_tally(0, window[strstart - 1] & 0xff);
+
+					if (bflush) {
+						flush_block_only(false);
+					}
+					strstart++;
+					lookahead--;
+					if (strm.avail_out === 0)
+						return NeedMore;
+				} else {
+					// There is no previous match to compare with, wait for
+					// the next step to decide.
+
+					match_available = 1;
+					strstart++;
+					lookahead--;
+				}
+			}
+
+			if (match_available !== 0) {
+				bflush = _tr_tally(0, window[strstart - 1] & 0xff);
+				match_available = 0;
+			}
+			flush_block_only(flush == Z_FINISH);
+
+			if (strm.avail_out === 0) {
+				if (flush == Z_FINISH)
+					return FinishStarted;
+				else
+					return NeedMore;
+			}
+
+			return flush == Z_FINISH ? FinishDone : BlockDone;
+		}
+
+		function deflateReset(strm) {
+			strm.total_in = strm.total_out = 0;
+			strm.msg = null; //
+			
+			that.pending = 0;
+			that.pending_out = 0;
+
+			status = BUSY_STATE;
+
+			last_flush = Z_NO_FLUSH;
+
+			tr_init();
+			lm_init();
+			return Z_OK;
+		}
+
+		that.deflateInit = function(strm, _level, bits, _method, memLevel, _strategy) {
+			if (!_method)
+				_method = Z_DEFLATED;
+			if (!memLevel)
+				memLevel = DEF_MEM_LEVEL;
+			if (!_strategy)
+				_strategy = Z_DEFAULT_STRATEGY;
+
+			// byte[] my_version=ZLIB_VERSION;
+
+			//
+			// if (!version || version[0] != my_version[0]
+			// || stream_size != sizeof(z_stream)) {
+			// return Z_VERSION_ERROR;
+			// }
+
+			strm.msg = null;
+
+			if (_level == Z_DEFAULT_COMPRESSION)
+				_level = 6;
+
+			if (memLevel < 1 || memLevel > MAX_MEM_LEVEL || _method != Z_DEFLATED || bits < 9 || bits > 15 || _level < 0 || _level > 9 || _strategy < 0
+					|| _strategy > Z_HUFFMAN_ONLY) {
+				return Z_STREAM_ERROR;
+			}
+
+			strm.dstate = that;
+
+			w_bits = bits;
+			w_size = 1 << w_bits;
+			w_mask = w_size - 1;
+
+			hash_bits = memLevel + 7;
+			hash_size = 1 << hash_bits;
+			hash_mask = hash_size - 1;
+			hash_shift = Math.floor((hash_bits + MIN_MATCH - 1) / MIN_MATCH);
+
+			window = new Uint8Array(w_size * 2);
+			prev = [];
+			head = [];
+
+			lit_bufsize = 1 << (memLevel + 6); // 16K elements by default
+
+			// We overlay pending_buf and d_buf+l_buf. This works since the average
+			// output size for (length,distance) codes is <= 24 bits.
+			that.pending_buf = new Uint8Array(lit_bufsize * 4);
+			pending_buf_size = lit_bufsize * 4;
+
+			d_buf = Math.floor(lit_bufsize / 2);
+			l_buf = (1 + 2) * lit_bufsize;
+
+			level = _level;
+
+			strategy = _strategy;
+			method = _method & 0xff;
+
+			return deflateReset(strm);
+		};
+
+		that.deflateEnd = function() {
+			if (status != INIT_STATE && status != BUSY_STATE && status != FINISH_STATE) {
+				return Z_STREAM_ERROR;
+			}
+			// Deallocate in reverse order of allocations:
+			that.pending_buf = null;
+			head = null;
+			prev = null;
+			window = null;
+			// free
+			that.dstate = null;
+			return status == BUSY_STATE ? Z_DATA_ERROR : Z_OK;
+		};
+
+		that.deflateParams = function(strm, _level, _strategy) {
+			var err = Z_OK;
+
+			if (_level == Z_DEFAULT_COMPRESSION) {
+				_level = 6;
+			}
+			if (_level < 0 || _level > 9 || _strategy < 0 || _strategy > Z_HUFFMAN_ONLY) {
+				return Z_STREAM_ERROR;
+			}
+
+			if (config_table[level].func != config_table[_level].func && strm.total_in !== 0) {
+				// Flush the last buffer:
+				err = strm.deflate(Z_PARTIAL_FLUSH);
+			}
+
+			if (level != _level) {
+				level = _level;
+				max_lazy_match = config_table[level].max_lazy;
+				good_match = config_table[level].good_length;
+				nice_match = config_table[level].nice_length;
+				max_chain_length = config_table[level].max_chain;
+			}
+			strategy = _strategy;
+			return err;
+		};
+
+		that.deflateSetDictionary = function(strm, dictionary, dictLength) {
+			var length = dictLength;
+			var n, index = 0;
+
+			if (!dictionary || status != INIT_STATE)
+				return Z_STREAM_ERROR;
+
+			if (length < MIN_MATCH)
+				return Z_OK;
+			if (length > w_size - MIN_LOOKAHEAD) {
+				length = w_size - MIN_LOOKAHEAD;
+				index = dictLength - length; // use the tail of the dictionary
+			}
+			window.set(dictionary.subarray(index, index + length), 0);
+
+			strstart = length;
+			block_start = length;
+
+			// Insert all strings in the hash table (except for the last two bytes).
+			// s->lookahead stays null, so s->ins_h will be recomputed at the next
+			// call of fill_window.
+
+			ins_h = window[0] & 0xff;
+			ins_h = (((ins_h) << hash_shift) ^ (window[1] & 0xff)) & hash_mask;
+
+			for (n = 0; n <= length - MIN_MATCH; n++) {
+				ins_h = (((ins_h) << hash_shift) ^ (window[(n) + (MIN_MATCH - 1)] & 0xff)) & hash_mask;
+				prev[n & w_mask] = head[ins_h];
+				head[ins_h] = n;
+			}
+			return Z_OK;
+		};
+
+		that.deflate = function(_strm, flush) {
+			var i, header, level_flags, old_flush, bstate;
+
+			if (flush > Z_FINISH || flush < 0) {
+				return Z_STREAM_ERROR;
+			}
+
+			if (!_strm.next_out || (!_strm.next_in && _strm.avail_in !== 0) || (status == FINISH_STATE && flush != Z_FINISH)) {
+				_strm.msg = z_errmsg[Z_NEED_DICT - (Z_STREAM_ERROR)];
+				return Z_STREAM_ERROR;
+			}
+			if (_strm.avail_out === 0) {
+				_strm.msg = z_errmsg[Z_NEED_DICT - (Z_BUF_ERROR)];
+				return Z_BUF_ERROR;
+			}
+
+			strm = _strm; // just in case
+			old_flush = last_flush;
+			last_flush = flush;
+
+			// Write the zlib header
+			if (status == INIT_STATE) {
+				header = (Z_DEFLATED + ((w_bits - 8) << 4)) << 8;
+				level_flags = ((level - 1) & 0xff) >> 1;
+
+				if (level_flags > 3)
+					level_flags = 3;
+				header |= (level_flags << 6);
+				if (strstart !== 0)
+					header |= PRESET_DICT;
+				header += 31 - (header % 31);
+
+				status = BUSY_STATE;
+				putShortMSB(header);
+			}
+
+			// Flush as much pending output as possible
+			if (that.pending !== 0) {
+				strm.flush_pending();
+				if (strm.avail_out === 0) {
+					// console.log(" avail_out==0");
+					// Since avail_out is 0, deflate will be called again with
+					// more output space, but possibly with both pending and
+					// avail_in equal to zero. There won't be anything to do,
+					// but this is not an error situation so make sure we
+					// return OK instead of BUF_ERROR at next call of deflate:
+					last_flush = -1;
+					return Z_OK;
+				}
+
+				// Make sure there is something to do and avoid duplicate
+				// consecutive
+				// flushes. For repeated and useless calls with Z_FINISH, we keep
+				// returning Z_STREAM_END instead of Z_BUFF_ERROR.
+			} else if (strm.avail_in === 0 && flush <= old_flush && flush != Z_FINISH) {
+				strm.msg = z_errmsg[Z_NEED_DICT - (Z_BUF_ERROR)];
+				return Z_BUF_ERROR;
+			}
+
+			// User must not provide more input after the first FINISH:
+			if (status == FINISH_STATE && strm.avail_in !== 0) {
+				_strm.msg = z_errmsg[Z_NEED_DICT - (Z_BUF_ERROR)];
+				return Z_BUF_ERROR;
+			}
+
+			// Start a new block or continue the current one.
+			if (strm.avail_in !== 0 || lookahead !== 0 || (flush != Z_NO_FLUSH && status != FINISH_STATE)) {
+				bstate = -1;
+				switch (config_table[level].func) {
+				case STORED:
+					bstate = deflate_stored(flush);
+					break;
+				case FAST:
+					bstate = deflate_fast(flush);
+					break;
+				case SLOW:
+					bstate = deflate_slow(flush);
+					break;
+				default:
+				}
+
+				if (bstate == FinishStarted || bstate == FinishDone) {
+					status = FINISH_STATE;
+				}
+				if (bstate == NeedMore || bstate == FinishStarted) {
+					if (strm.avail_out === 0) {
+						last_flush = -1; // avoid BUF_ERROR next call, see above
+					}
+					return Z_OK;
+					// If flush != Z_NO_FLUSH && avail_out === 0, the next call
+					// of deflate should use the same flush parameter to make sure
+					// that the flush is complete. So we don't have to output an
+					// empty block here, this will be done at next call. This also
+					// ensures that for a very small output buffer, we emit at most
+					// one empty block.
+				}
+
+				if (bstate == BlockDone) {
+					if (flush == Z_PARTIAL_FLUSH) {
+						_tr_align();
+					} else { // FULL_FLUSH or SYNC_FLUSH
+						_tr_stored_block(0, 0, false);
+						// For a full flush, this empty block will be recognized
+						// as a special marker by inflate_sync().
+						if (flush == Z_FULL_FLUSH) {
+							// state.head[s.hash_size-1]=0;
+							for (i = 0; i < hash_size/*-1*/; i++)
+								// forget history
+								head[i] = 0;
+						}
+					}
+					strm.flush_pending();
+					if (strm.avail_out === 0) {
+						last_flush = -1; // avoid BUF_ERROR at next call, see above
+						return Z_OK;
+					}
+				}
+			}
+
+			if (flush != Z_FINISH)
+				return Z_OK;
+			return Z_STREAM_END;
+		};
+	}
+
+	// ZStream
+
+	function ZStream() {
+		var that = this;
+		that.next_in_index = 0;
+		that.next_out_index = 0;
+		// that.next_in; // next input byte
+		that.avail_in = 0; // number of bytes available at next_in
+		that.total_in = 0; // total nb of input bytes read so far
+		// that.next_out; // next output byte should be put there
+		that.avail_out = 0; // remaining free space at next_out
+		that.total_out = 0; // total nb of bytes output so far
+		// that.msg;
+		// that.dstate;
+	}
+
+	ZStream.prototype = {
+		deflateInit : function(level, bits) {
+			var that = this;
+			that.dstate = new Deflate();
+			if (!bits)
+				bits = MAX_BITS;
+			return that.dstate.deflateInit(that, level, bits);
+		},
+
+		deflate : function(flush) {
+			var that = this;
+			if (!that.dstate) {
+				return Z_STREAM_ERROR;
+			}
+			return that.dstate.deflate(that, flush);
+		},
+
+		deflateEnd : function() {
+			var that = this;
+			if (!that.dstate)
+				return Z_STREAM_ERROR;
+			var ret = that.dstate.deflateEnd();
+			that.dstate = null;
+			return ret;
+		},
+
+		deflateParams : function(level, strategy) {
+			var that = this;
+			if (!that.dstate)
+				return Z_STREAM_ERROR;
+			return that.dstate.deflateParams(that, level, strategy);
+		},
+
+		deflateSetDictionary : function(dictionary, dictLength) {
+			var that = this;
+			if (!that.dstate)
+				return Z_STREAM_ERROR;
+			return that.dstate.deflateSetDictionary(that, dictionary, dictLength);
+		},
+
+		// Read a new buffer from the current input stream, update the
+		// total number of bytes read. All deflate() input goes through
+		// this function so some applications may wish to modify it to avoid
+		// allocating a large strm->next_in buffer and copying from it.
+		// (See also flush_pending()).
+		read_buf : function(buf, start, size) {
+			var that = this;
+			var len = that.avail_in;
+			if (len > size)
+				len = size;
+			if (len === 0)
+				return 0;
+			that.avail_in -= len;
+			buf.set(that.next_in.subarray(that.next_in_index, that.next_in_index + len), start);
+			that.next_in_index += len;
+			that.total_in += len;
+			return len;
+		},
+
+		// Flush as much pending output as possible. All deflate() output goes
+		// through this function so some applications may wish to modify it
+		// to avoid allocating a large strm->next_out buffer and copying into it.
+		// (See also read_buf()).
+		flush_pending : function() {
+			var that = this;
+			var len = that.dstate.pending;
+
+			if (len > that.avail_out)
+				len = that.avail_out;
+			if (len === 0)
+				return;
+
+			// if (that.dstate.pending_buf.length <= that.dstate.pending_out || that.next_out.length <= that.next_out_index
+			// || that.dstate.pending_buf.length < (that.dstate.pending_out + len) || that.next_out.length < (that.next_out_index +
+			// len)) {
+			// console.log(that.dstate.pending_buf.length + ", " + that.dstate.pending_out + ", " + that.next_out.length + ", " +
+			// that.next_out_index + ", " + len);
+			// console.log("avail_out=" + that.avail_out);
+			// }
+
+			that.next_out.set(that.dstate.pending_buf.subarray(that.dstate.pending_out, that.dstate.pending_out + len), that.next_out_index);
+
+			that.next_out_index += len;
+			that.dstate.pending_out += len;
+			that.total_out += len;
+			that.avail_out -= len;
+			that.dstate.pending -= len;
+			if (that.dstate.pending === 0) {
+				that.dstate.pending_out = 0;
+			}
+		}
+	};
+
+	// Deflater
+
+	function Deflater(options) {
+		var that = this;
+		var z = new ZStream();
+		var bufsize = 512;
+		var flush = Z_NO_FLUSH;
+		var buf = new Uint8Array(bufsize);
+		var level = options ? options.level : Z_DEFAULT_COMPRESSION;
+		if (typeof level == "undefined")
+			level = Z_DEFAULT_COMPRESSION;
+		z.deflateInit(level);
+		z.next_out = buf;
+
+		that.append = function(data, onprogress) {
+			var err, buffers = [], lastIndex = 0, bufferIndex = 0, bufferSize = 0, array;
+			if (!data.length)
+				return;
+			z.next_in_index = 0;
+			z.next_in = data;
+			z.avail_in = data.length;
+			do {
+				z.next_out_index = 0;
+				z.avail_out = bufsize;
+				err = z.deflate(flush);
+				if (err != Z_OK)
+					throw new Error("deflating: " + z.msg);
+				if (z.next_out_index)
+					if (z.next_out_index == bufsize)
+						buffers.push(new Uint8Array(buf));
+					else
+						buffers.push(new Uint8Array(buf.subarray(0, z.next_out_index)));
+				bufferSize += z.next_out_index;
+				if (onprogress && z.next_in_index > 0 && z.next_in_index != lastIndex) {
+					onprogress(z.next_in_index);
+					lastIndex = z.next_in_index;
+				}
+			} while (z.avail_in > 0 || z.avail_out === 0);
+			array = new Uint8Array(bufferSize);
+			buffers.forEach(function(chunk) {
+				array.set(chunk, bufferIndex);
+				bufferIndex += chunk.length;
+			});
+			return array;
+		};
+		that.flush = function() {
+			var err, buffers = [], bufferIndex = 0, bufferSize = 0, array;
+			do {
+				z.next_out_index = 0;
+				z.avail_out = bufsize;
+				err = z.deflate(Z_FINISH);
+				if (err != Z_STREAM_END && err != Z_OK)
+					throw new Error("deflating: " + z.msg);
+				if (bufsize - z.avail_out > 0)
+					buffers.push(new Uint8Array(buf.subarray(0, z.next_out_index)));
+				bufferSize += z.next_out_index;
+			} while (z.avail_in > 0 || z.avail_out === 0);
+			z.deflateEnd();
+			array = new Uint8Array(bufferSize);
+			buffers.forEach(function(chunk) {
+				array.set(chunk, bufferIndex);
+				bufferIndex += chunk.length;
+			});
+			return array;
+		};
+	}
+
+	// 'zip' may not be defined in z-worker and some tests
+	var env = global.zip || global;
+	env.Deflater = env._jzlib_Deflater = Deflater;
+})(this);
+
+// z-worker.js 内容 (不使用 Web Workers)
+/* jshint worker:true */
+(function main(global) {
+	"use strict";
+
+	if (global.zWorkerInitialized)
+		throw new Error('z-worker.js should be run only once');
+	global.zWorkerInitialized = true;
+
+	addEventListener("message", function(event) {
+		var message = event.data, type = message.type, sn = message.sn;
+		var handler = handlers[type];
+		if (handler) {
+			try {
+				handler(message);
+			} catch (e) {
+				onError(type, sn, e);
+			}
+		}
+		//for debug
+		//postMessage({type: 'echo', originalType: type, sn: sn});
+	});
+
+	var handlers = {
+		importScripts: doImportScripts,
+		newTask: newTask,
+		append: processData,
+		flush: processData,
+	};
+
+	// deflater/inflater tasks indexed by serial numbers
+	var tasks = {};
+
+	function doImportScripts(msg) {
+		if (msg.scripts && msg.scripts.length > 0)
+			importScripts.apply(undefined, msg.scripts);
+		postMessage({type: 'importScripts'});
+	}
+
+	function newTask(msg) {
+		var CodecClass = global[msg.codecClass];
+		var sn = msg.sn;
+		if (tasks[sn])
+			throw Error('duplicated sn');
+		tasks[sn] =  {
+			codec: new CodecClass(msg.options),
+			crcInput: msg.crcType === 'input',
+			crcOutput: msg.crcType === 'output',
+			crc: new Crc32(),
+		};
+		postMessage({type: 'newTask', sn: sn});
+	}
+
+	// performance may not be supported
+	var now = global.performance ? global.performance.now.bind(global.performance) : Date.now;
+
+	function processData(msg) {
+		var sn = msg.sn, type = msg.type, input = msg.data;
+		var task = tasks[sn];
+		// allow creating codec on first append
+		if (!task && msg.codecClass) {
+			newTask(msg);
+			task = tasks[sn];
+		}
+		var isAppend = type === 'append';
+		var start = now();
+		var output;
+		if (isAppend) {
+			try {
+				output = task.codec.append(input, function onprogress(loaded) {
+					postMessage({type: 'progress', sn: sn, loaded: loaded});
+				});
+			} catch (e) {
+				delete tasks[sn];
+				throw e;
+			}
+		} else {
+			delete tasks[sn];
+			output = task.codec.flush();
+		}
+		var codecTime = now() - start;
+
+		start = now();
+		if (input && task.crcInput)
+			task.crc.append(input);
+		if (output && task.crcOutput)
+			task.crc.append(output);
+		var crcTime = now() - start;
+
+		var rmsg = {type: type, sn: sn, codecTime: codecTime, crcTime: crcTime};
+		var transferables = [];
+		if (output) {
+			rmsg.data = output;
+			transferables.push(output.buffer);
+		}
+		if (!isAppend && (task.crcInput || task.crcOutput))
+			rmsg.crc = task.crc.get();
+		
+		// posting a message with transferables will fail on IE10
+		try {
+			postMessage(rmsg, transferables);
+		} catch(ex) {
+			postMessage(rmsg); // retry without transferables
+		}
+	}
+
+	function onError(type, sn, e) {
+		var msg = {
+			type: type,
+			sn: sn,
+			error: formatError(e)
+		};
+		postMessage(msg);
+	}
+
+	function formatError(e) {
+		return { message: e.message, stack: e.stack };
+	}
+
+	// Crc32 code copied from file zip.js
+	function Crc32() {
+		this.crc = -1;
+	}
+	Crc32.prototype.append = function append(data) {
+		var crc = this.crc | 0, table = this.table;
+		for (var offset = 0, len = data.length | 0; offset < len; offset++)
+			crc = (crc >>> 8) ^ table[(crc ^ data[offset]) & 0xFF];
+		this.crc = crc;
+	};
+	Crc32.prototype.get = function get() {
+		return ~this.crc;
+	};
+	Crc32.prototype.table = (function() {
+		var i, j, t, table = []; // Uint32Array is actually slower than []
+		for (i = 0; i < 256; i++) {
+			t = i;
+			for (j = 0; j < 8; j++)
+				if (t & 1)
+					t = (t >>> 1) ^ 0xEDB88320;
+				else
+					t = t >>> 1;
+			table[i] = t;
+		}
+		return table;
+	})();
+
+	// "no-op" codec
+	function NOOP() {}
+	global.NOOP = NOOP;
+	NOOP.prototype.append = function append(bytes, onprogress) {
+		return bytes;
+	};
+	NOOP.prototype.flush = function flush() {};
+})(this);
+
+</script>
     <script>
 class SharedData {
 
@@ -2524,7 +5703,7 @@ class SharedData {
 
 }
 
-    </script>
+</script>
     <script>
 class ObjModel {
 
@@ -2760,7 +5939,7 @@ class ObjModel {
     }
 
 }
-    </script>
+</script>
     <script>
 let mat4 = glMatrix.mat4;
 let vec2 = glMatrix.vec2;
@@ -2940,7 +6119,7 @@ class Renderer {
     }
 
 }
-    </script>
+</script>
     <script>
 class UiHelper {
 
@@ -4614,7 +7793,7 @@ class UiManager {
 
 }
 
-    </script>
+</script>
     <script>
         let uiManager = new UiManager();
     </script>
