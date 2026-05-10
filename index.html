@@ -3198,13 +3198,13 @@
 
                         const len = Math.sqrt(normal[0] ** 2 + normal[1] ** 2 + normal[2] ** 2);
                         if (len > 0) {
-                            normal[0] /= len;
-                            normal[1] /= len;
-                            normal[2] /= len;
+                            normal[0] = Math.round((normal[0] / len) * 1000) / 1000;
+                            normal[1] = Math.round((normal[1] / len) * 1000) / 1000;
+                            normal[2] = Math.round((normal[2] / len) * 1000) / 1000;
                         }
 
-                        const normalKey = normal.map(n => Math.round(n * 100000)).join(',');
-                        
+                        const normalKey = normal.join(',');
+
                         if (!normalIndexMap.has(normalKey)) {
                             normalIndexMap.set(normalKey, normalIndex++);
                             newNormals.push(normal);
