@@ -5375,19 +5375,24 @@ class UiManager {
     }
 
     addBone() {
-        if (!this.activeSkin) {
+        // 获取当前正在显示的皮肤（而不是仅仅依赖 activeSkin）
+        const currentSkin = this.groupList.skin || this.activeSkin;
+        
+        if (!currentSkin) {
             alert("请先选择或创建一个皮肤！");
             return;
         }
+        
+        console.log("添加骨骼 - 当前皮肤:", currentSkin.name);
 
         // 弹出对话框输入骨骼名称
-        const boneName = prompt("请输入骨骼名称：", "bone_" + this.activeSkin.bones.length);
+        const boneName = prompt("请输入骨骼名称：", "bone_" + currentSkin.bones.length);
         if (!boneName || boneName.trim() === "") {
             return;
         }
 
         // 检查是否已存在同名骨骼
-        const existingBone = this.activeSkin.bones.find(b => b.name === boneName.trim());
+        const existingBone = currentSkin.bones.find(b => b.name === boneName.trim());
         if (existingBone) {
             alert("已存在名为 \"" + boneName + "\" 的骨骼！");
             return;
@@ -5395,13 +5400,13 @@ class UiManager {
 
         // 让用选择父骨骼
         let parentName = null;
-        if (this.activeSkin.bones.length > 0) {
-            const boneNames = this.activeSkin.bones.map(b => b.name).join("\n");
+        if (currentSkin.bones.length > 0) {
+            const boneNames = currentSkin.bones.map(b => b.name).join("\n");
             const useParent = confirm("是否要设置父骨骼？\n\n当前骨骼列表:\n" + boneNames + "\n\n点击确定设置父骨骼，点击取消创建根骨骼");
             if (useParent) {
                 const parentInput = prompt("请输入父骨骼名称（区分大小写）:");
                 if (parentInput && parentInput.trim() !== "") {
-                    const parentBone = this.activeSkin.bones.find(b => b.name === parentInput.trim());
+                    const parentBone = currentSkin.bones.find(b => b.name === parentInput.trim());
                     if (parentBone) {
                         parentName = parentInput.trim();
                     } else {
@@ -5427,21 +5432,26 @@ class UiManager {
         }
 
         // 添加到骨骼列表
-        this.activeSkin.bones.push(newBone);
+        currentSkin.bones.push(newBone);
 
         // 保存并刷新
-        this.activeSkin.saveBonesToLS();
-        this.activeSkin.assignBoneInfoToGroups();
-        this.groupList.setObjects(this.activeSkin.model.objects, this.activeSkin.bones);
+        currentSkin.saveBonesToLS();
+        currentSkin.assignBoneInfoToGroups();
+        this.groupList.setObjects(currentSkin.model.objects, currentSkin.bones);
 
         alert("骨骼 \"" + boneName + "\" 添加成功！" + (parentName ? " 父骨骼：" + parentName : ""));
     }
 
     deleteSelectedBone() {
-        if (!this.activeSkin) {
+        // 获取当前正在显示的皮肤（而不是仅仅依赖 activeSkin）
+        const currentSkin = this.groupList.skin || this.activeSkin;
+        
+        if (!currentSkin) {
             alert("请先选择或创建一个皮肤！");
             return;
         }
+        
+        console.log("删除骨骼 - 当前皮肤:", currentSkin.name);
 
         const selectedType = this.groupList.selectionType;
         const selectedObject = this.groupList.selection;
@@ -5463,15 +5473,15 @@ class UiManager {
         }
 
         // 从骨骼列表中移除
-        const boneIndex = this.activeSkin.bones.indexOf(selectedObject);
+        const boneIndex = currentSkin.bones.indexOf(selectedObject);
         if (boneIndex >= 0) {
-            this.activeSkin.bones.splice(boneIndex, 1);
+            currentSkin.bones.splice(boneIndex, 1);
         }
 
         // 保存并刷新
-        this.activeSkin.saveBonesToLS();
-        this.activeSkin.assignBoneInfoToGroups();
-        this.groupList.setObjects(this.activeSkin.model.objects, this.activeSkin.bones);
+        currentSkin.saveBonesToLS();
+        currentSkin.assignBoneInfoToGroups();
+        this.groupList.setObjects(currentSkin.model.objects, currentSkin.bones);
         this.groupList.setSelection(null, null);
 
         // 清除画布选择
@@ -5480,13 +5490,18 @@ class UiManager {
     }
 
     autoGroupObjects() {
-        if (!this.activeSkin || !this.activeSkin.model) {
+        // 获取当前正在显示的皮肤（而不是仅仅依赖 activeSkin）
+        const currentSkin = this.groupList.skin || this.activeSkin;
+        
+        if (!currentSkin || !currentSkin.model) {
             alert("请先上传一个 OBJ 模型！");
             return;
         }
+        
+        console.log("自动分组 - 当前皮肤:", currentSkin.name);
 
         // 重置所有骨骼的组关联
-        for (let bone of this.activeSkin.bones) {
+        for (let bone of currentSkin.bones) {
             bone.groups = [];
         }
 
@@ -5494,8 +5509,8 @@ class UiManager {
         let matchedCount = 0;
         let unmatchedObjects = [];
 
-        for (let objIndex = 0; objIndex < this.activeSkin.model.objects.length; objIndex++) {
-            let obj = this.activeSkin.model.objects[objIndex];
+        for (let objIndex = 0; objIndex < currentSkin.model.objects.length; objIndex++) {
+            let obj = currentSkin.model.objects[objIndex];
             let objectName = obj.name ? obj.name.toLowerCase().replace(/\s+/g, '') : '';
             
             if (!objectName) continue;
@@ -5505,27 +5520,27 @@ class UiManager {
             
             // 检测 left + arm 组合
             if (objectName.includes('left') && objectName.includes('arm')) {
-                matchedBone = this.activeSkin.bones.find(b => b.name === 'leftArm');
+                matchedBone = currentSkin.bones.find(b => b.name === 'leftArm');
             }
             // 检测 right + arm 组合
             else if (objectName.includes('right') && objectName.includes('arm')) {
-                matchedBone = this.activeSkin.bones.find(b => b.name === 'rightArm');
+                matchedBone = currentSkin.bones.find(b => b.name === 'rightArm');
             }
             // 检测 left + leg 组合
             else if (objectName.includes('left') && objectName.includes('leg')) {
-                matchedBone = this.activeSkin.bones.find(b => b.name === 'leftLeg');
+                matchedBone = currentSkin.bones.find(b => b.name === 'leftLeg');
             }
             // 检测 right + leg 组合
             else if (objectName.includes('right') && objectName.includes('leg')) {
-                matchedBone = this.activeSkin.bones.find(b => b.name === 'rightLeg');
+                matchedBone = currentSkin.bones.find(b => b.name === 'rightLeg');
             }
             // 检测 body
             else if (objectName.includes('body')) {
-                matchedBone = this.activeSkin.bones.find(b => b.name === 'body');
+                matchedBone = currentSkin.bones.find(b => b.name === 'body');
             }
             // 检测 head
             else if (objectName.includes('head')) {
-                matchedBone = this.activeSkin.bones.find(b => b.name === 'head');
+                matchedBone = currentSkin.bones.find(b => b.name === 'head');
             }
 
             if (matchedBone) {
@@ -5540,11 +5555,11 @@ class UiManager {
         }
 
         // 更新组信息
-        this.activeSkin.assignBoneInfoToGroups();
+        currentSkin.assignBoneInfoToGroups();
         
         // 保存并刷新界面
-        this.activeSkin.saveBonesToLS();
-        this.groupList.setObjects(this.activeSkin.model.objects, this.activeSkin.bones);
+        currentSkin.saveBonesToLS();
+        this.groupList.setObjects(currentSkin.model.objects, currentSkin.bones);
 
         // 显示结果提示
         let message = `自动分组完成！\n\n成功匹配: ${matchedCount} 个物体`;
@@ -5555,10 +5570,15 @@ class UiManager {
     }
 
     importPivotJson() {
-        if (!this.activeSkin) {
+        // 获取当前正在显示的皮肤（而不是仅仅依赖 activeSkin）
+        const currentSkin = this.groupList.skin || this.activeSkin;
+        
+        if (!currentSkin) {
             alert("请先选择或创建一个皮肤！");
             return;
         }
+        
+        console.log("导入枢纽点 - 当前皮肤:", currentSkin.name);
 
         // 保存 this 引用，避免回调中作用域丢失
         const self = this;
@@ -5570,16 +5590,19 @@ class UiManager {
                 return;
             }
 
+            console.log("========== 枢纽点映射开始 ==========");
+            console.log("JSON 文件路径: " + file.name);
+            
             // 读取文件
             const reader = new FileReader();
             reader.onload = (e) => {
                 try {
                     console.log("FileReader 完成");
+                    console.log("文件路径: " + file.name);
                     console.log("文件内容长度:", e.target.result.length);
-                    console.log("self:", self);
                     
                     const jsonData = JSON.parse(e.target.result);
-                    console.log("JSON 解析成功");
+                    console.log("JSON 解析成功，来源文件:", file.name);
                     
                     // 询问用户缩放比例
                     const scaleInput = prompt("枢纽点映射\n\n请确认源文件缩放与 SkinStudio 内的模型比例\n输入缩放比例（如 0.8），不缩放请输入 1 或留空：", "1");
@@ -5610,9 +5633,24 @@ class UiManager {
         console.log("jsonData:", jsonData);
         console.log("scale:", scale);
         
+        // 获取当前正在显示的皮肤（而不是仅仅依赖 activeSkin）
+        const currentSkin = this.groupList.skin || this.activeSkin;
+        console.log("当前皮肤:", currentSkin ? currentSkin.name : "无");
+        console.log("当前皮肤bones数量:", currentSkin ? currentSkin.bones.length : 0);
+        
         // 获取骨骼列表
-        const bones = this.activeSkin.bones;
+        const bones = currentSkin.bones;
         console.log("bones:", bones);
+        
+        // 从 JSON 中查找所有骨骼
+        const jsonBones = jsonData["minecraft:geometry"]?.[0]?.bones || [];
+        console.log("JSON中的所有骨骼:", jsonBones);
+        console.log("JSON中骨骼数量:", jsonBones.length);
+        
+        // 打印每个骨骼的名称和pivot
+        jsonBones.forEach((bone, i) => {
+            console.log(`JSON骨骼[${i}]: name="${bone.name}", pivot=${JSON.stringify(bone.pivot)}`);
+        });
         
         // 定义映射关系
         const pivotMap = {
@@ -5672,9 +5710,15 @@ class UiManager {
                             pivotMap.rightLeg = [...pivot];
                         }
                     }
-                    // 检测 head 相关
+                    // 检测 head 相关（排除 AllHead、FullHead 等复合词）
+                    // 优先匹配精确的 "head"，其次是 "mhead" 等
                     else if (boneName.toLowerCase().includes('head')) {
-                        if (!pivotMap.head) {
+                        const lowerName = boneName.toLowerCase();
+                        // 排除复合词，只匹配 head、mhead、skull、face 等
+                        if (!pivotMap.head && 
+                            !lowerName.includes('all') && 
+                            !lowerName.includes('full') &&
+                            !lowerName.includes('upper')) {
                             pivotMap.head = [...pivot];
                         }
                     }
@@ -5702,6 +5746,16 @@ class UiManager {
             pivotMap.body = [...pivotMap.head];
         }
 
+        console.log("========== 枢纽点映射计算 ==========");
+        console.log("使用的 scale 值:", scale);
+        console.log("pivotMap 内容:");
+        for (const key in pivotMap) {
+            if (pivotMap[key]) {
+                console.log(`  ${key}: [${pivotMap[key].join(', ')}]`);
+                console.log(`    计算: [${pivotMap[key].map(v => v + ' * ' + scale + ' = ' + (v * scale).toFixed(4)).join(', ')}]`);
+            }
+        }
+
         // 应用枢纽点到骨骼
         let appliedCount = 0;
         let results = [];
@@ -5713,8 +5767,12 @@ class UiManager {
                 if (bone) {
                     let finalPivot;
                     
+                    console.log(`\n处理 ${targetName}:`);
+                    console.log(`  原始 pivot: [${pivot.join(', ')}]`);
+                    
                     // 对于 leftItem 和 rightItem，需要根据手臂旋转计算正确位置
                     if (targetName === "leftItem" && armData.leftArm.pivot && armData.leftArm.rotation) {
+                        console.log(`  使用旋转计算（arm pivot: [${armData.leftArm.pivot.join(', ')}], rotation: [${armData.leftArm.rotation.join(', ')}]）`);
                         finalPivot = this.calculateRotatedHandPosition(
                             armData.leftArm.pivot,
                             armData.leftArm.rotation,
@@ -5722,6 +5780,7 @@ class UiManager {
                             scale
                         );
                     } else if (targetName === "rightItem" && armData.rightArm.pivot && armData.rightArm.rotation) {
+                        console.log(`  使用旋转计算（arm pivot: [${armData.rightArm.pivot.join(', ')}], rotation: [${armData.rightArm.rotation.join(', ')}]）`);
                         finalPivot = this.calculateRotatedHandPosition(
                             armData.rightArm.pivot,
                             armData.rightArm.rotation,
@@ -5732,7 +5791,11 @@ class UiManager {
                         // 普通骨骼，只应用缩放和X轴反转
                         const scaledPivot = pivot.map(v => v * scale);
                         finalPivot = [-scaledPivot[0], scaledPivot[1], scaledPivot[2]];
+                        console.log(`  普通骨骼计算: pivot.map(v => v * ${scale}) = [${scaledPivot.join(', ')}]`);
+                        console.log(`  应用 X 轴反转: [-${scaledPivot[0]}, ${scaledPivot[1]}, ${scaledPivot[2]}]`);
                     }
+                    
+                    console.log(`  最终 pivot: [${finalPivot.join(', ')}]`);
                     
                     bone.pivot = finalPivot;
                     appliedCount++;
@@ -5742,9 +5805,9 @@ class UiManager {
         }
 
         // 保存并刷新
-        this.activeSkin.saveBonesToLS();
-        this.activeSkin.assignBoneInfoToGroups();
-        this.groupList.setObjects(this.activeSkin.model.objects, this.activeSkin.bones);
+        currentSkin.saveBonesToLS();
+        currentSkin.assignBoneInfoToGroups();
+        this.groupList.setObjects(currentSkin.model.objects, currentSkin.bones);
         this.propManager.update();
 
         // 显示结果
