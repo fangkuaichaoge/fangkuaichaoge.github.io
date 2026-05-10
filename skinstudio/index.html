@@ -5550,6 +5550,14 @@ class UiManager {
                 }
                 matchedCount++;
             } else {
+                // 未匹配的物体自动分配到 body
+                const bodyBone = currentSkin.bones.find(b => b.name === 'body');
+                if (bodyBone) {
+                    for (let groupIndex = 0; groupIndex < obj.groups.length; groupIndex++) {
+                        bodyBone.groups.push([objIndex, groupIndex]);
+                    }
+                    matchedCount++;
+                }
                 unmatchedObjects.push(obj.name);
             }
         }
@@ -5564,7 +5572,7 @@ class UiManager {
         // 显示结果提示
         let message = `自动分组完成！\n\n成功匹配: ${matchedCount} 个物体`;
         if (unmatchedObjects.length > 0) {
-            message += `\n未匹配: ${unmatchedObjects.length} 个物体\n\n未匹配的物体:\n${unmatchedObjects.join('\n')}`;
+            message += `\n已自动分配到 body: ${unmatchedObjects.length} 个物体\n\n自动分配的物体:\n${unmatchedObjects.join('\n')}`;
         }
         alert(message);
     }
