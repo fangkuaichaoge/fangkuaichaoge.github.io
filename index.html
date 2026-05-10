@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
@@ -1575,6 +1575,17 @@
                         <span class="slider"></span>
                     </label>
                 </div>
+                
+                <div class="option-item">
+                    <div class="option-label">
+                        <i class="fas fa-arrow-right"></i>
+                        <span>法线重算</span>
+                    </div>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="recalculateNormals">
+                        <span class="slider"></span>
+                    </label>
+                </div>
             </div>
         </div>
 
@@ -1624,10 +1635,10 @@
             // 常量定义
             const CORE_FILES = ['manifest.json', 'geometry.json', 'skins.json'];
             const PRESET_CONFIGS = {
-                1: { name: "同模型兼容", settings: { compatibleRenameModel: true, fixComments: true } },
-                2: { name: "启动器适配", settings: { replaceUuid: true, outputMcpack: true } },
-                3: { name: "简化合并", settings: { simplifyNaming: true, addHideArmor: true } },
-                4: { name: "全能版", settings: { compatibleRenameModel: true, simplifyNaming: true, replaceUuid: true, addHideArmor: true, fixComments: true } }
+                1: { name: "同模型兼容", settings: { compatibleRenameModel: true, fixComments: true, recalculateNormals: true } },
+                2: { name: "启动器适配", settings: { replaceUuid: true, outputMcpack: true, recalculateNormals: false } },
+                3: { name: "简化合并", settings: { simplifyNaming: true, addHideArmor: true, recalculateNormals: true } },
+                4: { name: "全能版", settings: { compatibleRenameModel: true, simplifyNaming: true, replaceUuid: true, addHideArmor: true, fixComments: true, recalculateNormals: true } }
             };
 
             // 状态管理
@@ -1660,7 +1671,8 @@
                 simplifyNaming: document.getElementById('simplifyNaming'),
                 replaceUuid: document.getElementById('replaceUuid'),
                 addHideArmor: document.getElementById('addHideArmor'),
-                outputMcpack: document.getElementById('outputMcpack')
+                outputMcpack: document.getElementById('outputMcpack'),
+                recalculateNormals: document.getElementById('recalculateNormals')
             };
 
             // 工具函数
@@ -2769,12 +2781,12 @@
 
                 updateUI() {
                     const readyPacks = state.skinPacks.filter(p => p.status === 'ready');
-                    const allReady = readyPacks.length === state.skinPacks.length && state.skinPacks.length >= 2;
+                    const allReady = readyPacks.length === state.skinPacks.length && state.skinPacks.length >= 1;
                     
                     elements.mergeBtn.disabled = !allReady || state.mergeInProgress;
-                    elements.mergeBtnText.textContent = state.skinPacks.length < 2 
-                        ? `请至少上传 2 个皮肤包 (${state.skinPacks.length}/2)` 
-                        : `开始合并 ${state.skinPacks.length} 个皮肤包`;
+                    elements.mergeBtnText.textContent = state.skinPacks.length < 1 
+                        ? '请上传皮肤包' 
+                        : `开始处理 ${state.skinPacks.length} 个皮肤包`;
                 },
 
                 refreshPackSkins(packId) {
@@ -3011,7 +3023,7 @@
 
                 applyPresets() {
                     const activePresets = document.querySelectorAll('.preset-pill.active');
-                    const settings = { compatibleRenameModel: false, simplifyNaming: false, replaceUuid: false, addHideArmor: false, fixComments: false, outputMcpack: false };
+                    const settings = { compatibleRenameModel: false, simplifyNaming: false, replaceUuid: false, addHideArmor: false, fixComments: false, outputMcpack: false, recalculateNormals: false };
                     
                     activePresets.forEach(btn => {
                         Object.assign(settings, PRESET_CONFIGS[btn.dataset.preset].settings);
@@ -3048,6 +3060,12 @@
 
                         const result = await this.processPacks(packsData);
                         
+                        if (elements.recalculateNormals.checked) {
+                            utils.updateProgress(50, '重算模型法线...');
+                            this.recalculateAllNormals(result.geometry);
+                            logger.add('🔄 已重算所有模型法线');
+                        }
+
                         if (elements.addHideArmor.checked) {
                             utils.updateProgress(60, '处理隐藏盔甲...');
                             result.skins = result.skins.map(s => s.type === 'free' && !s.hide_armor ? { ...s, hide_armor: true } : s);
@@ -3118,6 +3136,87 @@
                     }
 
                     return { skins: allSkins, geometry: mergedGeo };
+                },
+
+                recalculateAllNormals(geometry) {
+                    for (const [geoKey, geoData] of Object.entries(geometry)) {
+                        if (geoData.bones) {
+                            for (const bone of geoData.bones) {
+                                if (bone.poly_mesh && bone.poly_mesh.normals && bone.poly_mesh.normals.length > 0) {
+                                    if (bone.poly_mesh.positions && bone.poly_mesh.polys && bone.poly_mesh.polys.length > 0) {
+                                        bone.poly_mesh.normals = this.recalculatePolyMeshNormals(bone.poly_mesh);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+
+                recalculatePolyMeshNormals(polyMesh) {
+                    const positions = polyMesh.positions || [];
+                    const polys = polyMesh.polys || [];
+                    
+                    if (!positions.length || !polys.length) {
+                        return polyMesh.normals;
+                    }
+
+                    const faceNormals = [];
+                    const normalIndexMap = new Map();
+                    let normalIndex = 0;
+                    const newNormals = [];
+
+                    for (const poly of polys) {
+                        if (!Array.isArray(poly) || poly.length < 3) continue;
+                        
+                        const corners = poly.slice(0, 3);
+                        if (corners.some(c => !Array.isArray(c) || c.length < 2)) continue;
+                        
+                        const i0 = corners[0][0];
+                        const i1 = corners[1][0];
+                        const i2 = corners[2][0];
+                        
+                        if (i0 >= positions.length || i1 >= positions.length || i2 >= positions.length) {
+                            continue;
+                        }
+
+                        const v0 = positions[i0];
+                        const v1 = positions[i1];
+                        const v2 = positions[i2];
+                        
+                        if (!Array.isArray(v0) || !Array.isArray(v1) || !Array.isArray(v2)) {
+                            continue;
+                        }
+
+                        const e1 = [v1[0] - v0[0], v1[1] - v0[1], v1[2] - v0[2]];
+                        const e2 = [v2[0] - v0[0], v2[1] - v0[1], v2[2] - v0[2]];
+                        
+                        const normal = [
+                            e1[1] * e2[2] - e1[2] * e2[1],
+                            e1[2] * e2[0] - e1[0] * e2[2],
+                            e1[0] * e2[1] - e1[1] * e2[0]
+                        ];
+
+                        const len = Math.sqrt(normal[0] ** 2 + normal[1] ** 2 + normal[2] ** 2);
+                        if (len > 0) {
+                            normal[0] /= len;
+                            normal[1] /= len;
+                            normal[2] /= len;
+                        }
+
+                        const normalKey = normal.map(n => Math.round(n * 100000)).join(',');
+                        
+                        if (!normalIndexMap.has(normalKey)) {
+                            normalIndexMap.set(normalKey, normalIndex++);
+                            newNormals.push(normal);
+                        }
+                        
+                        const idx = normalIndexMap.get(normalKey);
+                        for (let j = 0; j < poly.length; j++) {
+                            poly[j][1] = idx;
+                        }
+                    }
+
+                    return newNormals.length ? newNormals : polyMesh.normals;
                 },
 
                 /**
