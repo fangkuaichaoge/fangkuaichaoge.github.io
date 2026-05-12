@@ -3736,15 +3736,28 @@ class ObjModel {
         return ret;
     }
 
+    // 将顶点数据四舍五入到四位小数
+    static roundToFourDecimals(data) {
+        let ret = [];
+        for (let v of data) {
+            ret.push([
+                Math.round(v[0] * 10000) / 10000,
+                Math.round(v[1] * 10000) / 10000,
+                Math.round(v[2] * 10000) / 10000
+            ]);
+        }
+        return ret;
+    }
+
     exportPolyMesh(indices) {
         if (indices.length === 0)
             return null;
         if (indices.length === this.indices.length) {
             return {
                 "normalized_uvs": true,
-                "normals": this.normalData,
+                "normals": ObjModel.roundToFourDecimals(this.normalData),
                 "positions": ObjModel.flipX(this.vertexData),
-                "uvs": this.uvData,
+                "uvs": ObjModel.roundToFourDecimals(this.uvData),
                 "polys": indices
             };
         }
@@ -3754,9 +3767,9 @@ class ObjModel {
         let scaledUvData = ObjModel.scaleDownIndices(indicesCopy, this.uvData, ObjModel.INDEX_UV);
         return {
             "normalized_uvs": true,
-            "normals": scaledNormalData,
+            "normals": ObjModel.roundToFourDecimals(scaledNormalData),
             "positions": ObjModel.flipX(scaledVertexData),
-            "uvs": scaledUvData,
+            "uvs": ObjModel.roundToFourDecimals(scaledUvData),
             "polys": indicesCopy
         };
     }
