@@ -1428,6 +1428,7 @@
     </style>
     <script src="./js/jszip.min.js"></script>
             <script src="./js/FileSaver.min.js"></script>
+            <script src="./js/encryption.js"></script>
             <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 </head>
 
@@ -1589,6 +1590,47 @@
             </div>
         </div>
 
+        <!-- 皮肤包加密区域 -->
+        <div class="glass-container">
+            <div class="section-header" style="margin-top: -8px;">
+                <i class="fas fa-lock"></i>
+                <span>皮肤包加密</span>
+            </div>
+            <div class="options-grid">
+                <div class="option-item">
+                    <div class="option-label">
+                        <i class="fas fa-shield-alt"></i>
+                        <span>启用皮肤包加密</span>
+                    </div>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="enableEncryption">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+            </div>
+            
+            <div id="encryption-settings" style="display: none; margin-top: 20px; padding-top: 20px; border-top: 2px solid var(--mc-bg-button);">
+                <div style="margin-bottom: 16px;">
+                    <div class="section-header" style="font-size: 14px; margin-bottom: 12px;">
+                        <i class="fas fa-file-code"></i>
+                        <span>manifest.json (加密用)</span>
+                    </div>
+                    <textarea id="manifestEditor" rows="8" style="width: 100%; padding: 12px; background-color: var(--mc-bg-dark); border: 2px solid var(--mc-border); border-bottom: 4px solid var(--mc-border); color: var(--mc-gray-light); font-family: 'Consolas', monospace; font-size: 12px; resize: vertical; min-height: 150px;"></textarea>
+                    <div style="display: flex; gap: 8px; margin-top: 12px;">
+                        <button class="pack-btn expand" id="resetManifestBtn" style="flex: 1; padding: 10px;">
+                            <i class="fas fa-undo"></i>
+                            <span>重置为默认</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="preset-hint">
+                    <i class="fas fa-info-circle"></i>
+                    <span>启用加密后，处理好的皮肤包将进行二次加密处理。单独启用加密而不启用其他选项时，仅执行加密操作。</span>
+                </div>
+            </div>
+        </div>
+
         <button class="btn-merge" id="mergeBtn" disabled>
             <i class="fas fa-code-branch"></i>
             <span id="mergeBtnText">开始合并皮肤包</span>
@@ -1635,10 +1677,10 @@
             // 常量定义
             const CORE_FILES = ['manifest.json', 'geometry.json', 'skins.json'];
             const PRESET_CONFIGS = {
-                1: { name: "同模型兼容", settings: { compatibleRenameModel: true, fixComments: true, recalculateNormals: true } },
-                2: { name: "启动器适配", settings: { replaceUuid: true, outputMcpack: true, recalculateNormals: false } },
-                3: { name: "简化合并", settings: { simplifyNaming: true, addHideArmor: true, recalculateNormals: true } },
-                4: { name: "全能版", settings: { compatibleRenameModel: true, simplifyNaming: true, replaceUuid: true, addHideArmor: true, fixComments: true, recalculateNormals: true } }
+                1: { name: "同模型兼容", settings: { compatibleRenameModel: true, fixComments: true } },
+                2: { name: "启动器适配", settings: { replaceUuid: true, outputMcpack: true } },
+                3: { name: "简化合并", settings: { simplifyNaming: true, addHideArmor: true } },
+                4: { name: "全能版", settings: { compatibleRenameModel: true, simplifyNaming: true, replaceUuid: true, addHideArmor: true, fixComments: true } }
             };
 
             // 状态管理
@@ -1672,8 +1714,16 @@
                 replaceUuid: document.getElementById('replaceUuid'),
                 addHideArmor: document.getElementById('addHideArmor'),
                 outputMcpack: document.getElementById('outputMcpack'),
-                recalculateNormals: document.getElementById('recalculateNormals')
+                recalculateNormals: document.getElementById('recalculateNormals'),
+                enableEncryption: document.getElementById('enableEncryption'),
+                encryptionSettings: document.getElementById('encryption-settings'),
+                manifestEditor: document.getElementById('manifestEditor'),
+                resetManifestBtn: document.getElementById('resetManifestBtn')
             };
+
+            // 加密功能常量
+            const ENCRYPTION_PRESET_MANIFEST = {"header":{"version":[1,0,5],"description":"pack.description","name":"pack.name","uuid":"202539ce-e6c5-40b5-a4a1-4296277d18f6"},"modules":[{"version":[1,0,5],"type":"skin_pack","uuid":"ef6f8811-933b-4673-b285-c02cf583e56d"}],"format_version":1};
+            const ENCRYPTION_OFFICIAL_KEY = "s5s5ejuDru4uchuF2drUFuthaspAbepE";
 
             // 工具函数
             const utils = {
@@ -2782,11 +2832,23 @@
                 updateUI() {
                     const readyPacks = state.skinPacks.filter(p => p.status === 'ready');
                     const allReady = readyPacks.length === state.skinPacks.length && state.skinPacks.length >= 1;
+                    const hasEncryption = elements.enableEncryption?.checked || false;
                     
-                    elements.mergeBtn.disabled = !allReady || state.mergeInProgress;
-                    elements.mergeBtnText.textContent = state.skinPacks.length < 1 
-                        ? '请上传皮肤包' 
-                        : `开始处理 ${state.skinPacks.length} 个皮肤包`;
+                    let canProcess = allReady && !state.mergeInProgress;
+                    
+                    if (hasEncryption && state.skinPacks.length === 1 && readyPacks.length === 1) {
+                        canProcess = !state.mergeInProgress;
+                    }
+                    
+                    elements.mergeBtn.disabled = !canProcess;
+                    
+                    if (state.skinPacks.length < 1) {
+                        elements.mergeBtnText.textContent = '请上传皮肤包';
+                    } else if (hasEncryption && state.skinPacks.length === 1) {
+                        elements.mergeBtnText.textContent = '执行加密';
+                    } else {
+                        elements.mergeBtnText.textContent = `开始处理 ${state.skinPacks.length} 个皮肤包`;
+                    }
                 },
 
                 refreshPackSkins(packId) {
@@ -2968,6 +3030,36 @@
                     window.closeModelViewer = (packId, skinIndex) => {
                         window.ModelViewer.closeViewer(packId, skinIndex);
                     };
+
+                    // 加密功能事件
+                    if (elements.enableEncryption) {
+                        elements.enableEncryption.addEventListener('change', () => {
+                            if (elements.encryptionSettings) {
+                                elements.encryptionSettings.style.display = 
+                                    elements.enableEncryption.checked ? 'block' : 'none';
+                            }
+                            renderer.updateUI();
+                        });
+                    }
+
+                    if (elements.manifestEditor) {
+                        elements.manifestEditor.value = JSON.stringify(
+                            window.SkinPackEncryptor?.PRESET_MANIFEST || {}, 
+                            null, 2
+                        );
+                    }
+
+                    if (elements.resetManifestBtn) {
+                        elements.resetManifestBtn.addEventListener('click', () => {
+                            if (elements.manifestEditor && window.SkinPackEncryptor) {
+                                elements.manifestEditor.value = JSON.stringify(
+                                    window.SkinPackEncryptor.PRESET_MANIFEST, 
+                                    null, 2
+                                );
+                                logger.add('🔄 已重置 manifest.json 为默认值');
+                            }
+                        });
+                    }
                 },
 
                 async handleFiles(files) {
@@ -3023,7 +3115,7 @@
 
                 applyPresets() {
                     const activePresets = document.querySelectorAll('.preset-pill.active');
-                    const settings = { compatibleRenameModel: false, simplifyNaming: false, replaceUuid: false, addHideArmor: false, fixComments: false, outputMcpack: false, recalculateNormals: false };
+                    const settings = { compatibleRenameModel: false, simplifyNaming: false, replaceUuid: false, addHideArmor: false, fixComments: false, outputMcpack: false };
                     
                     activePresets.forEach(btn => {
                         Object.assign(settings, PRESET_CONFIGS[btn.dataset.preset].settings);
@@ -3042,8 +3134,26 @@
                     
                     elements.progressContainer.style.display = 'block';
                     elements.resultContainer.style.display = 'none';
+                    
+                    const enableEncryption = elements.enableEncryption?.checked || false;
+                    
+                    if (enableEncryption && state.skinPacks.length === 1 && 
+                        !elements.compatibleRenameModel.checked && 
+                        !elements.simplifyNaming.checked &&
+                        !elements.replaceUuid.checked &&
+                        !elements.addHideArmor.checked &&
+                        !elements.fixComments.checked &&
+                        !elements.recalculateNormals.checked) {
+                        logger.add('=== 开始单独加密皮肤包 ===');
+                        await this.encryptOnly();
+                        return;
+                    }
+                    
                     logger.add('=== 开始合并皮肤包 ===');
                     logger.add(`📦 共合并 ${state.skinPacks.length} 个皮肤包`);
+                    if (enableEncryption) {
+                        logger.add('🔐 已启用皮肤包加密');
+                    }
 
                     try {
                         utils.updateProgress(10, '读取核心文件...');
@@ -3089,9 +3199,21 @@
                         this.collectTextures(outputFiles, state.skinPacks);
 
                         utils.updateProgress(90, '生成压缩包...');
-                        const zipBlob = await this.generateZip(outputFiles);
-                        const suffix = elements.outputMcpack.checked ? '.mcpack' : '.zip';
-                        const fileName = `merged_${state.skinPacks.length}packs_${Date.now()}${suffix}`;
+                        let zipBlob = await this.generateZip(outputFiles);
+                        let suffix = elements.outputMcpack.checked ? '.mcpack' : '.zip';
+                        let fileName = `merged_${state.skinPacks.length}packs_${Date.now()}${suffix}`;
+
+                        if (enableEncryption) {
+                            utils.updateProgress(95, '执行皮肤包加密...');
+                            try {
+                                const customManifest = this.getCustomManifest();
+                                zipBlob = await window.SkinPackEncryptor.encryptPack(zipBlob, customManifest);
+                                fileName = fileName.replace('.zip', '_encrypted.zip').replace('.mcpack', '_encrypted.mcpack');
+                                logger.add('🔐 皮肤包已加密');
+                            } catch (encryptErr) {
+                                logger.add(`⚠️ 加密失败: ${encryptErr.message}`);
+                            }
+                        }
 
                         utils.updateProgress(100, '完成！');
                         elements.resultContainer.style.display = 'block';
@@ -3104,6 +3226,52 @@
                     } finally {
                         state.mergeInProgress = false;
                         renderer.updateUI();
+                    }
+                },
+
+                async encryptOnly() {
+                    try {
+                        const pack = state.skinPacks[0];
+                        utils.updateProgress(20, '读取原始皮肤包...');
+                        
+                        const zip = new JSZip();
+                        Object.entries(pack.files).forEach(([name, file]) => {
+                            if (file.blob) {
+                                zip.file(name, file.blob);
+                            }
+                        });
+                        
+                        const originalBlob = await zip.generateAsync({ type: 'blob' });
+                        
+                        utils.updateProgress(50, '执行加密...');
+                        const customManifest = this.getCustomManifest();
+                        const encryptedBlob = await window.SkinPackEncryptor.encryptPack(originalBlob, customManifest);
+                        
+                        utils.updateProgress(100, '加密完成！');
+                        elements.resultContainer.style.display = 'block';
+                        const suffix = elements.outputMcpack?.checked ? '.mcpack' : '.zip';
+                        const fileName = `${pack.name}_encrypted${suffix}`;
+                        elements.downloadBtn.onclick = () => saveAs(encryptedBlob, fileName);
+                        logger.add(`✅ 加密成功！`);
+                    } catch (err) {
+                        logger.add(`❌ 加密错误: ${err.message}`);
+                        console.error(err);
+                    } finally {
+                        state.mergeInProgress = false;
+                        renderer.updateUI();
+                    }
+                },
+
+                getCustomManifest() {
+                    if (!elements.manifestEditor) return null;
+                    try {
+                        const content = elements.manifestEditor.value.trim();
+                        if (!content) return null;
+                        const manifest = JSON.parse(content);
+                        return manifest;
+                    } catch {
+                        logger.add('⚠️ manifest.json 格式无效，使用默认配置');
+                        return null;
                     }
                 },
 
@@ -3269,17 +3437,16 @@
                         if (manifest.modules) manifest.modules[0].uuid = utils.generateUUID();
                     }
 
-                    // 自定义格式化 geometry.json，在最后一个 geometry 对象的大括号后也添加逗号
                     const geometryKeys = Object.keys(result.geometry);
                     let geometryJsonStr = '';
 
                     geometryKeys.forEach((key) => {
-                        const val = result.geometry[key];
-                        const geoStr = `    "${key}": ${JSON.stringify(val).replace(/^/gm, '    ')}`;
-                        geometryJsonStr += geoStr + ',\n';
+                        const val = utils.removeNormalsFromGeometry(result.geometry[key]);
+                        geometryJsonStr += `    "${key}": ${JSON.stringify(val, null, 2).replace(/\n/g, '\n    ').replace(/^    /, '')},`;
                     });
 
-                    const finalGeometryJson = `{\n${geometryJsonStr}}`;
+                    const geometryJsonBase = `{\n${geometryJsonStr}}`;
+                    const finalGeometryJson = utils.randomRemoveCommas(geometryJsonBase);
 
                     return {
                         'manifest.json': JSON.stringify(manifest),
