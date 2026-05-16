@@ -3741,9 +3741,9 @@ class ObjModel {
         let ret = [];
         for (let v of data) {
             ret.push([
-                Math.round(v[0] * 10000) / 10000,
-                Math.round(v[1] * 10000) / 10000,
-                Math.round(v[2] * 10000) / 10000
+                isNaN(v[0]) ? 0 : Math.round(v[0] * 10000) / 10000,
+                isNaN(v[1]) ? 1 : Math.round(v[1] * 10000) / 10000,
+                isNaN(v[2]) ? 0 : Math.round(v[2] * 10000) / 10000
             ]);
         }
         return ret;
@@ -3755,9 +3755,9 @@ class ObjModel {
         if (indices.length === this.indices.length) {
             return {
                 "normalized_uvs": true,
-                "normals": ObjModel.roundToFourDecimals(this.normalData),
+                "normals": this.normalData,
                 "positions": ObjModel.flipX(this.vertexData),
-                "uvs": ObjModel.roundToFourDecimals(this.uvData),
+                "uvs": this.uvData,
                 "polys": indices
             };
         }
@@ -3767,9 +3767,9 @@ class ObjModel {
         let scaledUvData = ObjModel.scaleDownIndices(indicesCopy, this.uvData, ObjModel.INDEX_UV);
         return {
             "normalized_uvs": true,
-            "normals": ObjModel.roundToFourDecimals(scaledNormalData),
+            "normals": scaledNormalData,
             "positions": ObjModel.flipX(scaledVertexData),
-            "uvs": ObjModel.roundToFourDecimals(scaledUvData),
+            "uvs": scaledUvData,
             "polys": indicesCopy
         };
     }
