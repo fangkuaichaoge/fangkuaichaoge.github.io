@@ -1759,6 +1759,30 @@
                 updateProgress: (percent, text) => {
                     elements.progressFill.style.width = `${percent}%`;
                     elements.progressText.innerHTML = `<i class="fas fa-spinner"></i> ${text}`;
+                },
+
+                removeNormalsFromGeometry: (geometry) => {
+                    if (!geometry || typeof geometry !== 'object') return geometry;
+                    
+                    const result = JSON.parse(JSON.stringify(geometry));
+                    
+                    if (result.bones && Array.isArray(result.bones)) {
+                        result.bones.forEach(bone => {
+                            if (bone.cubes) {
+                                bone.cubes.forEach(cube => {
+                                    delete cube.orientation;
+                                    delete cube.uvsByFace;
+                                    delete cube.normals;
+                                });
+                            }
+                        });
+                    }
+                    
+                    return result;
+                },
+
+                randomRemoveCommas: (jsonStr) => {
+                    return jsonStr.replace(/,\s*}/g, '}').replace(/,\s*\]/g, ']');
                 }
             };
 
