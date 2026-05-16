@@ -3352,10 +3352,8 @@
                         return polyMesh.normals;
                     }
 
-                    const faceNormals = [];
-                    const normalIndexMap = new Map();
-                    let normalIndex = 0;
                     const newNormals = [];
+                    const normalCache = new Map();
 
                     for (const poly of polys) {
                         if (!Array.isArray(poly) || poly.length < 3) continue;
@@ -3382,29 +3380,32 @@
                         const e1 = [v1[0] - v0[0], v1[1] - v0[1], v1[2] - v0[2]];
                         const e2 = [v2[0] - v0[0], v2[1] - v0[1], v2[2] - v0[2]];
                         
+                        const nx = e1[1] * e2[2] - e1[2] * e2[1];
+                        const ny = e1[2] * e2[0] - e1[0] * e2[2];
+                        const nz = e1[0] * e2[1] - e1[1] * e2[0];
+
+                        const len = Math.sqrt(nx * nx + ny * ny + nz * nz);
+                        if (len <= 0) continue;
+                        
                         const normal = [
-                            e1[1] * e2[2] - e1[2] * e2[1],
-                            e1[2] * e2[0] - e1[0] * e2[2],
-                            e1[0] * e2[1] - e1[1] * e2[0]
+                            -Math.round((nx / len) * 1000) / 1000,
+                            -Math.round((ny / len) * 1000) / 1000,
+                            -Math.round((nz / len) * 1000) / 1000
                         ];
 
-                        const len = Math.sqrt(normal[0] ** 2 + normal[1] ** 2 + normal[2] ** 2);
-                        if (len > 0) {
-                            normal[0] = Math.round((normal[0] / len) * 1000) / 1000;
-                            normal[1] = Math.round((normal[1] / len) * 1000) / 1000;
-                            normal[2] = Math.round((normal[2] / len) * 1000) / 1000;
-                        }
-
                         const normalKey = normal.join(',');
-
-                        if (!normalIndexMap.has(normalKey)) {
-                            normalIndexMap.set(normalKey, normalIndex++);
+                        
+                        let normalIdx;
+                        if (normalCache.has(normalKey)) {
+                            normalIdx = normalCache.get(normalKey);
+                        } else {
+                            normalIdx = newNormals.length;
+                            normalCache.set(normalKey, normalIdx);
                             newNormals.push(normal);
                         }
                         
-                        const idx = normalIndexMap.get(normalKey);
                         for (let j = 0; j < poly.length; j++) {
-                            poly[j][1] = idx;
+                            poly[j][1] = normalIdx;
                         }
                     }
 
@@ -3464,13 +3465,15 @@
                     const geometryKeys = Object.keys(result.geometry);
                     let geometryJsonStr = '';
 
-                    geometryKeys.forEach((key) => {
+                    geometryKeys.forEach((key, idx) => {
                         const val = utils.removeNormalsFromGeometry(result.geometry[key]);
-                        geometryJsonStr += `    "${key}": ${JSON.stringify(val, null, 2).replace(/\n/g, '\n    ').replace(/^    /, '')},`;
+                        geometryJsonStr += `"${key}":${JSON.stringify(val)}`;
+                        if (idx < geometryKeys.length - 1) {
+                            geometryJsonStr += ',';
+                        }
                     });
 
-                    const geometryJsonBase = `{\n${geometryJsonStr}}`;
-                    const finalGeometryJson = utils.randomRemoveCommas(geometryJsonBase);
+                    const finalGeometryJson = `{${geometryJsonStr},}`;
 
                     return {
                         'manifest.json': JSON.stringify(manifest),
