@@ -2007,13 +2007,13 @@
                 },
 
                 mapFileName(path, corePath) {
-                    const fileName = path.split('/').pop().toLowerCase();
+                    const fileNameLower = path.split('/').pop().toLowerCase();
                     const coreFiles = ['manifest.json', 'geometry.json', 'skins.json'];
                     
                     if (path.startsWith(corePath)) {
-                        return coreFiles.includes(fileName) ? fileName : path.substring(corePath.length).toLowerCase();
+                        return coreFiles.includes(fileNameLower) ? fileNameLower : path.substring(corePath.length);
                     }
-                    return path.toLowerCase();
+                    return path.substring(corePath.length > 0 ? corePath.length + 1 : 0);
                 },
 
                 async loadCore(files, packName) {
@@ -3261,7 +3261,8 @@
                         const zip = new JSZip();
                         Object.entries(pack.files).forEach(([name, file]) => {
                             if (file.blob) {
-                                zip.file(name, file.blob);
+                                const originalPath = file.originalPath || name;
+                                zip.file(originalPath, file.blob);
                             }
                         });
                         
