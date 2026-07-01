@@ -2010,10 +2010,13 @@
                     const fileNameLower = path.split('/').pop().toLowerCase();
                     const coreFiles = ['manifest.json', 'geometry.json', 'skins.json'];
                     
+                    let result;
                     if (path.startsWith(corePath)) {
-                        return coreFiles.includes(fileNameLower) ? fileNameLower : path.substring(corePath.length);
+                        result = coreFiles.includes(fileNameLower) ? fileNameLower : path.substring(corePath.length);
+                    } else {
+                        result = path.substring(corePath.length > 0 ? corePath.length + 1 : 0);
                     }
-                    return path.substring(corePath.length > 0 ? corePath.length + 1 : 0);
+                    return result.toLowerCase();
                 },
 
                 async loadCore(files, packName) {
@@ -3445,8 +3448,9 @@
                     packs.forEach(pack => {
                         Object.entries(pack.files).forEach(([name, file]) => {
                             const nameLower = name.toLowerCase();
-                            if (capeMap.has(nameLower)) {
-                                const newCapeName = capeMap.get(nameLower);
+                            const fileName = nameLower.split('/').pop();
+                            if (capeMap.has(nameLower) || capeMap.has(fileName)) {
+                                const newCapeName = capeMap.get(nameLower) || capeMap.get(fileName);
                                 pack.textureMap.set(name, newCapeName);
                                 capeFiles.set(newCapeName, file.blob || file);
                                 logger.add(`🦅 Cape 重命名：${name} → ${newCapeName}`);
@@ -3487,7 +3491,8 @@
                     packs.forEach(pack => {
                         Object.entries(pack.files).forEach(([name, file]) => {
                             if (name.endsWith('.png') || name.endsWith('.jpg')) {
-                                const newName = pack.textureMap.get(name) || name;
+                                const fileName = name.split('/').pop();
+                                const newName = pack.textureMap.get(name) || pack.textureMap.get(fileName) || name;
                                 outputFiles[newName] = file.blob || file;
                             }
                         });
