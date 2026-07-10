@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Geo JSON UV 修复工具</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+        }
+        body {
+            background-color: #f0f2f5;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+        }
+        .card {
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+            padding: 40px;
+            width: 100%;
+            max-width: 560px;
+        }
+        h1 {
+            font-size: 22px;
+            color: #1f2329;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+        .desc {
+            color: #646a73;
+            margin-bottom: 28px;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        /* 上传区域 - 核心优化 */
+        .upload-area {
+            border: 2px dashed #d9dce0;
+            border-radius: 10px;
+            padding: 48px 24px;
+            text-align: center;
+            margin-bottom: 24px;
+            transition: all 0.25s ease;
+            background: #fafbfc;
+            cursor: pointer;
+            user-select: none;
+        }
+        .upload-area:hover {
+            border-color: #165dff;
+            background: #f0f5ff;
+        }
+        .upload-area.drag-over {
+            border-color: #165dff;
+            background: #e8f0ff;
+            transform: scale(1.01);
+        }
+        .upload-area.selected {
+            border-color: #00b42a;
+            background: #f2fff5;
+        }
+        .upload-area input[type="file"] {
+            display: none;
+        }
+        .upload-icon {
+            font-size: 32px;
+            margin-bottom: 12px;
+            color: #86909c;
+        }
+        .upload-tip {
+            color: #165dff;
+            font-weight: 500;
+            font-size: 15px;
+            margin-bottom: 6px;
+        }
+        .upload-subtip {
+            color: #86909c;
+            font-size: 13px;
+        }
+        .file-name {
+            margin-top: 14px;
+            color: #1f2329;
+            font-size: 14px;
+            font-weight: 500;
+            word-break: break-all;
+            display: none;
+        }
+        .file-name.show {
+            display: block;
+        }
+
+        /* 按钮样式 */
+        .btn {
+            width: 100%;
+            padding: 12px 16px;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-bottom: 16px;
+        }
+        .btn-primary {
+            background: #165dff;
+            color: white;
+        }
+        .btn-primary:hover:not(:disabled) {
+            background: #0e42d2;
+        }
+        .btn-primary:active:not(:disabled) {
+            background: #0b36ad;
+        }
+        .btn-primary:disabled {
+            background: #c9cdd4;
+            cursor: not-allowed;
+            color: #f2f3f5;
+        }
+        .btn-download {
+            background: #00b42a;
+            color: white;
+            display: none;
+        }
+        .btn-download:hover {
+            background: #009a29;
+        }
+        .btn-download:active {
+            background: #008022;
+        }
+
+        /* 结果区域 */
+        .result {
+            padding: 16px 18px;
+            border-radius: 8px;
+            margin-bottom: 16px;
+            display: none;
+            line-height: 1.7;
+            font-size: 14px;
+        }
+        .result.success {
+            background: #f2fff5;
+            border: 1px solid #c6f5d0;
+            color: #13772b;
+        }
+        .result.error {
+            background: #fff2f2;
+            border: 1px solid #ffd0d0;
+            color: #b42323;
+        }
+        .result strong {
+            font-size: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h1>Geo JSON UV 修复工具</h1>
+        <p class="desc">自动修复 Minecraft Bedrock 模型文件中 uv_size 小于等于 0 的异常值，统一修正为最小尺寸 1，逻辑与原版 Python 脚本完全一致</p>
+        
+        <div class="upload-area" id="uploadArea">
+            <div class="upload-icon">📄</div>
+            <div class="upload-tip">点击选择文件 或 拖拽到此处</div>
+            <div class="upload-subtip">仅支持 .json 格式文件</div>
+            <div class="file-name" id="fileName"></div>
+            <input type="file" id="fileInput" accept=".json">
+        </div>
+
+        <button class="btn btn-primary" id="processBtn" disabled>开始修复</button>
+        
+        <div class="result" id="resultBox"></div>
+        
+        <button class="btn btn-download" id="downloadBtn">下载修复后的文件</button>
+    </div>
+
+    <script>
+        const uploadArea = document.getElementById('uploadArea');
+        const fileInput = document.getElementById('fileInput');
+        const fileNameEl = document.getElementById('fileName');
+        const processBtn = document.getElementById('processBtn');
+        const resultBox = document.getElementById('resultBox');
+        const downloadBtn = document.getElementById('downloadBtn');
+
+        let originalFile = null;
+        let fixedData = null;
+        let fixedFileName = '';
+        let fixedCount = 0;
+
+        // 整个区域点击触发文件选择
+        uploadArea.addEventListener('click', () => {
+            fileInput.click();
+        });
+
+        // 阻止拖拽默认行为
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            uploadArea.addEventListener(eventName, preventDefaults, false);
+        });
+        function preventDefaults(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+
+        // 拖拽进入高亮
+        ['dragenter', 'dragover'].forEach(eventName => {
+            uploadArea.addEventListener(eventName, () => {
+                uploadArea.classList.add('drag-over');
+            }, false);
+        });
+
+        // 拖拽离开取消高亮
+        ['dragleave', 'drop'].forEach(eventName => {
+            uploadArea.addEventListener(eventName, () => {
+                uploadArea.classList.remove('drag-over');
+            }, false);
+        });
+
+        // 处理拖拽上传
+        uploadArea.addEventListener('drop', (e) => {
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                handleFile(files[0]);
+            }
+        }, false);
+
+        // 处理点击选择文件
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files.length > 0) {
+                handleFile(e.target.files[0]);
+            }
+        });
+
+        // 统一文件处理函数
+        function handleFile(file) {
+            originalFile = file;
+            fileNameEl.textContent = file.name;
+            fileNameEl.classList.add('show');
+            uploadArea.classList.add('selected');
+            processBtn.disabled = false;
+            resultBox.style.display = 'none';
+            downloadBtn.style.display = 'none';
+        }
+
+        // 核心修复逻辑
+        function fixUV(uvDict) {
+            if (typeof uvDict !== 'object' || uvDict === null) {
+                return false;
+            }
+
+            let uvSize = uvDict.uv_size;
+            if (uvSize === undefined || uvSize === null) {
+                uvSize = [0, 0];
+            }
+
+            if (Array.isArray(uvSize) && uvSize.length >= 2) {
+                const newSize = [
+                    Math.max(1, Math.abs(uvSize[0])),
+                    Math.max(1, Math.abs(uvSize[1]))
+                ];
+                if (newSize[0] !== uvSize[0] || newSize[1] !== uvSize[1]) {
+                    uvDict.uv_size = newSize;
+                    fixedCount++;
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        function processCubes(cubes) {
+            if (!Array.isArray(cubes)) return;
+            for (const cube of cubes) {
+                if (typeof cube !== 'object' || cube === null) continue;
+                const uv = cube.uv;
+                if (typeof uv !== 'object' || uv === null) continue;
+                
+                const faces = ["north", "east", "south", "west", "up", "down"];
+                for (const face of faces) {
+                    if (face in uv) {
+                        fixUV(uv[face]);
+                    }
+                }
+            }
+        }
+
+        function processBones(bones) {
+            if (!Array.isArray(bones)) return;
+            for (const bone of bones) {
+                if (typeof bone !== 'object' || bone === null) continue;
+                const cubes = bone.cubes;
+                if (Array.isArray(cubes)) {
+                    processCubes(cubes);
+                }
+            }
+        }
+
+        // 开始修复
+        processBtn.addEventListener('click', () => {
+            if (!originalFile) return;
+            
+            fixedCount = 0;
+            const reader = new FileReader();
+            
+            reader.onload = (e) => {
+                try {
+                    const data = JSON.parse(e.target.result);
+                    
+                    const geometries = data["minecraft:geometry"] || [];
+                    if (Array.isArray(geometries)) {
+                        for (const geometry of geometries) {
+                            if (typeof geometry === 'object' && geometry !== null) {
+                                const bones = geometry.bones || [];
+                                processBones(bones);
+                            }
+                        }
+                    }
+
+                    fixedData = data;
+                    const nameParts = originalFile.name.split('.');
+                    const ext = nameParts.pop();
+                    const baseName = nameParts.join('.');
+                    fixedFileName = `${baseName}_fixed.${ext}`;
+
+                    resultBox.className = 'result success';
+                    resultBox.style.display = 'block';
+                    resultBox.innerHTML = `
+                        <p><strong>✅ 处理完成</strong></p>
+                        <p>共修复了 <strong>${fixedCount}</strong> 个异常 UV 面</p>
+                        <p>输出文件：${fixedFileName}</p>
+                    `;
+                    
+                    downloadBtn.style.display = 'block';
+
+                } catch (err) {
+                    resultBox.className = 'result error';
+                    resultBox.style.display = 'block';
+                    resultBox.innerHTML = `<p><strong>❌ 处理失败</strong></p><p>错误信息：${err.message}</p>`;
+                    downloadBtn.style.display = 'none';
+                }
+            };
+
+            reader.readAsText(originalFile, 'utf-8');
+        });
+
+        // 下载文件
+        downloadBtn.addEventListener('click', () => {
+            if (!fixedData) return;
+            
+            const jsonStr = JSON.stringify(fixedData, null, '\t');
+            const blob = new Blob([jsonStr], { type: 'application/json;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = fixedFileName;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        });
+    </script>
+</body>
+</html>
