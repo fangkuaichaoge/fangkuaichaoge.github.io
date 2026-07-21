@@ -1795,6 +1795,76 @@
                     .replace(/(?<!\\)'/g, '"')
                     .replace(/([{,]\s*)(\w+)(\s*:)/g, '$1"$2"$3'),
 
+                fixJsonStructure: jsonStr => {
+                    let result = jsonStr.trim();
+                    
+                    if (!result) return '{}';
+                    
+                    let inString = false;
+                    let escape = false;
+                    const stack = [];
+                    
+                    for (let i = 0; i < result.length; i++) {
+                        const char = result[i];
+                        
+                        if (escape) {
+                            escape = false;
+                            continue;
+                        }
+                        
+                        if (char === '\\' && inString) {
+                            escape = true;
+                            continue;
+                        }
+                        
+                        if (char === '"') {
+                            inString = !inString;
+                            continue;
+                        }
+                        
+                        if (!inString) {
+                            if (char === '{') stack.push('}');
+                            else if (char === '[') stack.push(']');
+                            else if (char === '}' || char === ']') {
+                                if (stack.length > 0 && stack[stack.length - 1] === char) {
+                                    stack.pop();
+                                } else if (stack.length > 0) {
+                                    result = result.substring(0, i) + stack.pop() + result.substring(i);
+                                }
+                            }
+                        }
+                    }
+                    
+                    while (stack.length > 0) {
+                        result += stack.pop();
+                    }
+                    
+                    return result;
+                },
+
+                fixJson: jsonStr => {
+                    let result = utils.removeComments(jsonStr);
+                    result = utils.fixJsonStructure(result);
+                    result = utils.fixJsonSyntax(result);
+                    return result;
+                },
+
+                parseJson: jsonStr => {
+                    try {
+                        return JSON.parse(jsonStr);
+                    } catch {
+                        try {
+                            return JSON.parse(utils.fixJsonStructure(jsonStr));
+                        } catch {
+                            try {
+                                return JSON.parse(utils.fixJsonSyntax(jsonStr));
+                            } catch {
+                                return JSON.parse(utils.fixJson(jsonStr));
+                            }
+                        }
+                    }
+                },
+
                 removeCommentsAndFixGeometry: jsonStr => {
                     let cleaned = utils.removeComments(jsonStr);
                     return cleaned.replace(/,\s*"geometry\.null"\s*:\s*\{\s*\}/g, '').replace(/"geometry\.null"\s*:\s*\{\s*\},?/g, '');
@@ -1802,8 +1872,7 @@
 
                 countSkins: content => {
                     try {
-                        const cleaned = utils.removeComments(content);
-                        const data = JSON.parse(cleaned);
+                        const data = utils.parseJson(content);
                         return data.skins?.length || 0;
                     } catch {
                         return 0;
@@ -1859,8 +1928,8 @@
                     const pack = state.skinPacks.find(p => p.id === packId);
                     if (!pack || !pack.files['skins.json']) return false;
 
-                    const skinsContent = utils.removeComments(pack.files['skins.json']._content);
-                    const skinsData = JSON.parse(skinsContent);
+                    const skinsContent = pack.files['skins.json']._content;
+                    const skinsData = utils.parseJson(skinsContent);
 
                     if (skinsData.skins.length <= 1) {
                         logger.add(`⚠️ 无法删除：${pack.fileName} 至少需要保留1个皮肤`);
@@ -1889,8 +1958,7 @@
 
                 rebuildSkinsJson(originalContent, skins, deleteIndex) {
                     // 解析原始JSON字符串以准确定位
-                    const cleaned = utils.removeComments(originalContent);
-                    const data = JSON.parse(cleaned);
+                    const data = utils.parseJson(originalContent);
                     const skinArray = data.skins;
 
                     // 构建新的skins数组
@@ -1911,9 +1979,8 @@
                     if (!geometryStillInUse) {
                         // 从 geometry.json 中删除该模型
                         if (pack.files['geometry.json']) {
-                            const geoContent = utils.removeComments(pack.files['geometry.json']._content);
                             try {
-                                const geoData = JSON.parse(geoContent);
+                                const geoData = utils.parseJson(pack.files['geometry.json']._content);
                                 if (geoData[deletedGeometry]) {
                                     delete geoData[deletedGeometry];
                                     pack.files['geometry.json']._content = JSON.stringify(geoData);
@@ -1973,9 +2040,8 @@
 
                     // 删除不再使用的模型
                     if (pack.files['geometry.json']) {
-                        const geoContent = utils.removeComments(pack.files['geometry.json']._content);
                         try {
-                            const geoData = JSON.parse(geoContent);
+                            const geoData = utils.parseJson(pack.files['geometry.json']._content);
                             let deletedGeoCount = 0;
 
                             deletedGeometries.forEach(geometry => {
@@ -2091,13 +2157,26 @@
                         
                         try {
                             coreData[fileName] = JSON.parse(content);
-                        } catch {
+                        } catch (e1) {
                             try {
-                                content = utils.fixJsonSyntax(content);
+                                content = utils.fixJsonStructure(content);
                                 coreData[fileName] = JSON.parse(content);
-                                logger.add(`✅ ${fileName} 自动修复成功`);
-                            } catch (e) {
-                                throw new Error(`${fileName} JSON解析失败且无法自动修复：${e.message}`);
+                                logger.add(`✅ ${fileName} 结构修复成功（补充缺失括号）`);
+                            } catch (e2) {
+                                try {
+                                    content = utils.fixJsonSyntax(content);
+                                    coreData[fileName] = JSON.parse(content);
+                                    logger.add(`✅ ${fileName} 语法修复成功（处理逗号/引号）`);
+                                } catch (e3) {
+                                    try {
+                                        content = utils.fixJsonStructure(content);
+                                        content = utils.fixJsonSyntax(content);
+                                        coreData[fileName] = JSON.parse(content);
+                                        logger.add(`✅ ${fileName} 综合修复成功（结构+语法）`);
+                                    } catch (e4) {
+                                        throw new Error(`${fileName} JSON解析失败且无法自动修复：${e4.message}`);
+                                    }
+                                }
                             }
                         }
 
@@ -2597,7 +2676,7 @@
 
                     try {
                         // 获取皮肤信息
-                        const skinsData = JSON.parse(utils.removeComments(pack.files['skins.json']._content));
+                        const skinsData = utils.parseJson(pack.files['skins.json']._content);
                         const skin = skinsData.skins[skinIndex];
                         if (!skin) {
                             logger.add('❌ 未找到皮肤数据');
@@ -2616,17 +2695,7 @@
                         // 解析geometry
                         let geoContent = pack.files['geometry.json']._content;
                         // 始终尝试自动修复 JSON 格式
-                        geoContent = this.fixJsonSyntax(utils.removeCommentsAndFixGeometry(geoContent));
-
-                        let geoData;
-                        try {
-                            geoData = this.parseGeometry(JSON.parse(geoContent));
-                        } catch (e) {
-                            // 如果还是失败，再尝试更激进的修复
-                            logger.add(`⚠️ 第一次修复失败，尝试更激进的修复...`);
-                            const moreFixed = utils.fixJsonSyntax(geoContent);
-                            geoData = this.parseGeometry(JSON.parse(moreFixed));
-                        }
+                        const geoData = this.parseGeometry(utils.parseJson(geoContent));
 
                         if (!geoData[geometryName]) {
                             logger.add(`❌ 未找到模型: ${geometryName}`);
@@ -2760,8 +2829,7 @@
                     let skins = [];
                     if (isReady && pack.files['skins.json']) {
                         try {
-                            const cleaned = utils.removeComments(pack.files['skins.json']._content);
-                            const data = JSON.parse(cleaned);
+                            const data = utils.parseJson(pack.files['skins.json']._content);
                             skins = data.skins || [];
                         } catch (e) {
                             console.error('Failed to parse skins for display:', e);
@@ -2946,8 +3014,7 @@
                     if (!skinsListEl) return;
 
                     try {
-                        const cleaned = utils.removeComments(pack.files['skins.json']._content);
-                        const data = JSON.parse(cleaned);
+                        const data = utils.parseJson(pack.files['skins.json']._content);
                         const skins = data.skins || [];
                         pack.skinCount = skins.length;
                         
@@ -3077,7 +3144,7 @@
                                             const pack = state.skinPacks.find(p => p.id === packId);
                                             if (!pack || !pack.files['skins.json']) return;
                     
-                                            const skinsData = JSON.parse(utils.removeComments(pack.files['skins.json']._content));
+                                            const skinsData = utils.parseJson(pack.files['skins.json']._content);
                                             const remainingSkins = skinsData.skins.length - selectedIndices.length;
                     
                                             if (remainingSkins < 1) {
@@ -3355,7 +3422,7 @@
                     try {
                         const content = elements.manifestEditor.value.trim();
                         if (!content) return null;
-                        const manifest = JSON.parse(content);
+                        const manifest = utils.parseJson(content);
                         return manifest;
                     } catch {
                         logger.add('⚠️ manifest.json 格式无效，使用默认配置');
