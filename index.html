@@ -2328,27 +2328,30 @@
                     const geoRenameMap = new Map();
                     const textureRenameMap = new Map();
 
-                    modelMap.forEach((newName, oldName) => geoRenameMap.set(oldName, newName));
-                    textureMap.forEach((newName, oldName) => textureRenameMap.set(oldName, newName));
+                    for (const [oldName, newName] of modelMap) geoRenameMap.set(oldName, newName);
+                    for (const [oldName, newName] of textureMap) textureRenameMap.set(oldName, newName);
 
-                    core['skins.json'].skins.forEach((skin, idx) => {
-                        const skinName = skin.localization_name || `skin_${idx}`;
+                    const skins = core['skins.json'].skins;
+                    const skinsLen = skins.length;
+                    for (let i = 0; i < skinsLen; i++) {
+                        const skin = skins[i];
+                        const skinName = skin.localization_name || `skin_${i}`;
                         const oldModel = skin.geometry;
                         const oldTexture = relations.skinToTexture.get(skinName);
 
-                        // 如果是 humanoid.custom 或 humanoid.customSlim，保持 geometry 不变
                         const isCustomHumanoid = oldModel === 'geometry.humanoid.custom' || oldModel === 'geometry.humanoid.customSlim';
                         const newModel = isCustomHumanoid ? oldModel : (modelMap.get(oldModel) || oldModel);
                         const newTexture = textureMap.get(oldTexture) || oldTexture;
 
                         let newSkinName = isCustomHumanoid ? skinName : newModel.replace('geometry.', '');
-                        if (!isCustomHumanoid && suffixMap.has(oldModel) && suffixMap.get(oldModel).has(oldTexture)) {
-                            newSkinName += suffixMap.get(oldModel).get(oldTexture);
+                        if (!isCustomHumanoid && suffixMap && suffixMap.has(oldModel)) {
+                            const suffix = suffixMap.get(oldModel)?.get(oldTexture);
+                            if (suffix) newSkinName += suffix;
                         }
 
                         modifiedSkins.push({ ...skin, localization_name: newSkinName, geometry: newModel, texture: newTexture });
                         logger.add(`🔄 兼容重命名：皮肤【${skinName}】→【${newSkinName}】`);
-                    });
+                    }
 
                     return { modifiedSkins, geoRenameMap, textureMap: textureRenameMap };
                 },
@@ -2358,10 +2361,12 @@
                     const geoRenameMap = new Map();
                     const textureMap = new Map();
 
-                    core['skins.json']?.skins?.forEach((skin, idx) => {
-                        const baseName = `skin${startIndex + idx}`;
+                    const skins = core['skins.json']?.skins || [];
+                    const skinsLen = skins.length;
+                    for (let i = 0; i < skinsLen; i++) {
+                        const skin = skins[i];
+                        const baseName = `skin${startIndex + i}`;
                         
-                        // 如果是 humanoid.custom 或 humanoid.customSlim，保持 geometry 和名称不变
                         const isCustomHumanoid = skin.geometry === 'geometry.humanoid.custom' || skin.geometry === 'geometry.humanoid.customSlim';
                         
                         if (isCustomHumanoid) {
@@ -2379,42 +2384,49 @@
                             modifiedSkins.push({ ...skin, localization_name: baseName, geometry: newGeo, texture: newTex });
                             logger.add(`🔄 简化命名：${skin.localization_name} → ${baseName}`);
                         }
-                    });
+                    }
 
                     return { modifiedSkins, geoRenameMap, textureMap };
                 },
 
                 modifyDuplicate(core, existingSkins, packPrefix) {
-                    const existingNames = new Set(existingSkins.map(s => s.localization_name));
-                    const existingGeo = new Set(existingSkins.map(s => s.geometry));
+                    const existingNames = {};
+                    const existingGeo = {};
+                    const existingLen = existingSkins.length;
+                    for (let i = 0; i < existingLen; i++) {
+                        const s = existingSkins[i];
+                        existingNames[s.localization_name] = true;
+                        existingGeo[s.geometry] = true;
+                    }
 
                     const modifiedSkins = [];
                     const geoRenameMap = new Map();
                     const textureMap = new Map();
 
-                    // 获取包序号：从 packPrefix 中提取数字（如 pack1、pack2）
                     const packIndex = packPrefix.match(/pack(\d+)/) ? packPrefix.match(/pack(\d+)/)[1] : packPrefix;
 
-                    core['skins.json']?.skins?.forEach(skin => {
+                    const skins = core['skins.json']?.skins || [];
+                    const skinsLen = skins.length;
+                    for (let i = 0; i < skinsLen; i++) {
+                        const skin = skins[i];
                         let newName = skin.localization_name;
                         let newGeo = skin.geometry;
                         let newTex = skin.texture ? skin.texture.toLowerCase() : '';
 
-                        // 如果是 humanoid.custom 或 humanoid.customSlim，保持 geometry 和名称不变
                         const isCustomHumanoid = skin.geometry === 'geometry.humanoid.custom' || skin.geometry === 'geometry.humanoid.customSlim';
 
                         if (!isCustomHumanoid) {
-                            if (existingNames.has(newName)) newName += `_${packPrefix}`;
-                            if (existingGeo.has(newGeo)) newGeo += `pack${packIndex}`;
+                            if (existingNames[newName]) newName += `_${packPrefix}`;
+                            if (existingGeo[newGeo]) newGeo += `pack${packIndex}`;
 
-                            existingNames.add(newName);
-                            existingGeo.add(newGeo);
+                            existingNames[newName] = true;
+                            existingGeo[newGeo] = true;
                         }
 
                         geoRenameMap.set(skin.geometry, newGeo);
                         if (skin.texture) textureMap.set(skin.texture.toLowerCase(), newTex);
                         modifiedSkins.push({ ...skin, localization_name: newName, geometry: newGeo, texture: newTex });
-                    });
+                    }
 
                     return { modifiedSkins, geoRenameMap, textureMap };
                 }
@@ -3315,42 +3327,57 @@
                             pack,
                             core: await fileHandler.loadCore(pack.files, `包${i + 1}(${pack.name})`)
                         })));
+                        await new Promise(r => setTimeout(r, 0));
 
                         utils.updateProgress(25, '扫描模型-贴图关联关系...');
                         packsData.forEach(({ pack, core }) => relationScanner.scan(core, pack.id));
+                        await new Promise(r => setTimeout(r, 0));
 
                         utils.updateProgress(40, elements.compatibleRenameModel.checked ? '执行重名模型兼容命名...' : 
                             (elements.simplifyNaming.checked ? '执行命名简化...' : '处理重复字段...'));
 
                         const result = await this.processPacks(packsData);
+                        await new Promise(r => setTimeout(r, 0));
                         
                         if (elements.recalculateNormals.checked) {
                             utils.updateProgress(50, '重算模型法线...');
                             this.recalculateAllNormals(result.geometry);
                             logger.add('🔄 已重算所有模型法线');
+                            await new Promise(r => setTimeout(r, 0));
                         }
 
                         if (elements.addHideArmor.checked) {
                             utils.updateProgress(60, '处理隐藏盔甲...');
-                            result.skins = result.skins.map(s => s.type === 'free' && !s.hide_armor ? { ...s, hide_armor: true } : s);
-                            const count = result.skins.filter(s => s.hide_armor).length;
+                            const skins = result.skins;
+                            let count = 0;
+                            for (let i = 0; i < skins.length; i++) {
+                                const s = skins[i];
+                                if (s.type === 'free' && !s.hide_armor) {
+                                    s.hide_armor = true;
+                                    count++;
+                                }
+                            }
                             if (count) logger.add(`🛡️ 已为 ${count} 个皮肤启用隐藏盔甲`);
+                            await new Promise(r => setTimeout(r, 0));
                         }
 
                         // 处理 cape 重命名
                         utils.updateProgress(65, '处理披风重命名...');
                         const capeFiles = this.processCapeRename(result, state.skinPacks);
+                        await new Promise(r => setTimeout(r, 0));
 
                         utils.updateProgress(70, '合并文件...');
                         const outputFiles = this.buildOutputFiles(result, packsData[0].core['manifest.json']);
+                        await new Promise(r => setTimeout(r, 0));
 
                         // 添加 cape 文件到输出
-                        capeFiles.forEach((content, name) => {
+                        Object.entries(capeFiles).forEach(([name, content]) => {
                             outputFiles[name] = content;
                         });
 
                         utils.updateProgress(80, '收集贴图文件...');
                         this.collectTextures(outputFiles, state.skinPacks);
+                        await new Promise(r => setTimeout(r, 0));
 
                         utils.updateProgress(90, '生成压缩包...');
                         let zipBlob = await this.generateZip(outputFiles);
@@ -3433,8 +3460,9 @@
                 async processPacks(packsData) {
                     const allSkins = [];
                     const mergedGeo = {};
+                    const packsLen = packsData.length;
                     
-                    for (let i = 0; i < packsData.length; i++) {
+                    for (let i = 0; i < packsLen; i++) {
                         const { pack, core } = packsData[i];
                         const startIdx = allSkins.length;
                         let result;
@@ -3448,13 +3476,20 @@
                             result = namingHandler.modifyDuplicate(core, allSkins, prefix);
                         }
 
-                        allSkins.push(...result.modifiedSkins);
+                        const modifiedSkins = result.modifiedSkins;
+                        const geoRenameMap = result.geoRenameMap;
                         
-                        Object.entries(core['geometry.json']).forEach(([key, val]) => {
-                            mergedGeo[result.geoRenameMap.get(key) || key] = val;
-                        });
+                        for (let j = 0; j < modifiedSkins.length; j++) {
+                            allSkins.push(modifiedSkins[j]);
+                        }
+                        
+                        const geoEntries = Object.entries(core['geometry.json']);
+                        for (let j = 0; j < geoEntries.length; j++) {
+                            const [key, val] = geoEntries[j];
+                            mergedGeo[geoRenameMap.get(key) || key] = val;
+                        }
 
-                        pack.geoRenameMap = result.geoRenameMap;
+                        pack.geoRenameMap = geoRenameMap;
                         pack.textureMap = result.textureMap;
                     }
 
@@ -3462,12 +3497,18 @@
                 },
 
                 recalculateAllNormals(geometry) {
-                    for (const [geoKey, geoData] of Object.entries(geometry)) {
-                        if (geoData.bones) {
-                            for (const bone of geoData.bones) {
-                                if (bone.poly_mesh && bone.poly_mesh.normals && bone.poly_mesh.normals.length > 0) {
-                                    if (bone.poly_mesh.positions && bone.poly_mesh.polys && bone.poly_mesh.polys.length > 0) {
-                                        bone.poly_mesh.normals = this.recalculatePolyMeshNormals(bone.poly_mesh);
+                    const keys = Object.keys(geometry);
+                    for (let i = 0; i < keys.length; i++) {
+                        const geoKey = keys[i];
+                        const geoData = geometry[geoKey];
+                        if (geoData && geoData.bones) {
+                            const bones = geoData.bones;
+                            for (let j = 0; j < bones.length; j++) {
+                                const bone = bones[j];
+                                if (bone && bone.poly_mesh && bone.poly_mesh.normals && bone.poly_mesh.normals.length > 0) {
+                                    const pm = bone.poly_mesh;
+                                    if (pm.positions && pm.polys && pm.polys.length > 0) {
+                                        pm.normals = this.recalculatePolyMeshNormals(pm);
                                     }
                                 }
                             }
@@ -3478,61 +3519,63 @@
                 recalculatePolyMeshNormals(polyMesh) {
                     const positions = polyMesh.positions || [];
                     const polys = polyMesh.polys || [];
+                    const posLen = positions.length;
+                    const polyLen = polys.length;
                     
-                    if (!positions.length || !polys.length) {
+                    if (!posLen || !polyLen) {
                         return polyMesh.normals;
                     }
 
                     const newNormals = [];
-                    const normalCache = new Map();
+                    const normalCache = {};
 
-                    for (const poly of polys) {
-                        if (!Array.isArray(poly) || poly.length < 3) continue;
+                    for (let i = 0; i < polyLen; i++) {
+                        const poly = polys[i];
+                        if (!poly || !poly.length || poly.length < 3) continue;
                         
-                        const corners = poly.slice(0, 3);
-                        if (corners.some(c => !Array.isArray(c) || c.length < 2)) continue;
+                        const c0 = poly[0];
+                        const c1 = poly[1];
+                        const c2 = poly[2];
+                        if (!c0 || !c1 || !c2 || c0.length < 2 || c1.length < 2 || c2.length < 2) continue;
                         
-                        const i0 = corners[0][0];
-                        const i1 = corners[1][0];
-                        const i2 = corners[2][0];
+                        const i0 = c0[0];
+                        const i1 = c1[0];
+                        const i2 = c2[0];
                         
-                        if (i0 >= positions.length || i1 >= positions.length || i2 >= positions.length) {
-                            continue;
-                        }
+                        if (i0 >= posLen || i1 >= posLen || i2 >= posLen) continue;
 
                         const v0 = positions[i0];
                         const v1 = positions[i1];
                         const v2 = positions[i2];
                         
-                        if (!Array.isArray(v0) || !Array.isArray(v1) || !Array.isArray(v2)) {
-                            continue;
-                        }
+                        if (!v0 || !v1 || !v2 || v0.length < 3 || v1.length < 3 || v2.length < 3) continue;
 
-                        const e1 = [v1[0] - v0[0], v1[1] - v0[1], v1[2] - v0[2]];
-                        const e2 = [v2[0] - v0[0], v2[1] - v0[1], v2[2] - v0[2]];
+                        const v0x = v0[0], v0y = v0[1], v0z = v0[2];
+                        const v1x = v1[0], v1y = v1[1], v1z = v1[2];
+                        const v2x = v2[0], v2y = v2[1], v2z = v2[2];
+
+                        const e1x = v1x - v0x, e1y = v1y - v0y, e1z = v1z - v0z;
+                        const e2x = v2x - v0x, e2y = v2y - v0y, e2z = v2z - v0z;
                         
-                        const nx = e1[1] * e2[2] - e1[2] * e2[1];
-                        const ny = e1[2] * e2[0] - e1[0] * e2[2];
-                        const nz = e1[0] * e2[1] - e1[1] * e2[0];
+                        const nx = e1y * e2z - e1z * e2y;
+                        const ny = e1z * e2x - e1x * e2z;
+                        const nz = e1x * e2y - e1y * e2x;
 
                         const len = Math.sqrt(nx * nx + ny * ny + nz * nz);
                         if (len <= 0) continue;
                         
-                        const normal = [
-                            -Math.round((nx / len) * 1000) / 1000,
-                            -Math.round((ny / len) * 1000) / 1000,
-                            -Math.round((nz / len) * 1000) / 1000
-                        ];
+                        const invLen = 1 / len;
+                        const nxN = -Math.round((nx * invLen) * 1000) / 1000;
+                        const nyN = -Math.round((ny * invLen) * 1000) / 1000;
+                        const nzN = -Math.round((nz * invLen) * 1000) / 1000;
 
-                        const normalKey = normal.join(',');
+                        const normalKey = nxN + ',' + nyN + ',' + nzN;
                         
-                        let normalIdx;
-                        if (normalCache.has(normalKey)) {
-                            normalIdx = normalCache.get(normalKey);
-                        } else {
+                        let normalIdx = normalCache[normalKey];
+                        if (normalIdx === undefined) {
                             normalIdx = newNormals.length;
-                            normalCache.set(normalKey, normalIdx);
-                            newNormals.push(normal);
+                            normalCache[normalKey] = normalIdx;
+                            newNormals.push([nxN, nyN, nzN]);
                         }
                         
                         for (let j = 0; j < poly.length; j++) {
@@ -3548,42 +3591,50 @@
                  * 检测 skins.json 中的 cape 字段，将对应的 png 文件按顺序重命名为 cape1.png, cape2.png...
                  */
                 processCapeRename(result, packs) {
-                    const capeMap = new Map(); // 旧 cape 名 -> 新 cape 名
-                    const capeFiles = new Map(); // 用于存储 cape 文件内容
+                    const capeMap = {};
+                    const capeFiles = {};
                     let capeCounter = 1;
+                    const skins = result.skins;
+                    const skinsLen = skins.length;
 
-                    // 收集所有需要重命名的 cape（只要是 png 文件就重命名）
-                    result.skins.forEach(skin => {
-                        if (skin.cape && skin.cape.endsWith('.png')) {
-                            const capeLower = skin.cape.toLowerCase();
-                            if (!capeMap.has(capeLower)) {
-                                const newCapeName = `cape${capeCounter}.png`;
-                                capeMap.set(capeLower, newCapeName);
+                    for (let i = 0; i < skinsLen; i++) {
+                        const skin = skins[i];
+                        const cape = skin.cape;
+                        if (cape && cape.endsWith('.png')) {
+                            const capeLower = cape.toLowerCase();
+                            if (!capeMap[capeLower]) {
+                                capeMap[capeLower] = `cape${capeCounter}.png`;
                                 capeCounter++;
                             }
                         }
-                    });
+                    }
 
-                    // 更新 skins 中的 cape 字段
-                    result.skins.forEach(skin => {
-                        if (skin.cape && capeMap.has(skin.cape.toLowerCase())) {
-                            skin.cape = capeMap.get(skin.cape.toLowerCase());
+                    for (let i = 0; i < skinsLen; i++) {
+                        const skin = skins[i];
+                        const cape = skin.cape;
+                        if (cape) {
+                            const capeLower = cape.toLowerCase();
+                            const newName = capeMap[capeLower];
+                            if (newName) skin.cape = newName;
                         }
-                    });
+                    }
 
-                    // 收集 cape 文件并建立映射
-                    packs.forEach(pack => {
-                        Object.entries(pack.files).forEach(([name, file]) => {
+                    const packsLen = packs.length;
+                    for (let i = 0; i < packsLen; i++) {
+                        const pack = packs[i];
+                        const entries = Object.entries(pack.files);
+                        for (let j = 0; j < entries.length; j++) {
+                            const [name, file] = entries[j];
                             const nameLower = name.toLowerCase();
                             const fileName = nameLower.split('/').pop();
-                            if (capeMap.has(nameLower) || capeMap.has(fileName)) {
-                                const newCapeName = capeMap.get(nameLower) || capeMap.get(fileName);
-                                pack.textureMap.set(name, newCapeName);
-                                capeFiles.set(newCapeName, file.blob || file);
-                                logger.add(`🦅 Cape 重命名：${name} → ${newCapeName}`);
+                            const newName = capeMap[nameLower] || capeMap[fileName];
+                            if (newName) {
+                                pack.textureMap.set(name, newName);
+                                capeFiles[newName] = file.blob || file;
+                                logger.add(`🦅 Cape 重命名：${name} → ${newName}`);
                             }
-                        });
-                    });
+                        }
+                    }
 
                     return capeFiles;
                 },
@@ -3594,18 +3645,14 @@
                         if (manifest.modules) manifest.modules[0].uuid = utils.generateUUID();
                     }
 
+                    const geoObject = {};
                     const geometryKeys = Object.keys(result.geometry);
-                    let geometryJsonStr = '';
+                    for (let i = 0; i < geometryKeys.length; i++) {
+                        const key = geometryKeys[i];
+                        geoObject[key] = utils.removeNormalsFromGeometry(result.geometry[key]);
+                    }
 
-                    geometryKeys.forEach((key, idx) => {
-                        const val = utils.removeNormalsFromGeometry(result.geometry[key]);
-                        geometryJsonStr += `"${key}":${JSON.stringify(val)}`;
-                        if (idx < geometryKeys.length - 1) {
-                            geometryJsonStr += ',';
-                        }
-                    });
-
-                    const finalGeometryJson = `{${geometryJsonStr},}`;
+                    const finalGeometryJson = JSON.stringify(geoObject);
 
                     return {
                         'manifest.json': JSON.stringify(manifest),
@@ -3615,22 +3662,33 @@
                 },
 
                 collectTextures(outputFiles, packs) {
-                    packs.forEach(pack => {
-                        Object.entries(pack.files).forEach(([name, file]) => {
+                    for (let i = 0; i < packs.length; i++) {
+                        const pack = packs[i];
+                        const entries = Object.entries(pack.files);
+                        for (let j = 0; j < entries.length; j++) {
+                            const [name, file] = entries[j];
                             if (name.endsWith('.png') || name.endsWith('.jpg')) {
                                 const fileName = name.split('/').pop();
                                 const newName = pack.textureMap.get(name) || pack.textureMap.get(fileName) || name;
                                 outputFiles[newName] = file.blob || file;
                             }
-                        });
-                    });
+                        }
+                    }
                 },
 
                 async generateZip(files) {
                     const zip = new JSZip();
-                    Object.entries(files).forEach(([name, content]) => {
-                        zip.file(name, typeof content === 'string' ? content : content);
-                    });
+                    const entries = Object.entries(files);
+                    const batchSize = 50;
+                    
+                    for (let i = 0; i < entries.length; i += batchSize) {
+                        const batch = entries.slice(i, i + batchSize);
+                        for (const [name, content] of batch) {
+                            zip.file(name, typeof content === 'string' ? content : content);
+                        }
+                        await new Promise(r => setTimeout(r, 0));
+                    }
+                    
                     return await zip.generateAsync({ type: 'blob', compression: 'DEFLATE' });
                 }
             };
